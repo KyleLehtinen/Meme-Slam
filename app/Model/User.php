@@ -12,18 +12,25 @@ class User {
 	public $keepsWins;
 	public $totalWins;
 	public $gameCount;
+	public $inventory;
 	public static $userCount;
 
 
-	// public function __construct($id = null){
-	// 	if ($id) {
-	// 		$instance = new self();
-	// 		$instance->loadByID($id);
-	// 		return $instance;
-	// 	} else {
-
-	// 	}
-	// }
+	public function __construct($id = null, $username = null, 
+								$password = null, $email = null){
+		//If ID is given instantiate object with given ID
+		if ($id) {
+			$instance = new self();
+			$instance->getByID($id);
+			return $instance;
+		} else { //If no ID create and save
+			$this->username = $username;
+			$this->salt = User::generateSalt();
+			$this->password = Hash::make($password + $this->salt);
+			$this->email = $email;
+			$this->save();
+		}
+	}
 
 
 
@@ -36,7 +43,15 @@ class User {
 			WHERE id = :id";
 
 		//Execute and Return
-		return DB::selectOne($sql, ["id" => $id]);
+		$row = DB::selectOne($sql, ["id" => $id]);
+
+		$user = new User();
+		$user->id = $row->id;
+		$user->username = $row->username;
+		$user->email = $row->email;
+		$user->collectionRating = $row->collectionRating;
+		$user->casualWins = $row->casualWins;
+		$user->keepsWins = $row->keepsWins
 	}
 
 	//Save (Call Insert or Update)
