@@ -17,6 +17,7 @@ trait RegistersUsers
     public function getRegister()
     {
         return view('auth.register');
+
     }
 
     /**

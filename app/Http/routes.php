@@ -14,9 +14,12 @@
 Route::get('/', function () {
     return view('/auth/login');
 });
-Route::get('/', ['middleware' => 'auth', function() {return view('home');}]);
 
-Route::get('home', ['middleware' => 'auth', function() {return view('home');}]);
+//routes authenticated users to dashboard
+Route::get('/', ['middleware' => 'auth', 'uses' => 'UserController@getUser']);
+Route::get('home', ['middleware' => 'auth', 'uses' => 'UserController@getUser']);
+// Route::get('/', ['middleware' => 'auth', function() {$user = Auth::user; return view('home',compact('user'));}]);
+// Route::get('home', ['middleware' => 'auth', function() {return view('home');}]);
 
 // Authentication routes...
 Route::get('auth/login', 'Auth\AuthController@getLogin');
@@ -24,5 +27,5 @@ Route::post('auth/login', 'Auth\AuthController@postLogin');
 Route::get('auth/logout', 'Auth\AuthController@getLogout');
 
 // Registration routes...
-Route::get('auth/register', 'Auth\AuthController@getRegister');
+// Route::get('auth/register', 'Auth\AuthController@getRegister');
 Route::post('auth/register', 'Auth\AuthController@postRegister');
