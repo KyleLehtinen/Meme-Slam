@@ -21,12 +21,12 @@ class UserController extends Controller
 				ActivatedMogs::newAccountDrop($user->id);
 			}
 
-			$user->recalcCollectionRating();
+			$collection_rating = $user->recalcCollectionRating();
 
 			//Get all the authenticated user's mogs
 			$mogs = User::getUserMogs($user->id);
 
-			return view('home',['user'=>$user, 'mogs'=>$mogs]);
+			return view('home',['user'=>$user, 'mogs'=>$mogs, 'collectionRating'=>$collection_rating]);
 		}
 	}
 };

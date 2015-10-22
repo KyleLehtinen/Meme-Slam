@@ -191,7 +191,7 @@ Jamaican Css in full force below
   width: 200px;
   padding: 2em;
   border-radius: 50%;
-  background-color: gold;
+  background-size: cover;
   margin: 1em auto;
   border: 1px solid black; }
 
@@ -256,13 +256,13 @@ Jamaican Css in full force below
   width: 20em;
   margin-right: 2em; }
 
-.inv-main-container {
+.mog-main-container {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   height: 600px; }
 
-.inv-main-container h3 {
+.mog-main-container h3 {
   padding-left: 1em; }
 
 .bet-pod-container {

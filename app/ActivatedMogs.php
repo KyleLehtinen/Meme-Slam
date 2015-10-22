@@ -7,7 +7,7 @@ use DB;
 class ActivatedMogs extends Model 
 {
 	protected $table = 'ActivatedMogs';
-	protected $fillable = ['mog_ID','exchanges','recent'];
+	protected $fillable = ['active_mog_ID','exchanges','recent'];
 
 	/**
 	 *Static method for initial mog drop for newly created accounts
@@ -59,19 +59,30 @@ class ActivatedMogs extends Model
 	 *Return: 
 	 *	Array of activated Mog IDs
 	 */
-	protected static function insert($count, $mogType, $userID) {
-		
+	protected static function insert($count, $mogType, $owner_id) {
+		//repeat per given count
 		for($i = 0; $i < $count; $i++) {
-			$mogID = $mogType[rand(0,count($mogType) - 1)]->id; 
+			//get's mog id for next insert
+			$mog_id = $mogType[rand(0,count($mogType) - 1)]->id; 
+
+			//insert into ActiveMogs
 			DB::insert("
 					INSERT 
-					into ActivatedMogs (mog_ID)
-					VALUES (:mogID)
-					",
-					['mogID' => $mogID]);
-
-			UserMogs::insertToUser($mogID, $userID);
+					into ActivatedMogs (mog_id, owner_id)
+					VALUES (:mog_id, :owner_id)
+				",
+				['mog_id' => $mog_id, 'owner_id' => $owner_id]);
 		}
 	}
+
+	// public static function insertToUser($activeMogID, $userID) {
+	// 	DB::insert('
+	// 			INSERT 
+	// 			into UserMogs (active_mog_ID, user_ID)
+	// 			VALUES (:activeMogID, :userID)
+	// 			', 
+	// 			['activeMogID' => $activeMogID, 'userID' => $userID]
+	// 		);
+	// }
 
 }

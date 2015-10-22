@@ -17,61 +17,44 @@ class User extends Model implements AuthenticatableContract,
 {
  	use Authenticatable, Authorizable, CanResetPassword;
 
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
     protected $table = 'user';
-    
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = ['name', 'email', 'password', 'collection_rating'];
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
     protected $hidden = ['password', 'remember_token'];
 
     public function recalcCollectionRating() {
-        
+   
+        //get this instance's owner mogs
         $mogs = $this->getUserMogs($this->id);
+
         $rating = 0;
 
+        //build rating value from retrieved mogs
         foreach($mogs as $mog) {
             $rating += $mog->rating;
         }
 
+        //update user's collection rating to new value
         DB::update('
                 UPDATE User
                 SET collection_rating = :rating
                 WHERE id = :userID
             ', 
             ['rating' => $rating, 'userID' => $this->id]);
+
+        return $rating;
     }
 
-    // public static function save($userID) {
-    //     DB::update('
-    //             UPDATE User
-    //             SET id = :userID, 
-    //         ')
-    // }
-
-    public static function getUserMogs($userID) {
+    public static function getUserMogs($owner_id) {
+            
         $mogs = DB::select("
-                    SELECT mm.id, mm.name, mm.src_url, mm.rating
+                    SELECT am.id as active_id, mm.id, mm.name, mm.src_url, mm.rating
                     FROM MogMaster as mm
-                    RIGHT JOIN UserMogs as um
-                    ON mm.id = um.mog_id
-                    WHERE mm.active = true and um.user_id = :userID
+                    RIGHT JOIN ActivatedMogs as am
+                    ON mm.id = am.mog_id
+                    WHERE mm.active = true and am.owner_id = :owner_id
                     ORDER BY mm.rating desc
                 ",
-                ['userID' => $userID]);
+                ['owner_id' => $owner_id]);
 
         return $mogs;
     }
