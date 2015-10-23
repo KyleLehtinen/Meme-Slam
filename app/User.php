@@ -47,7 +47,7 @@ class User extends Model implements AuthenticatableContract,
     public static function getUserMogs($owner_id) {
             
         $mogs = DB::select("
-                    SELECT am.id as active_id, mm.id, mm.name, mm.src_url, mm.rating
+                    SELECT am.id as active_id, am.on_bet as on_bet, mm.id, mm.name, mm.src_url, mm.rating
                     FROM MogMaster as mm
                     RIGHT JOIN ActivatedMogs as am
                     ON mm.id = am.mog_id

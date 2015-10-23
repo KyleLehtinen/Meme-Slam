@@ -41,6 +41,16 @@
 				<h3>Bet Rating: </h3>
 				<div class="bet-pod">
 					<div class="bet-pod-mogs connectedSortable">
+						@foreach($mogs as $mog)
+							@if($mog->on_bet)
+								<div id="{{$mog->active_id}}"
+									 class="mog-img" 
+									 title="{{{$mog->name}}} | {{$mog->rating}}" 
+									 style="background-image: url(/images/mogs/{{$mog->id}}" 
+									 data="{{$mog->src_url}}">
+								</div>
+							@endif
+						@endforeach
 						
 					</div>	
 				</div>
@@ -49,12 +59,14 @@
 				<h3>Mog Inventory Count: {{count($mogs)}}</h3>
 				<div class="mog-inv-container connectedSortable">
 					@foreach($mogs as $mog)
-						<div id="{{$mog->active_id}}"
-							 class="mog-img" 
-							 title="{{{$mog->name}}} | {{$mog->rating}}" 
-							 style="background-image: url(/images/mogs/{{$mog->id}}" 
-							 data="{{$mog->src_url}}">
-						</div>
+						@if(!$mog->on_bet)
+							<div id="{{$mog->active_id}}"
+								 class="mog-img" 
+								 title="{{{$mog->name}}} | {{$mog->rating}}" 
+								 style="background-image: url(/images/mogs/{{$mog->id}}" 
+								 data="{{$mog->src_url}}">
+							</div>
+						@endif
 					@endforeach
 				</div>
 			</div>
