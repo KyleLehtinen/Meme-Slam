@@ -1,5 +1,31 @@
 $(function(){
 
+	//used to recalculate pet pod rating
+	var calcBetPodRating = function() {
+		var newBetPodRating = 0;
+
+		if ($('.bet-pod-mogs').has('.mog-img')) {
+			$('.bet-pod-mogs .mog-img').each(function(){
+				newBetPodRating += Number($(this).attr('title').substring($(this).attr('title').indexOf('|') + 1));
+			});
+			$('.bet-pod-container > h3').text('Bet Rating: ' + newBetPodRating);
+		} else {
+			$('.bet-pod-container > h3').text('Bet Rating: 0');
+		}
+		
+	}
+
+	calcBetPodRating();
+
+	
+
+
+	// mogs.each(function(){
+	// 	console.log($(this).attr('title').substring($(this).attr('title').indexOf('|') + 1));
+	// });
+
+
+
 	//controls mog selection from bet pod and inventory for hero area
 	$('body').on('click','.mog-img', function(e){
 		var title_rating = $(this).attr('title');
@@ -14,48 +40,12 @@ $(function(){
 
 	//logic for adding/removing mogs from Bet Pod
 	$(".mog-inv-container").sortable({
-		connectWith: ".bet-pod-mogs"
-		// ,
-		// drop: function(){
-		// 		var id = $(this).attr('id');
-		// 		var url = ''
-
-		// 		$.ajax({
-		// 			type: 'POST',
-		// 			url: 'home/' + id + '/toggle_bet'
-		// 		});
-		// 	}
+		connectWith: ".bet-pod-mogs",
+		receive: calcBetPodRating
 	});
 
 	$(".bet-pod-mogs").sortable({
-		connectWith: ".mog-inv-container"
+		connectWith: ".mog-inv-container",
+		receive: calcBetPodRating
 	});
-
-	// $( ".mog-inv-container, .bet-pod-mogs" ).sortable({
-	// 	accept: '.mog-img',
-	// 	helper: "clone", 
-	// 	opacity: 0.5,
-	// 	cursor: "crosshair",
-	// 	connectWith: ".connectedSortable",
-	// 	drop: function(event,ui) {
-	// 		$(this).
-	// 	}
-	// });
-
-	// $( "#sort1,#sort2" ).disableSelection();
-
-	// $('.mog-inv-container, .bet-pod-mogs').droppable({
-	// 	accept: '.mog-img',
-	// 	drop: function(event,ui) {
-	// 		$(this).detach().appendTo('.bet-pod-mogs');
-	// 	}
-	// }).sortable({
-	// 	connectWith: '.connectedSortable'
-	// }).disableSelection();
-
-	// $('.mog-img').draggable({
-	// 	containment: '.mog-main-container',
-	// 	cursor: 'pointer',
-	// 	connectToSortable: '.mog-inv-container, .bet-pod-mogs',
-	// });
 });

@@ -24,7 +24,7 @@
 					{{'Rating: ' . $mogs[0]->rating}}
 				</div>
 				<div class="selected-mog-url">
-					<a href="{{$mogs[0]->src_url}}">Learn More at KnowYourMeme</a>
+					<a href="{{$mogs[0]->src_url}}" target=”_blank”>Learn More at KnowYourMeme</a>
 				</div>
 			</div>
 		</div>
@@ -38,7 +38,7 @@
 		</div>
 		<div class="mog-main-container">
 			<aside class="bet-pod-container">
-				<h3>Bet Pod Rating: 14.1</h3>
+				<h3>Bet Rating: </h3>
 				<div class="bet-pod">
 					<div class="bet-pod-mogs connectedSortable">
 						
@@ -46,7 +46,7 @@
 				</div>
 			</aside>
 			<div class="mog-inventory">
-				<h3>Your Mogs: {{count($mogs)}}</h3>
+				<h3>Mog Inventory Count: {{count($mogs)}}</h3>
 				<div class="mog-inv-container connectedSortable">
 					@foreach($mogs as $mog)
 						<div id="{{$mog->active_id}}"
