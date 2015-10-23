@@ -18,6 +18,9 @@ Route::get('/', function () {
 //routes authenticated users to dashboard
 Route::get('/', ['middleware' => 'auth', 'uses' => 'UserController@getUser']);
 Route::get('home', ['middleware' => 'auth', 'uses' => 'UserController@getUser']);
+
+//routes to MemeSlam page
+// Route::get('/meme_slam/{user_id}', '')
 // Route::get('/', ['middleware' => 'auth', function() {$user = Auth::user; return view('home',compact('user'));}]);
 // Route::get('home', ['middleware' => 'auth', function() {return view('home');}]);
 
@@ -31,4 +34,5 @@ Route::get('auth/logout', 'Auth\AuthController@getLogout');
 Route::post('auth/register', 'Auth\AuthController@postRegister');
 
 //APIs for Dashboard
-Route::post('home/{mog_id}/toggle_bet', 'ActivatedMogsController@toggleBetStatus');
+
+// Route::post('home/{mog_id}/toggle_bet', 'ActivatedMogsController@toggleBetStatus');

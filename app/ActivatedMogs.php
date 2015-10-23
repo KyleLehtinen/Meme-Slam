@@ -92,4 +92,67 @@ class ActivatedMogs extends Model
 
 		return true;
 	}
+
+	//given user ID and list of betted mogs...
+	public static function updateBetStatus($owner_id, $bet_mog_ids) {
+
+		//first set all user's mogs bet status to false
+		DB::update('
+				UPDATE ActivatedMogs
+				SET on_bet = 0
+				WHERE owner_id = :owner_id
+			',
+			['owner_id' => $owner_id]);
+
+		//Now reupdate bet status for user's mogs with given id's
+		DB::update('
+				UPDATE ActivatedMogs
+				SET on_bet = 1
+				WHERE id IN (:bet_mog_ids)
+			',
+			['bet_mog_ids' => implode(',',$bet_mog_ids)]);
+
+		return true;	
+	}
+
+	public static function getBetRating($owner_id) {
+
+		$bet_rating = 0;
+
+		//Get the given user's mogs
+		$current_bet_rating = DB::select("
+                    SELECT sum(mm.rating) as bet_rating
+                    FROM MogMaster as mm
+                    RIGHT JOIN ActivatedMogs as am
+                    ON mm.id = am.mog_id
+                    WHERE mm.active = true and am.owner_id = :owner_id and am.on_bet = true
+                ",
+                ['owner_id' => $owner_id]);
+
+		//check if value returned is zero
+		if($current_bet_rating[0]->bet_rating > 0) {
+			$bet_rating = $current_bet_rating[0]->bet_rating;	
+		}
+		
+		return $bet_rating;
+	}
+
+	// public function toggleBetStatus($mog_id) {
+		
+	// 	$mog = ActivatedMogs::getMog($mog_id);
+
+	// 	if($mog->on_bet == 0){
+	// 		$new_val = 1;
+	// 	} else {
+	// 		$new_val = 0;
+	// 	}
+		 
+	// 	DB::update('
+	// 			UPDATE ActivatedMogs
+	// 			SET on_bet = :new_val
+	// 		',
+	// 		['new_val' => $new_val]);
+
+	// 	return true
+	// }
 }

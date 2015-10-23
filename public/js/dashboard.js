@@ -15,7 +15,7 @@ $(function(){
 		
 	}
 
-	calcBetPodRating();
+	// calcBetPodRating();
 
 	
 

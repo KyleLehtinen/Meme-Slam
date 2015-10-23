@@ -28,8 +28,9 @@ class UserController extends Controller
 
 			//Get all the authenticated user's mogs
 			$mogs = User::getUserMogs($user->id);
+			$bet_rating = ActivatedMogs::getBetRating($user->id);
 
-			return view('home',['user'=>$user, 'mogs'=>$mogs, 'collectionRating'=>$collection_rating]);
+			return view('home',['user'=>$user, 'mogs'=>$mogs, 'bet_rating'=> $bet_rating, 'collectionRating'=>$collection_rating]);
 		}
 	}
 };

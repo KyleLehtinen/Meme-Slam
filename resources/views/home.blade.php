@@ -5,8 +5,7 @@
 @endsection
 
 @section('main')
-<body>
-		<div class="mog-viewport-container">
+	<div class="mog-viewport-container">
 		<div class="user-stats">
 			<h3>Games Played: {{$user->game_count}}</h3>
 			<h3>Games Won: {{$user->total_wins}}</h3>
@@ -38,7 +37,7 @@
 		</div>
 		<div class="mog-main-container">
 			<aside class="bet-pod-container">
-				<h3>Bet Rating: </h3>
+				<h3>Bet Rating: {{$bet_rating}}</h3>
 				<div class="bet-pod">
 					<div class="bet-pod-mogs connectedSortable">
 						@foreach($mogs as $mog)
