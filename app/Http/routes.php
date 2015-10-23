@@ -29,3 +29,6 @@ Route::get('auth/logout', 'Auth\AuthController@getLogout');
 // Registration routes...
 // Route::get('auth/register', 'Auth\AuthController@getRegister');
 Route::post('auth/register', 'Auth\AuthController@postRegister');
+
+//APIs for Dashboard
+Route::post('home/{mog_id}/toggle_bet', 'ActivatedMogsController@toggleBetStatus');

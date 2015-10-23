@@ -11,8 +11,10 @@ class UserController extends Controller
 {
 	
 	public function getUser(){
+
 		//Check user authenticated
 		if(Auth::user()) {
+
 			//Set authenticated user instance
 			$user = Auth::user();
 
@@ -21,6 +23,7 @@ class UserController extends Controller
 				ActivatedMogs::newAccountDrop($user->id);
 			}
 
+			//recalc user's collection rating and update
 			$collection_rating = $user->recalcCollectionRating();
 
 			//Get all the authenticated user's mogs

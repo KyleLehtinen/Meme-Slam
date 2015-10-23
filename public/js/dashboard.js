@@ -15,6 +15,16 @@ $(function(){
 	//logic for adding/removing mogs from Bet Pod
 	$(".mog-inv-container").sortable({
 		connectWith: ".bet-pod-mogs"
+		// ,
+		// drop: function(){
+		// 		var id = $(this).attr('id');
+		// 		var url = ''
+
+		// 		$.ajax({
+		// 			type: 'POST',
+		// 			url: 'home/' + id + '/toggle_bet'
+		// 		});
+		// 	}
 	});
 
 	$(".bet-pod-mogs").sortable({

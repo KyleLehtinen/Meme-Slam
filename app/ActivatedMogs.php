@@ -10,6 +10,20 @@ class ActivatedMogs extends Model
 	protected $fillable = ['active_mog_ID','exchanges','recent'];
 
 	/**
+	 *Static method that retrieves a selected mog
+	 *Takes: 
+	 *	activated mog ID
+	 *Return: 
+	 *	Instantiated mog
+	 */
+	public static function getMog($activated_id) {
+		//select mog of given ID and return
+		$mog = DB::table('ActivatedMogs')->where('id', $activated_id)->first();
+		return $mog;
+	}
+
+
+	/**
 	 *Static method for initial mog drop for newly created accounts
 	 *Takes: -
 	 *Return: 
@@ -60,9 +74,11 @@ class ActivatedMogs extends Model
 	 *	Array of activated Mog IDs
 	 */
 	protected static function insert($count, $mogType, $owner_id) {
+		
 		//repeat per given count
 		for($i = 0; $i < $count; $i++) {
-			//get's mog id for next insert
+			
+			//get's mog id from given list for next insert
 			$mog_id = $mogType[rand(0,count($mogType) - 1)]->id; 
 
 			//insert into ActiveMogs
@@ -73,16 +89,7 @@ class ActivatedMogs extends Model
 				",
 				['mog_id' => $mog_id, 'owner_id' => $owner_id]);
 		}
+
+		return true;
 	}
-
-	// public static function insertToUser($activeMogID, $userID) {
-	// 	DB::insert('
-	// 			INSERT 
-	// 			into UserMogs (active_mog_ID, user_ID)
-	// 			VALUES (:activeMogID, :userID)
-	// 			', 
-	// 			['activeMogID' => $activeMogID, 'userID' => $userID]
-	// 		);
-	// }
-
 }
