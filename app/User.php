@@ -58,6 +58,21 @@ class User extends Model implements AuthenticatableContract,
 
         return $mogs;
     }
+
+    public static function getBettedMogs($owner_id) {
+
+        $mogs = DB::select('
+                    SELECT am.id as active_id, mm.id, mm.name, mm.src_url, mm.rating
+                    FROM MogMaster as mm
+                    RIGHT JOIN ActivatedMogs as am
+                    ON mm.id = am.mog_id
+                    WHERE mm.active = true and am.owner_id = :owner_id and am.on_bet = true
+                    ORDER BY mm.rating desc
+                ',
+                ['owner_id' => $owner_id]);
+
+        return $mogs;
+    }
 }
 
 

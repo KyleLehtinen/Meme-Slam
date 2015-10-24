@@ -5,6 +5,7 @@ use Auth;
 use Illuminate\Routing\Controller;
 use App\User;
 use App\ActivatedMogs;
+use Crypt;
 
 
 class UserController extends Controller 
@@ -30,7 +31,10 @@ class UserController extends Controller
 			$mogs = User::getUserMogs($user->id);
 			$bet_rating = ActivatedMogs::getBetRating($user->id);
 
-			return view('home',['user'=>$user, 'mogs'=>$mogs, 'bet_rating'=> $bet_rating, 'collectionRating'=>$collection_rating]);
+			return view(
+					'home',
+					['user'=>$user, 'mogs'=>$mogs, 'bet_rating'=> $bet_rating, 'collectionRating'=>$collection_rating]
+				)->withEncryptedCsrfToken(Crypt::encrypt(csrf_token()));
 		}
 	}
 };

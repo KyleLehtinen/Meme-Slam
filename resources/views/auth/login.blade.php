@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('login-layout')
 
 @section('header')
 @endsection
@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="logo-container">
-                <img src="img/logo.jpg" alt="meme-slam">
+                <img src="" alt="meme-slam">
             </div>
 
             <form method="POST" action="/auth/login">
@@ -27,7 +27,7 @@
                     <input type="password" name="password" id="password" placeholder="Password">
                     <input id="conf-pass" type="password" name="password_confirmation" placeholder="Confirm Password" hidden>
                 </div>
-                <div id="remember-me" hidden>
+                <div id="remember-me">
                     <label>
                         <input type="checkbox" name="remember">  Remember Me  
                     </label>

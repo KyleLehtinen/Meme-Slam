@@ -1,30 +1,53 @@
 $(function(){
 
+	function updateMogBetStatus() {
+		var betMogs = new Array();
+		var token = $('meta[name="csrf_token"]').attr('content');
+
+		$('.bet-pod-mogs').children().each(function(){
+			betMogs.push(Number($(this).attr('id')));
+		});
+
+		var data = {
+			mogs: betMogs,
+			ownerID: $('.user-stats').attr('data')
+		};
+
+		$.ajax({
+			// _token: token,
+			url: '/api/update_bet_status',
+			beforeSend: function (xhr) {
+	        	var token = $('meta[name="csrf_token"]').attr('content');
+	            
+	            if (token) {
+	                return xhr.setRequestHeader('X-XSRF-TOKEN', token);
+	            }
+	        },
+			data: data,
+			method: 'post',
+			error: function(){
+				console.log("an error occurred sending the bet status update!");
+			}
+		});
+	}
+
 	//used to recalculate pet pod rating
-	var calcBetPodRating = function() {
+	function updateBetPodRating() {
+		
 		var newBetPodRating = 0;
 
 		if ($('.bet-pod-mogs').has('.mog-img')) {
 			$('.bet-pod-mogs .mog-img').each(function(){
-				newBetPodRating += Number($(this).attr('title').substring($(this).attr('title').indexOf('|') + 1));
+				var thisRating = Number($(this).attr('title').substring($(this).attr('title').indexOf('|') + 1));
+				var thisID = $(this).attr('id');
+
+				newBetPodRating += thisRating;
 			});
 			$('.bet-pod-container > h3').text('Bet Rating: ' + newBetPodRating);
 		} else {
 			$('.bet-pod-container > h3').text('Bet Rating: 0');
 		}
-		
 	}
-
-	// calcBetPodRating();
-
-	
-
-
-	// mogs.each(function(){
-	// 	console.log($(this).attr('title').substring($(this).attr('title').indexOf('|') + 1));
-	// });
-
-
 
 	//controls mog selection from bet pod and inventory for hero area
 	$('body').on('click','.mog-img', function(e){
@@ -41,11 +64,17 @@ $(function(){
 	//logic for adding/removing mogs from Bet Pod
 	$(".mog-inv-container").sortable({
 		connectWith: ".bet-pod-mogs",
-		receive: calcBetPodRating
+		receive: updateMogBetStatus,
+		stop: updateBetPodRating
+		
 	});
+
+	// $('.mog-inv-container').on('sortupdate', function(event, ui) {console.log("ajax call!");});
+	// $('.bet-pod-mogs').on('sortupdate', function(event, ui) {console.log("ajax call!");});
 
 	$(".bet-pod-mogs").sortable({
 		connectWith: ".mog-inv-container",
-		receive: calcBetPodRating
+		receive: updateMogBetStatus,
+		stop: updateBetPodRating
 	});
 });

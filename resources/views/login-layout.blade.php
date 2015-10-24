@@ -3,7 +3,6 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Meme Slam</title>
-	<meta name="csrf_token" content="{{ $encrypted_csrf_token }}" />
 	{!! HTML::style('css/app.css') !!}
 </head>
 <body>

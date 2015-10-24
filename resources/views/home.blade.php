@@ -6,7 +6,7 @@
 
 @section('main')
 	<div class="mog-viewport-container">
-		<div class="user-stats">
+		<div class="user-stats" data="{{$user->id}}">
 			<h3>Games Played: {{$user->game_count}}</h3>
 			<h3>Games Won: {{$user->total_wins}}</h3>
 			<h3>Collection Rating: {{$collectionRating}}</h3>
@@ -29,9 +29,9 @@
 		</div>
 	</div>
 	<div class="inventory-container">
-		<div class="inv-search-container">
-			<input class="search-field" type="text" name="smog" placeholder="Search inventory">
-			<label>
+		<div class="inv-search-container" >
+			<input class="search-field" type="text" name="smog" placeholder="Search inventory" hidden>
+			<label hidden>
 				<input type="checkbox" name="toggleDupes">Hide Duplicates
 			</label>
 		</div>
@@ -42,12 +42,15 @@
 					<div class="bet-pod-mogs connectedSortable">
 						@foreach($mogs as $mog)
 							@if($mog->on_bet)
+								{{-- <a href="home/{{$mog->active_id}}/toggle_bet_status"> --}}
 								<div id="{{$mog->active_id}}"
 									 class="mog-img" 
 									 title="{{{$mog->name}}} | {{$mog->rating}}" 
 									 style="background-image: url(/images/mogs/{{$mog->id}}" 
-									 data="{{$mog->src_url}}">
+									 data="{{$mog->src_url}}"
+									 owner="{{$user->id}}">
 								</div>
+								{{-- </a> --}}
 							@endif
 						@endforeach
 						
@@ -59,12 +62,15 @@
 				<div class="mog-inv-container connectedSortable">
 					@foreach($mogs as $mog)
 						@if(!$mog->on_bet)
+							{{-- <a href="home/{{$mog->active_id}}/toggle_bet_status"> --}}
 							<div id="{{$mog->active_id}}"
 								 class="mog-img" 
 								 title="{{{$mog->name}}} | {{$mog->rating}}" 
 								 style="background-image: url(/images/mogs/{{$mog->id}}" 
-								 data="{{$mog->src_url}}">
+								 data="{{$mog->src_url}}"
+								 owner="{{$user->id}}">
 							</div>
+							{{-- </a> --}}
 						@endif
 					@endforeach
 				</div>
