@@ -37,12 +37,11 @@
 		</div>
 		<div class="mog-main-container">
 			<aside class="bet-pod-container">
-				<h3>Bet Rating: {{$bet_rating}}</h3>
+				<h4>Bet Rating: {{$bet_rating}} {{$bet_count}}/20</h4>
 				<div class="bet-pod">
 					<div class="bet-pod-mogs connectedSortable">
 						@foreach($mogs as $mog)
 							@if($mog->on_bet)
-								{{-- <a href="home/{{$mog->active_id}}/toggle_bet_status"> --}}
 								<div id="{{$mog->active_id}}"
 									 class="mog-img" 
 									 title="{{{$mog->name}}} | {{$mog->rating}}" 
@@ -50,7 +49,6 @@
 									 data="{{$mog->src_url}}"
 									 owner="{{$user->id}}">
 								</div>
-								{{-- </a> --}}
 							@endif
 						@endforeach
 						
@@ -58,11 +56,10 @@
 				</div>
 			</aside>
 			<div class="mog-inventory">
-				<h3>Mog Inventory Count: {{count($mogs)}}</h3>
+				<h4>Mog Inventory Count: {{count($mogs)}}</h4>
 				<div class="mog-inv-container connectedSortable">
 					@foreach($mogs as $mog)
 						@if(!$mog->on_bet)
-							{{-- <a href="home/{{$mog->active_id}}/toggle_bet_status"> --}}
 							<div id="{{$mog->active_id}}"
 								 class="mog-img" 
 								 title="{{{$mog->name}}} | {{$mog->rating}}" 
@@ -70,7 +67,6 @@
 								 data="{{$mog->src_url}}"
 								 owner="{{$user->id}}">
 							</div>
-							{{-- </a> --}}
 						@endif
 					@endforeach
 				</div>

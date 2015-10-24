@@ -1,5 +1,7 @@
 $(function(){
 
+	var requiredBetMogs = 20;
+
 	function updateMogBetStatus() {
 		var betMogs = new Array();
 		var token = $('meta[name="csrf_token"]').attr('content');
@@ -43,10 +45,24 @@ $(function(){
 
 				newBetPodRating += thisRating;
 			});
-			$('.bet-pod-container > h3').text('Bet Rating: ' + newBetPodRating);
+			$('.bet-pod-container > h4').text('Bet Rating: ' + newBetPodRating 
+				+ ' ' + getBetMogCount() + '/' + requiredBetMogs);
 		} else {
-			$('.bet-pod-container > h3').text('Bet Rating: 0');
+			$('.bet-pod-container > h4').text('Bet Rating: 0');
 		}
+	}
+
+	function getBetMogCount() {
+
+		var betMogCount = 0;
+
+		if ($('.bet-pod-mogs').has('.mog-img')) {
+			$('.bet-pod-mogs .mog-img').each(function(){
+				betMogCount++;
+			});
+		}
+
+		return betMogCount;
 	}
 
 	//controls mog selection from bet pod and inventory for hero area

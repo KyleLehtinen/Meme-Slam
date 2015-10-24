@@ -29,12 +29,21 @@ class UserController extends Controller
 
 			//Get all the authenticated user's mogs
 			$mogs = User::getUserMogs($user->id);
+
+			//Get user's bet rating
 			$bet_rating = ActivatedMogs::getBetRating($user->id);
+
+			//Get count of users betted mogs
+			$bet_count = count(User::getBettedMogs($user->id));
 
 			return view(
 					'home',
-					['user'=>$user, 'mogs'=>$mogs, 'bet_rating'=> $bet_rating, 'collectionRating'=>$collection_rating]
+					['user'=>$user, 'mogs'=>$mogs, 'bet_rating'=> $bet_rating, 
+					 'collectionRating'=>$collection_rating, 'bet_count' => $bet_count]
 				)->withEncryptedCsrfToken(Crypt::encrypt(csrf_token()));
+			
+		} else {
+			return "You are not authorized to view this page...";
 		}
 	}
 };

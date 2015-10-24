@@ -25,18 +25,15 @@ Route::get('home', ['middleware' => 'auth', 'uses' => 'UserController@getUser'])
 //routes to MemeSlam page
 Route::get('/meme_slam/{user_id}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@preInitialize']);
 
-// Route::get('/', ['middleware' => 'auth', function() {$user = Auth::user; return view('home',compact('user'));}]);
-// Route::get('home', ['middleware' => 'auth', function() {return view('home');}]);
-
 // Authentication routes...
 Route::get('auth/login', 'Auth\AuthController@getLogin');
 Route::post('auth/login', 'Auth\AuthController@postLogin');
 Route::get('auth/logout', 'Auth\AuthController@getLogout');
 
 // Registration routes...
-// Route::get('auth/register', 'Auth\AuthController@getRegister');
 Route::post('auth/register', 'Auth\AuthController@postRegister');
+// Route::get('auth/register', 'Auth\AuthController@getRegister'); <Login page handles registration
+
 
 //APIs for Dashboard
-// Route::get('/home/{mog_id}/toggle_bet_status', ['middleware' => 'auth', 'uses' => 'ActivatedMogsController@toggleBetStatus']);
 Route::post('/api/update_bet_status', ['middleware' => 'auth', 'uses' => 'ActivatedMogsController@updateBetStatus']);

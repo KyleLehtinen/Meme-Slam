@@ -12,15 +12,20 @@ class MemeSlamController extends Controller
 {
 	public function preInitialize($user_id) {
 
-		
+		$required_bet_count = 20;
 
-		$user = Auth::user();
-		
-		$bet_mogs = User::getBettedMogs($user_id);
+		if(count(User::getBettedMogs($user_id)) == $required_bet_count) {
 
-		$bet_rating = ActivatedMogs::getBetRating($user_id);
+			$user = Auth::user();
+			
+			$bet_mogs = User::getBettedMogs($user_id);
 
-		return view('memeslam', ['bet_mogs' => $bet_mogs, 'bet_rating' => $bet_rating, 'user' => $user])
-				->withEncryptedCsrfToken(Crypt::encrypt(csrf_token()));;
+			$bet_rating = ActivatedMogs::getBetRating($user_id);
+
+			return view('memeslam', ['bet_mogs' => $bet_mogs, 'bet_rating' => $bet_rating, 'user' => $user])
+					->withEncryptedCsrfToken(Crypt::encrypt(csrf_token()));
+		} else {
+			return redirect('/');
+		}
 	}
 }
