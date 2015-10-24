@@ -2,6 +2,16 @@ $(function(){
 
 	var requiredBetMogs = 20;
 
+	//Support Jquery UI events - Prevents adding more than requiredBetMogs
+	function sortableReceiveLogic(event,ui) {
+		if ($('.bet-pod-mogs').children().length > requiredBetMogs) {
+            $(ui.sender).sortable('cancel');
+        }
+
+        updateMogBetStatus();
+	}
+
+	//Support Jquery UI events - AJAX to update which users mogs are in bet container
 	function updateMogBetStatus() {
 		var betMogs = new Array();
 		var token = $('meta[name="csrf_token"]').attr('content');
@@ -16,7 +26,6 @@ $(function(){
 		};
 
 		$.ajax({
-			// _token: token,
 			url: '/api/update_bet_status',
 			beforeSend: function (xhr) {
 	        	var token = $('meta[name="csrf_token"]').attr('content');
@@ -33,7 +42,7 @@ $(function(){
 		});
 	}
 
-	//used to recalculate pet pod rating
+	//Supports Jquery UI Events - used to recalculate pet pod rating
 	function updateBetPodRating() {
 		
 		var newBetPodRating = 0;
@@ -52,6 +61,7 @@ $(function(){
 		}
 	}
 
+	//Returns count of mogs in bet container
 	function getBetMogCount() {
 
 		var betMogCount = 0;
@@ -77,20 +87,17 @@ $(function(){
 		$('.selected-mog-url > a').attr('href',url);
 	});
 
-	//logic for adding/removing mogs from Bet Pod
+	//Events for adding/removing mogs from Bet Pod
 	$(".mog-inv-container").sortable({
 		connectWith: ".bet-pod-mogs",
-		receive: updateMogBetStatus,
+		receive: sortableReceiveLogic,
 		stop: updateBetPodRating
 		
 	});
 
-	// $('.mog-inv-container').on('sortupdate', function(event, ui) {console.log("ajax call!");});
-	// $('.bet-pod-mogs').on('sortupdate', function(event, ui) {console.log("ajax call!");});
-
 	$(".bet-pod-mogs").sortable({
 		connectWith: ".mog-inv-container",
-		receive: updateMogBetStatus,
+		receive: sortableReceiveLogic,
 		stop: updateBetPodRating
 	});
 });
