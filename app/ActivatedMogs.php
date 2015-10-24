@@ -12,40 +12,18 @@ class ActivatedMogs extends Model
 	protected $table = 'ActivatedMogs';
 	protected $fillable = ['active_mog_ID','exchanges','recent'];
 
-	/**
-	 *Static method that retrieves a selected mog
-	 *Takes: 
-	 *	activated mog ID
-	 *Return: 
-	 *	Instantiated mog
-	 */
+	//Retrieves a selected mog given the activated mog's id
 	public static function getMog($activated_id) {
-		//select mog of given ID and return
 		$mog = DB::table('ActivatedMogs')->where('id', $activated_id)->first();
 		return $mog;
 	}
 
-
-	/**
-	 *Static method for initial mog drop for newly created accounts
-	 *Takes: -
-	 *Return: 
-	 *	array of newly activated Mog IDs for join table
-	 */
+	//Used to give initial mog drop for newly registered accounts or accounts that have exhausted their mog inventory
 	public static function newAccountDrop($userID) {
 		ActivatedMogs::activateNew(45,5,0,$userID);
 	}
 
-
-	/**
-	 *Main method to activate new mogs
-	 *Takes: 
-	 *	number of new mogs to create/activate
-	 *	number of legendary to create 
-	 *	number of rare to create
-	 *Returns: 
-	 *	array of newly activated Mog IDs for join table
-	 */
+	//Activates new mogs for new account drop, end-game drops, daily logins, etc
 	protected static function activateNew($nCommon, $nRare, $nLegendary, $userID) {
 		
 		//Get Mogs
@@ -69,13 +47,7 @@ class ActivatedMogs extends Model
 		}
 	}
 
-	/**
-	 *Helper method for new mog instantiation
-	 *Takes: 
-	 *	Number of mogs, class of Mogs, activated ID's array
-	 *Return: 
-	 *	Array of activated Mog IDs
-	 */
+	//Utility method for new mog instantiation and insertion to a user's account 
 	protected static function insert($count, $mogType, $owner_id) {
 		
 		//repeat per given count
@@ -96,7 +68,7 @@ class ActivatedMogs extends Model
 		return true;
 	}
 
-	//given user ID and list of betted mogs...
+	//Updates betting status of a user's mogs given user ID and list of betted mogs
 	public static function updateBetStatus($owner_id, $bet_mog_ids) {
 
 		//first set all user's mogs bet status to false
@@ -107,7 +79,7 @@ class ActivatedMogs extends Model
 			',
 			['owner_id' => $owner_id]);
 
-		// //Now reupdate bet status for user's mogs with given id's
+		//Now reupdate bet status for user's mogs with given id's
 		$updates = DB::table('ActivatedMogs')
 						->whereIn('id',$bet_mog_ids)
 						->update(['on_bet' => 1]);
@@ -115,6 +87,7 @@ class ActivatedMogs extends Model
 		return TRUE;	
 	}
 
+	//Calcs and returns the bet pod rating of a given user id 
 	public static function getBetRating($owner_id) {
 
 		$bet_rating = 0;
@@ -137,8 +110,7 @@ class ActivatedMogs extends Model
 		return $bet_rating;
 	}
 
-	
-
+	//Used to toggle the bet status of a given activated mog
 	public static function toggleBetStatus($mog_id) {
 		
 		$mog = ActivatedMogs::getMog($mog_id);
