@@ -16,5 +16,6 @@
     {!! HTML::script('js/login.js') !!}
     {!! HTML::script('js/snabbt.min.js') !!}
     {!! HTML::script('js/dashboard.js') !!}
+    {!! HTML::script('js/memeslam.js') !!}
 </body>
 </html>
