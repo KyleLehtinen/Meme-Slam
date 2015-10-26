@@ -57,18 +57,20 @@
 			</aside>
 			<div class="mog-inventory">
 				<h4>Mog Inventory Count: {{count($mogs)}}</h4>
-				<div class="mog-inv-container connectedSortable">
-					@foreach($mogs as $mog)
-						@if(!$mog->on_bet)
-							<div id="{{$mog->active_id}}"
-								 class="mog-img" 
-								 title="{{{$mog->name}}} | {{$mog->rating}}" 
-								 style="background-image: url(/images/mogs/{{$mog->id}}" 
-								 data="{{$mog->src_url}}"
-								 owner="{{$user->id}}">
-							</div>
-						@endif
-					@endforeach
+				<div class="mog-inv-container">
+					<div class="inv-mogs connectedSortable">
+						@foreach($mogs as $mog)
+							@if(!$mog->on_bet)
+								<div id="{{$mog->active_id}}"
+									 class="mog-img" 
+									 title="{{{$mog->name}}} | {{$mog->rating}}" 
+									 style="background-image: url(/images/mogs/{{$mog->id}}" 
+									 data="{{$mog->src_url}}"
+									 owner="{{$user->id}}">
+								</div>
+							@endif
+						@endforeach
+					</div>
 				</div>
 			</div>
 		</div>

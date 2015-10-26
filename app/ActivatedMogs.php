@@ -27,9 +27,9 @@ class ActivatedMogs extends Model
 	protected static function activateNew($nCommon, $nRare, $nLegendary, $userID) {
 		
 		//Get Mogs
-		$commonMogs = DB::select('select id from MogMaster where rating < 1000');
-		$rareMogs = DB::select('select id from MogMaster where rating < 100000 and rating >= 1000');
-		$legendaryMogs = DB::select('select id from MogMaster where rating >= 100000');
+		$commonMogs = DB::select('select id from MogMaster where rating < 600 and active = 1');
+		$rareMogs = DB::select('select id from MogMaster where rating < 900 and rating >= 600 and active = 1');
+		$legendaryMogs = DB::select('select id from MogMaster where rating >= 900 and active = 1');
 
 		//instantiate common Mogs
 		if ($nCommon) {

@@ -328,6 +328,10 @@ Jamaican Css in full force below
 }
 
 .mog-inv-container {
+    overflow: scroll;
+}
+
+.inv-mogs {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;

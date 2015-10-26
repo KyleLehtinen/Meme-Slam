@@ -328,6 +328,9 @@ Jamaican Css in full force below
   border: solid black 1px; }
 
 .mog-inv-container {
+  overflow: scroll; }
+
+.inv-mogs {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;

@@ -88,7 +88,7 @@ $(function(){
 	});
 
 	//Events for adding/removing mogs from Bet Pod
-	$(".mog-inv-container").sortable({
+	$(".inv-mogs").sortable({
 		connectWith: ".bet-pod-mogs",
 		receive: sortableReceiveLogic,
 		stop: updateBetPodRating
@@ -96,7 +96,7 @@ $(function(){
 	});
 
 	$(".bet-pod-mogs").sortable({
-		connectWith: ".mog-inv-container",
+		connectWith: ".inv-mogs",
 		receive: sortableReceiveLogic,
 		stop: updateBetPodRating
 	});
