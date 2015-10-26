@@ -18,6 +18,8 @@ class Matches extends Model
 	//be deployed publicly
 	public static function searchMatch($player_id, $player_bet_rating) {
 
+		$response = [];
+
 		$br_upper = $player_bet_rating + 300;
 		$br_lower = $player_bet_rating - 300;
 
@@ -37,10 +39,11 @@ class Matches extends Model
 		if(empty($matches)) {
 			$result = Matches::createMatch($player_id, $player_bet_rating);
 
-			if($result) {
-				$response = false;
-			} else {
+			if(!$result) {
 				die("Error: Could not create a new match record");
+			} else {
+				$response['matchFound'] = false;
+				$response['matchID'] = $result;
 			}
 			
 		} else {
@@ -48,12 +51,12 @@ class Matches extends Model
 
 			$result = Matches::joinMatch($player_id, $player_bet_rating, $match_id);
 
-			if($result) {
-				$response = true;	
-			} else {
+			if(!$result) {
 				die("Error: Could not join the match...");
+			} else {
+				$response['matchFound'] = true;
+				$response['matchID'] = $match_id;
 			}
-			
 		}
 
 		return $response;
@@ -62,13 +65,15 @@ class Matches extends Model
 	//Creates a new match
 	public static function createMatch($player_id, $player_bet_rating) {
 
-		$result = DB::insert('
-						INSERT 
-						INTO Matches
-							(p1_id, p1_bet_rating)
-						VALUES 
-							(:player_id, :player_bet_rating)
-					', ['player_id'=>$player_id, 'player_bet_rating'=>$player_bet_rating]);
+		DB::insert('
+				INSERT 
+				INTO Matches
+					(p1_id, p1_bet_rating)
+				VALUES 
+					(:player_id, :player_bet_rating)
+			', ['player_id'=>$player_id, 'player_bet_rating'=>$player_bet_rating]);
+		
+		$result = DB::getPdo()->lastInsertId();
 
 		return $result;
 	}
@@ -76,12 +81,14 @@ class Matches extends Model
 	//Joins player to an existing match
 	public static function joinMatch($player_id, $player_bet_rating, $match_id) {
 		
-		$result = DB::update('
-						UPDATE Matches
-						SET p2_id = :player_id,
-							p2_bet_rating = :player_bet_rating
-						WHERE id = :match_id
-					',['player_id' => $player_id, 'player_bet_rating' => $player_bet_rating, 'match_id' => $match_id]);
+		DB::update('
+				UPDATE Matches
+				SET p2_id = :player_id,
+					p2_bet_rating = :player_bet_rating
+				WHERE id = :match_id
+			',['player_id' => $player_id, 'player_bet_rating' => $player_bet_rating, 'match_id' => $match_id]);
+		
+		$result = $match_id;
 
 		return $result;
 	}

@@ -37,10 +37,14 @@ class MemeSlamController extends Controller
 		$player_id = Request::input('userID');
 		$player_bet_rating = Request::input('betRating');
 
-		$response = Matches::searchMatch($player_id, $player_bet_rating);
-
-		$result = ['result' => $response];
+		$result = Matches::searchMatch($player_id, $player_bet_rating);
 
 		return json_encode($result);
+	}
+
+	public function playerAcceptMatch() {
+
+		$player_id = Request::input('userID');
+
 	}
 }
