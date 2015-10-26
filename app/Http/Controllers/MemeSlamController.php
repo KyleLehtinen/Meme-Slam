@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Crypt;
+use Request;
 use Illuminate\Routing\Controller;
 use App\User;
 use App\ActivatedMogs;
-use Crypt;
+use App\Matches;
+
 
 class MemeSlamController extends Controller
 {
@@ -27,5 +30,17 @@ class MemeSlamController extends Controller
 		} else {
 			return redirect('/');
 		}
+	}
+
+	public function searchForMatch() {
+
+		$player_id = Request::input('userID');
+		$player_bet_rating = Request::input('betRating');
+
+		$response = Matches::searchMatch($player_id, $player_bet_rating);
+
+		$result = ['result' => $response];
+
+		return json_encode($result);
 	}
 }

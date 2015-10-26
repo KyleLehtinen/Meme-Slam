@@ -5,13 +5,13 @@
 @endsection
 
 @section('main')
-	<div class="game-field" id="{{$user->id}}">
-		<div class="pre-search" hidden>
+	<div class="game-field" data="{{$user->id}}" rating="{{$bet_rating}}">
+		<div class="pre-search">
 			<h3>Your Bet Pod Rating is {{$bet_rating}}</h3>
 			<h3>You will be matched against other players with a BP rating between {{$bet_rating - 300}} and {{$bet_rating + 300}}</h3>
 			<button class="search-for-match">Search for Match</button>
 		</div>	
-		<div class="game-search">
+		<div class="game-search" hidden>
 			<h3>Searching for match...</h3>
 			<div class="searching-icn"></div>
 		</div>

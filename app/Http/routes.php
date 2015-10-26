@@ -37,3 +37,4 @@ Route::post('auth/register', 'Auth\AuthController@postRegister');
 
 //APIs for Dashboard
 Route::post('/api/update_bet_status', ['middleware' => 'auth', 'uses' => 'ActivatedMogsController@updateBetStatus']);
+Route::post('/api/search_for_match', ['middleware' => 'auth', 'uses' => 'MemeSlamController@searchForMatch']);
