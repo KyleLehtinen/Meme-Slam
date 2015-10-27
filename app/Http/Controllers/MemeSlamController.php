@@ -42,16 +42,29 @@ class MemeSlamController extends Controller
 		return json_encode($response);
 	}
 
-	public function playerAcceptMatch() {
+	public function playerAcceptsMatch() {
 
-		$player_id = Request::input('userID');
+		$response = [];
 
+		$match_id = Request::input('matchID');
+		$player_roll = Request::input('playerRoll');
+
+		$response['playersMatched'] = Matches::playerAcceptsMatch($match_id, $player_roll);
+
+		return $response;
 	}
 
 	public function checkP2Joined($match_id) {
 
 		$response = [];
 		$response['p2Joined'] = Matches::p2JoinedMatch($match_id);
+
+		return json_encode($response);
+	}
+
+	public function checkPlayersAcceptedMatch($match_id) {
+		$response = [];
+		$response['playersAcceptedMatch'] = Matches::checkPlayersAcceptedMatch($match_id);
 
 		return json_encode($response);
 	}

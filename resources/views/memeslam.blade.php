@@ -15,7 +15,10 @@
 			<h3>Searching for match...</h3>
 			<div class="searching-icn"></div>
 		</div>
-
+		<div class="prompt-accept" hidden>
+			<h3>A match has been found! Click 'Accept Match' below to join...<span>10</span></h3>
+			<button class="accept-match-btn">Accept Match</button>
+		</div>
 	</div>
 	<div class="game-details-container">
 		<div class="game-details">

@@ -8,7 +8,7 @@ use DB;
 class Matches extends Model
 {
 	protected $table = 'Matches';
-	protected $fillable = ['players_matched','p1_turn_roll','p2_turn_roll','in_progress',
+	protected $fillable = ['players_matched','p1_rpc_roll','p2_rpc_roll','in_progress',
 							'p1_id','p1_bet_rating','p1_accept',
 							'p2_id','p2_bet_rating','p2_accept',
 							'p1_turn','match_complete','p1_new_mogs','p2_new_mogs'];
@@ -107,6 +107,67 @@ class Matches extends Model
 					', ['match_id' => $match_id]);
 
 		if(!empty($row)) {
+			$result = true;
+		}
+
+		return $result;
+	}
+
+	public static function playerAcceptsMatch($match_id, $player_roll) {
+		
+		//check which player is accepting
+		if($player_roll == 1) {
+			$sql = '
+					UPDATE Matches
+					SET p1_accept = 1
+					WHERE id = :match_id
+				';
+		} else {
+			$sql = '
+					UPDATE Matches
+					SET p2_accept = 1
+					WHERE id = :match_id
+				';
+		}
+
+		//update match accordingly
+		DB::update($sql,['match_id' => $match_id]);
+
+		//check if both have accepted and update players_matched if so...
+		$players_matched = DB::select('
+									SELECT id
+									FROM Matches
+									WHERE p1_accept = 1 and
+										  p2_accept = 1 and
+										  id = :match_id
+								', ['match_id' => $match_id]);
+		if(!empty($players_matched)) {
+			DB::update('
+						UPDATE Matches
+						SET players_matched = 1
+						WHERE id = :match_id
+					', ['match_id' => $match_id]);
+			$players_matched = true;
+		} else {
+			$players_matched = false;
+		}
+
+		return $players_matched;
+	}
+
+	//checks if both players have accepted the match
+	public static function checkPlayersAcceptedMatch($match_id) {
+
+		$result = false;
+
+		$check_accepted = DB::select('
+								SELECT id
+								FROM Matches
+								WHERE players_matched = 1 and
+									  id = :match_id
+							',['match_id' => $match_id]);
+
+		if(!empty($check_accepted)) {
 			$result = true;
 		}
 
