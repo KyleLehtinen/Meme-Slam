@@ -44,6 +44,7 @@ class Matches extends Model
 			} else {
 				$response['matchFound'] = false;
 				$response['matchID'] = $result;
+				$response['playerRoll'] = 1;
 			}
 			
 		} else {
@@ -56,6 +57,7 @@ class Matches extends Model
 			} else {
 				$response['matchFound'] = true;
 				$response['matchID'] = $match_id;
+				$response['playerRoll'] = 2;
 			}
 		}
 
@@ -89,6 +91,24 @@ class Matches extends Model
 			',['player_id' => $player_id, 'player_bet_rating' => $player_bet_rating, 'match_id' => $match_id]);
 		
 		$result = $match_id;
+
+		return $result;
+	}
+
+	public static function p2JoinedMatch($match_id) {
+		
+		$result = false;
+		
+		$row = DB::select('
+						SELECT id, p2_id
+						FROM Matches
+						WHERE id = :match_id and
+							  p2_id IS NOT NULL
+					', ['match_id' => $match_id]);
+
+		if(!empty($row)) {
+			$result = true;
+		}
 
 		return $result;
 	}

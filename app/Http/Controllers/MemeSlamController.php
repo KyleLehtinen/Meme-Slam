@@ -37,14 +37,22 @@ class MemeSlamController extends Controller
 		$player_id = Request::input('userID');
 		$player_bet_rating = Request::input('betRating');
 
-		$result = Matches::searchMatch($player_id, $player_bet_rating);
+		$response = Matches::searchMatch($player_id, $player_bet_rating);
 
-		return json_encode($result);
+		return json_encode($response);
 	}
 
 	public function playerAcceptMatch() {
 
 		$player_id = Request::input('userID');
 
+	}
+
+	public function checkP2Joined($match_id) {
+
+		$response = [];
+		$response['p2Joined'] = Matches::p2JoinedMatch($match_id);
+
+		return json_encode($response);
 	}
 }
