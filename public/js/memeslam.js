@@ -8,6 +8,22 @@ $(function(){
 	var acceptTimerValue = 10000;
 	var recheckPlayersAcceptTimerValue = 5000;
 
+	var data = {
+		userID: userID,
+		betRating: betRating
+	};	
+
+	//setup ajax call request headers
+	$.ajaxSetup({
+        beforeSend: function (xhr) {
+        	var token = $('meta[name="csrf_token"]').attr('content');
+            
+            if (token) {
+                return xhr.setRequestHeader('X-XSRF-TOKEN', token);
+            }
+        }
+    });
+
 	function updateGameView(select) {
 		var gameViews = {
 			preSearch: $('.pre-search'),
@@ -24,11 +40,6 @@ $(function(){
 
 		gameViews[select].removeAttr('hidden');
 	}
-
-	var data = {
-		userID: userID,
-		betRating: betRating
-	};	
 
 	function stopPolling(event) {
 		clearInterval(event);
@@ -54,8 +65,6 @@ $(function(){
 
 		//update view
 		updateGameView('promptAccept');
-		// $('.game-search').attr('hidden','');
-		// $('.prompt-accept').removeAttr('hidden');
 
 		var data = {
 			matchID: matchID,
@@ -69,8 +78,6 @@ $(function(){
 			playerAcceptedMatch = true;
 
 			updateGameView('attemptJoin');
-			// $('.prompt-accept').attr('hidden','');
-			// $('.attempt-join').removeAttr('hidden');
 		});
 
 		setTimeout(function() {
@@ -79,13 +86,6 @@ $(function(){
 				$.ajax({
 					url: '/api/player_accepts_match',
 					method: 'post',
-					beforeSend: function (xhr) {
-			        	var token = $('meta[name="csrf_token"]').attr('content');
-			            
-			            if (token) {
-			                return xhr.setRequestHeader('X-XSRF-TOKEN', token);
-			            }
-			        },
 			        dataType: 'json',
 			        data: data,
 			        success: function(e) {
@@ -99,17 +99,9 @@ $(function(){
 			        			$.ajax({
 									url: '/api/check_players_accepted/' + data.matchID,
 									method: 'get',
-									beforeSend: function (xhr) {
-							        	var token = $('meta[name="csrf_token"]').attr('content');
-							            
-							            if (token) {
-							                return xhr.setRequestHeader('X-XSRF-TOKEN', token);
-							            }
-							        },
 							        dataType: 'json',
 							        success: function(e) {
 							        	
-
 							        	var playersAcceptedMatch = e.playersAcceptedMatch;
 
 							        	if(playersAcceptedMatch) {
@@ -151,13 +143,6 @@ $(function(){
 			$.ajax({
 				url: '/api/check_opponent_joined/' + matchID,
 				method: 'get',
-				beforeSend: function (xhr) {
-		        	var token = $('meta[name="csrf_token"]').attr('content');
-		            
-		            if (token) {
-		                return xhr.setRequestHeader('X-XSRF-TOKEN', token);
-		            }
-		        },
 		        dataType: 'json',
 		        success: function(e) {
 		        	console.log(e.p2Joined);
@@ -178,13 +163,6 @@ $(function(){
 		$.ajax({
 			url: '/api/drop_match',
 			method: 'post',
-			beforeSend: function (xhr) {
-	        	var token = $('meta[name="csrf_token"]').attr('content');
-	            
-	            if (token) {
-	                return xhr.setRequestHeader('X-XSRF-TOKEN', token);
-	            }
-	        },
 	        data: data,
 	        success: function(e) {
 	        	console.log('Match dropped, resetting view...');
@@ -198,19 +176,10 @@ $(function(){
 		
 		//change gamefield view to reflect match is being searched for
 		updateGameView('gameSearch');
-		// $('.pre-search').attr('hidden','');
-		// $('.game-search').removeAttr('hidden');
 
 		$.ajax({
 			url: '/api/search_for_match',
 			method: 'post',
-			beforeSend: function (xhr) {
-	        	var token = $('meta[name="csrf_token"]').attr('content');
-	            
-	            if (token) {
-	                return xhr.setRequestHeader('X-XSRF-TOKEN', token);
-	            }
-	        },
 			data: data,
 			dataType: 'json',
 			success: function(e) {
