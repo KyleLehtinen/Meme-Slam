@@ -21,5 +21,7 @@ class ActivatedMogsController extends Controller
 		}
 		
 		ActivatedMogs::updateBetStatus($owner_id,$mogs);
+
+		return "success";
 	}
 }

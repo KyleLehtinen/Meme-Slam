@@ -93,6 +93,9 @@ $(function(){
 
 			        	if(playersMatched) {
 			        		console.log("BOTH PLAYERS ACCEPT! ON TO THE COIN FLIP!")
+			        		
+			        		getOpponentDetail(data.matchID, data.playerRoll);
+
 			        		updateGameView('displayFirstPlayer');
 			        	} else {
 			        		setTimeout(function() {
@@ -106,7 +109,11 @@ $(function(){
 
 							        	if(playersAcceptedMatch) {
 							        		console.log("BOTH PLAYERS HAVE ACCEPTED THE MATCH! ON TO THE COIN FLIP!");
+							        		
+							        		getOpponentDetail(data.matchID, data.playerRoll);
+
 							        		updateGameView('displayFirstPlayer');
+
 							        	} else {
 							        		console.log("THIS IS WHERE WE WOULD DROP THE MATCH AND RESET");
 
@@ -117,6 +124,7 @@ $(function(){
 							        	}
 							        },
 							        error: function (request, status, error) {
+								        console.log("Error while checking if players accepted match...")
 								        console.dir(error);
 								    }
 	
@@ -124,7 +132,8 @@ $(function(){
 			        		}, recheckPlayersAcceptTimerValue, playerAcceptedMatch, data);
 			        	}
 			        },
-			        error: function() {
+			        error: function(request, status, error) {
+			        	console.log("Error while sending accept of match...")
 			        	console.dir(error);
 			        }
 
@@ -150,7 +159,11 @@ $(function(){
 		        		stopPolling(pollOpponentJoin);
 		        		promptAccept(matchID, 1, acceptTimerValue);
 		        	}
-		        }
+		        },
+		        error: function(request, status, error){
+					console.log("Error while checking if opponent joined the match...");
+					console.dir(error);
+				}
 			});
 		}, joinIntervalPollTime);
 	}
@@ -166,7 +179,11 @@ $(function(){
 	        data: data,
 	        success: function(e) {
 	        	console.log('Match dropped, resetting view...');
-	        }
+	        },
+	        error: function(request, status, error){
+				console.log("Error while dropping match...");
+				console.dir(error);
+			}
 		});
 	}
 
@@ -197,15 +214,24 @@ $(function(){
 					checkPlayerJoin(joinIntervalPollTime,matchID);
 				}
 			},
-			error: function(){
+			error: function(request, status, error){
+				console.log("Error while searchinf for a match...");
 				console.dir(error);
 			}
 		});
 	});
+
+	function getOpponentDetail(matchID, requestor) {
+		$.ajax({
+			url: '/api/get_match_players/' + matchID + '/' + requestor ,
+			method: 'get',
+			dataType: 'json',
+			success: function(e) {
+				$('.opponent-player').text(e.opponent);
+			},
+			error: function(request, status, error){
+				console.dir(error);
+			}
+		});
+	}
 });
-
-
-
-
-
-

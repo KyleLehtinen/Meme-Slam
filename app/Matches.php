@@ -42,6 +42,18 @@ class Matches extends Model
 		return $result;
 	}
 
+	public static function getOpponentDetail($opponent_id) {
+		$opponent = DB::select('
+							SELECT name
+							FROM User
+							WHERE id = :opponent_id
+						',['opponent_id' => $opponent_id]);
+
+		$result = $opponent[0]->name;
+
+		return $result;
+	}
+
 
 	public static function searchMatch($player_id, $player_bet_rating) {
 
@@ -61,14 +73,9 @@ class Matches extends Model
 								  p1_bet_rating <= :br_upper
 						',['player_id'=>$player_id,'br_lower'=>$br_lower, 'br_upper'=>$br_upper]);
 
-		// print_r($matches);
-		// echo '<br> PlayerID: ' .$player_id;
-		// echo '<br> Bet Rating: '. $player_bet_rating
-
 		//if no match is found call create, else add player to an existing match as player2
 		if(empty($matches)) {
 			
-			// echo "Shouldn't have come here....";
 			$result = Matches::createMatch($player_id, $player_bet_rating);
 
 			if(!$result) {

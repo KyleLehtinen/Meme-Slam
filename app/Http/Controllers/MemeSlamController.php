@@ -82,4 +82,19 @@ class MemeSlamController extends Controller
 
 		return "success";
 	}
+
+	public function getOpponentDetails($match_id, $requester) {
+
+		$match = Matches::find($match_id);
+
+		$players = $match->getMatchPlayers();
+
+		if($requester == 1){
+			$response['opponent'] = Matches::getOpponentDetail($players['player2']);
+		} else {
+			$response['opponent'] = Matches::getOpponentDetail($players['player1']);
+		}
+
+		return $response;
+	}
 }
