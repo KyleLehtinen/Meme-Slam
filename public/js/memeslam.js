@@ -8,25 +8,40 @@ $(function(){
 	var acceptTimerValue = 10000;
 	var recheckPlayersAcceptTimerValue = 5000;
 
+	function updateGameView(select) {
+		var gameViews = {
+			preSearch: $('.pre-search'),
+			gameSearch: $('.game-search'),
+			promptAccept: $('.prompt-accept'),
+			attemptJoin: $('.attempt-join'),
+			displayFirstPlayer: $('.display-first-player')
+		};
+
+		$('.game-field').children().each(function(){
+			$(this).removeAttr('hidden');
+			$(this).attr('hidden', '');
+		});
+
+		gameViews[select].removeAttr('hidden');
+	}
+
 	var data = {
 		userID: userID,
 		betRating: betRating
-	};
-
-	
+	};	
 
 	function stopPolling(event) {
 		clearInterval(event);
 	}
-
 
 	function promptAccept(matchID, playerRoll, acceptTimerValue) {
 		var playerAcceptedMatch = false;
 		console.log('MATCH FOUND! PLEASE ACCEPT!');
 
 		//update view
-		$('.game-search').attr('hidden','');
-		$('.prompt-accept').removeAttr('hidden');
+		updateGameView('promptAccept');
+		// $('.game-search').attr('hidden','');
+		// $('.prompt-accept').removeAttr('hidden');
 
 		var data = {
 			matchID: matchID,
@@ -38,6 +53,10 @@ $(function(){
 			e.preventDefault();
 
 			playerAcceptedMatch = true;
+
+			updateGameView('attemptJoin');
+			// $('.prompt-accept').attr('hidden','');
+			// $('.attempt-join').removeAttr('hidden');
 		});
 
 		setTimeout(function() {
@@ -60,6 +79,7 @@ $(function(){
 
 			        	if(playersMatched) {
 			        		console.log("BOTH PLAYERS ACCEPT! ON TO THE COIN FLIP!")
+			        		updateGameView('displayFirstPlayer');
 			        	} else {
 			        		setTimeout(function() {
 			        			$.ajax({
@@ -74,18 +94,27 @@ $(function(){
 							        },
 							        dataType: 'json',
 							        success: function(e) {
+							        	
+
 							        	var playersAcceptedMatch = e.playersAcceptedMatch;
 
 							        	if(playersAcceptedMatch) {
 							        		console.log("BOTH PLAYERS HAVE ACCEPTED THE MATCH! ON TO THE COIN FLIP!");
+							        		updateGameView('displayFirstPlayer');
 							        	} else {
 							        		console.log("THIS IS WHERE WE WOULD DROP THE MATCH AND RESET");
+
+							        		dropMatch(data.matchID);
+							        		
+							        		//reset view to starting view
+							        		updateGameView('preSearch')
 							        	}
 							        },
-							        error: function() {
-							        	console.log("An error occurred while trying to check if both players accepted the match...");
-							        }
-
+							        error: function(xhr, status, error) {
+  										var err = eval("(" + xhr.responseText + ")");
+									  	alert(err.Message);
+									}
+	
 							    });
 			        		}, recheckPlayersAcceptTimerValue, playerAcceptedMatch, data);
 			        	}
@@ -97,6 +126,8 @@ $(function(){
 				});
 			} else {
 				console.log("PLAYER DID NOT ACCEPT THE MATCH!!!");
+
+				updateGameView('preSearch');
 			}
 		}, acceptTimerValue, playerAcceptedMatch, data);
 	}
@@ -126,13 +157,36 @@ $(function(){
 		}, joinIntervalPollTime);
 	}
 
-	$('.search-for-match').on('click', function(e, matchID){
+	function dropMatch(matchID) {
+		var data = {
+			matchID: matchID
+		}
+
+		$.ajax({
+			url: '/api/drop_match',
+			method: 'post',
+			beforeSend: function (xhr) {
+	        	var token = $('meta[name="csrf_token"]').attr('content');
+	            
+	            if (token) {
+	                return xhr.setRequestHeader('X-XSRF-TOKEN', token);
+	            }
+	        },
+	        data: data,
+	        success: function(e) {
+	        	console.log('Match dropped, resetting view...');
+	        }
+		});
+	}
+
+	$('.search-for-match').on('click', function(e){
 
 		e.preventDefault();
 		
 		//change gamefield view to reflect match is being searched for
-		$('.pre-search').attr('hidden','');
-		$('.game-search').removeAttr('hidden');
+		updateGameView('gameSearch');
+		// $('.pre-search').attr('hidden','');
+		// $('.game-search').removeAttr('hidden');
 
 		$.ajax({
 			url: '/api/search_for_match',
@@ -146,7 +200,7 @@ $(function(){
 	        },
 			data: data,
 			dataType: 'json',
-			success: function(e, matchID) {
+			success: function(e) {
 				matchFound = e.matchFound;
 				matchID = e.matchID;
 				playerRoll = e.playerRoll;

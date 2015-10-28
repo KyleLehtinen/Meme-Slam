@@ -40,6 +40,7 @@ Route::post('/api/update_bet_status', ['middleware' => 'auth', 'uses' => 'Activa
 Route::post('/api/search_for_match', ['middleware' => 'auth', 'uses' => 'MemeSlamController@searchForMatch']);
 Route::post('/api/player_accepts_match', ['middleware' => 'auth', 'uses' => 'MemeSlamController@playerAcceptsMatch']);
 Route::post('/api/player_drop_match', ['middleware' => 'auth', 'uses' => 'MemeSlamController@playerDropMatch']);
+Route::post('/api/drop_match', ['middleware' => 'auth', 'uses' => 'MemeSlamController@dropMatch']);
 
 Route::get('/api/check_opponent_joined/{match_id}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@checkP2Joined']);
 Route::get('/api/check_players_accepted/{match_id}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@checkPlayersAcceptedMatch']);

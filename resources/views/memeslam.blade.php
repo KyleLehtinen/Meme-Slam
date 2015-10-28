@@ -19,6 +19,14 @@
 			<h3>A match has been found! Click 'Accept Match' below to join...<span>10</span></h3>
 			<button class="accept-match-btn">Accept Match</button>
 		</div>
+		<div class="attempt-join" hidden>
+			<h3>You accepted! Waiting for other player...</h3>
+		</div>
+		<div class="display-first-player" hidden>
+			<h3>Both players have accepted. You are playing against <span class="opponent-player"></span>!</h3>
+			<h3>Randomly selecting who goes first... Done!</h3>
+			<h3><span class="first-player"></span> will go first...</h3>
+		</div>
 	</div>
 	<div class="game-details-container">
 		<div class="game-details">

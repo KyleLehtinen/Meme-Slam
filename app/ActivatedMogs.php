@@ -80,10 +80,12 @@ class ActivatedMogs extends Model
 			['owner_id' => $owner_id]);
 
 		//Now reupdate bet status for user's mogs with given id's
-		$updates = DB::table('ActivatedMogs')
+		if(!empty($bet_mog_ids)) {
+			$updates = DB::table('ActivatedMogs')
 						->whereIn('id',$bet_mog_ids)
 						->update(['on_bet' => 1]);
-
+		}
+		
 		return TRUE;	
 	}
 

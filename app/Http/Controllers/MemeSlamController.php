@@ -39,7 +39,7 @@ class MemeSlamController extends Controller
 
 		$response = Matches::searchMatch($player_id, $player_bet_rating);
 
-		return json_encode($response);
+		return $response;
 	}
 
 	public function playerAcceptsMatch() {
@@ -63,9 +63,25 @@ class MemeSlamController extends Controller
 	}
 
 	public function checkPlayersAcceptedMatch($match_id) {
+		
 		$response = [];
 		$response['playersAcceptedMatch'] = Matches::checkPlayersAcceptedMatch($match_id);
 
-		return json_encode($response);
+		if($response['playersAcceptedMatch'] == true){
+			$match = Matches::find($match_id);
+			$match->initializeGame();
+		}
+		
+		echo "<br> RESPONSE: " . print_r($response);
+		// return json_encode($response);
+		return "success";
+	}
+
+	public function dropMatch() {
+		$match_id = Request::input('matchID');
+
+		Matches::dropMatch($match_id);
+
+		return "success";
 	}
 }

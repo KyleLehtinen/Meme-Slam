@@ -8,7 +8,7 @@ use DB;
 class Matches extends Model
 {
 	protected $table = 'Matches';
-	protected $fillable = ['players_matched','p1_rpc_roll','p2_rpc_roll','in_progress',
+	protected $fillable = ['players_matched','in_progress',
 							'p1_id','p1_bet_rating','p1_accept',
 							'p2_id','p2_bet_rating','p2_accept',
 							'p1_turn','match_complete','p1_new_mogs','p2_new_mogs'];
@@ -16,8 +16,36 @@ class Matches extends Model
 	//logic that searches for a match, if none found calls createMatch
 	//This is a flawed approach to match making and will need to be updated should meme slam
 	//be deployed publicly
+
+	public function initializeGame() {
+
+		Matches::chooseFirstTurn($this->id);
+		$match_players = $this->getMatchPlayers();
+		PlayField::loadGameMogs($this->id, $match_players);
+
+		return true;
+	}
+
+	public function getMatchPlayers() {
+
+		$result = [];
+
+		$row = DB::select('
+						SELECT p1_id, p2_id
+						FROM Matches
+						WHERE id = :match_id 
+					',['match_id' => $this->id]);
+
+		$result['player1'] = $row[0]->p1_id;
+		$result['player2'] = $row[0]->p2_id;
+
+		return $result;
+	}
+
+
 	public static function searchMatch($player_id, $player_bet_rating) {
 
+		
 		$response = [];
 
 		$br_upper = $player_bet_rating + 300;
@@ -31,12 +59,16 @@ class Matches extends Model
 								  p1_id != :player_id and
 								  p1_bet_rating >= :br_lower and
 								  p1_bet_rating <= :br_upper
-						',['player_id' => $player_id,'br_lower' => $br_lower, 'br_upper' => $br_upper]);
+						',['player_id'=>$player_id,'br_lower'=>$br_lower, 'br_upper'=>$br_upper]);
 
 		// print_r($matches);
+		// echo '<br> PlayerID: ' .$player_id;
+		// echo '<br> Bet Rating: '. $player_bet_rating
 
 		//if no match is found call create, else add player to an existing match as player2
 		if(empty($matches)) {
+			
+			// echo "Shouldn't have come here....";
 			$result = Matches::createMatch($player_id, $player_bet_rating);
 
 			if(!$result) {
@@ -168,9 +200,31 @@ class Matches extends Model
 							',['match_id' => $match_id]);
 
 		if(!empty($check_accepted)) {
-			$result = true;
+			$result = true;		
 		}
 
 		return $result;
+	}
+
+	public static function chooseFirstTurn($match_id) {
+		
+		$player = rand(0,1);
+
+		DB::table('Matches')
+					->where('id', $match_id)
+					->update(['p1_turn' => $player]);
+
+		return true; 
+	}
+
+	public static function dropMatch($match_id) {
+
+		DB::delete('
+				DELETE
+				FROM Matches
+				WHERE id = :match_id and
+					  match_complete = 0
+			', ['match_id'=>$match_id]);
+
 	}
 }

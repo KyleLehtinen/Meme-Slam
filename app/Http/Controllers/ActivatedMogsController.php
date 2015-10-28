@@ -14,10 +14,12 @@ class ActivatedMogsController extends Controller
 		$stringMogs = Request::input('mogs');
 
 		//convert string data to int for sql query in next method
-		foreach($stringMogs as $sMog) {
-			$mogs[] = (int) $sMog;
+		if(!empty($stringMogs)) {
+			foreach($stringMogs as $sMog) {
+				$mogs[] = (int) $sMog;
+			}	
 		}
-
+		
 		ActivatedMogs::updateBetStatus($owner_id,$mogs);
 	}
 }

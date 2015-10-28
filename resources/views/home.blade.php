@@ -37,7 +37,9 @@
 		</div>
 		<div class="mog-main-container">
 			<aside class="bet-pod-container">
-				<h4>Bet Rating: {{$bet_rating}} {{$bet_count}}/20</h4>
+				<div>
+					<h4>Bet Rating: {{$bet_rating}} {{$bet_count}}/20</h4>
+				</div>
 				<div class="bet-pod">
 					<div class="bet-pod-mogs connectedSortable">
 						@foreach($mogs as $mog)
@@ -56,7 +58,9 @@
 				</div>
 			</aside>
 			<div class="mog-inventory">
-				<h4>Mog Inventory Count: {{count($mogs)}}</h4>
+				<div>
+					<h4>Mog Inventory Count: {{count($mogs)}}</h4>
+				</div>
 				<div class="mog-inv-container">
 					<div class="inv-mogs connectedSortable">
 						@foreach($mogs as $mog)

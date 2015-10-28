@@ -54,10 +54,10 @@ $(function(){
 
 				newBetPodRating += thisRating;
 			});
-			$('.bet-pod-container > h4').text('Bet Rating: ' + newBetPodRating 
+			$('.bet-pod-container div h4').text('Bet Rating: ' + newBetPodRating 
 				+ ' ' + getBetMogCount() + '/' + requiredBetMogs);
 		} else {
-			$('.bet-pod-container > h4').text('Bet Rating: 0');
+			$('.bet-pod-container div h4').text('Bet Rating: 0');
 		}
 	}
 
