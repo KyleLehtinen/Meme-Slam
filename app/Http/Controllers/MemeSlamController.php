@@ -72,9 +72,7 @@ class MemeSlamController extends Controller
 			$match->initializeGame();
 		}
 		
-		echo "<br> RESPONSE: " . print_r($response);
-		// return json_encode($response);
-		return "success";
+		return $response;
 	}
 
 	public function dropMatch() {

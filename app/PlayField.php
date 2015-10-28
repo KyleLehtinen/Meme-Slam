@@ -21,7 +21,7 @@ class PlayField extends Model
 		for($i = 0; $i < count($player_mogs); $i++){
 			foreach($player_mogs[$i] as $mogs) {
 				DB::table('PlayField')->insert(['match_id'=>$match_id, 'mog_id'=>$mogs->active_id]);
-				echo "Mog $mogs->active_id inserted! <br>";
+				// echo "Mog $mogs->active_id inserted! <br>";
 			}
 		}
 

@@ -73,4 +73,10 @@ class User extends Model implements AuthenticatableContract,
 
         return $mogs;
     }
+
+    public static function getUsername($id) {
+        $username = DB::table('User')->where('id', '=', $id)->get('username');
+        
+        return $username;
+    }
 }

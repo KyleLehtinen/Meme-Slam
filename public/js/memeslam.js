@@ -34,6 +34,20 @@ $(function(){
 		clearInterval(event);
 	}
 
+	// function getOpponentDetails(playerRoll) {
+		
+	// 	var opponentRoll = 1
+
+	// 	if(playerRoll == 2) {
+	// 		opponentRoll = 2;
+	// 	} 
+
+	// 	$.ajax({
+	// 		url: '/api/get_opponent_details/' + ,
+	// 		method: 'get',
+	// 	});
+	// }
+
 	function promptAccept(matchID, playerRoll, acceptTimerValue) {
 		var playerAcceptedMatch = false;
 		console.log('MATCH FOUND! PLEASE ACCEPT!');
@@ -110,17 +124,16 @@ $(function(){
 							        		updateGameView('preSearch')
 							        	}
 							        },
-							        error: function(xhr, status, error) {
-  										var err = eval("(" + xhr.responseText + ")");
-									  	alert(err.Message);
-									}
+							        error: function (request, status, error) {
+								        console.dir(error);
+								    }
 	
 							    });
 			        		}, recheckPlayersAcceptTimerValue, playerAcceptedMatch, data);
 			        	}
 			        },
 			        error: function() {
-			        	console.log("An error occurred while trying to post that the player accepted the match!");
+			        	console.dir(error);
 			        }
 
 				});
@@ -216,7 +229,7 @@ $(function(){
 				}
 			},
 			error: function(){
-				console.log("An error occurred attempting to start the match!");
+				console.dir(error);
 			}
 		});
 	});
