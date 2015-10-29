@@ -10,7 +10,8 @@ use App\User;
 use App\ActivatedMogs;
 use App\Matches;
 use App\PlayField;
-
+use App\GameState;
+use App\Player;
 
 class MemeSlamController extends Controller
 {
@@ -33,7 +34,7 @@ class MemeSlamController extends Controller
 
 
 				//get the match record to know the current state of the match
-				$match = Matches::find($active_match_id);
+				$match_detail = Matches::find($active_match_id);
 				
 				//get the mogs that are in the play field
 				$bet_mogs = PlayField::getUsersBettedMogs($active_match_id, $user->id);
@@ -42,6 +43,8 @@ class MemeSlamController extends Controller
 
 			} else {//user is not in a match
 
+				$match_detail = null;
+
 				//Get user's betted mogs
 				$bet_mogs = User::getBettedMogs($user_id);
 				
@@ -49,7 +52,7 @@ class MemeSlamController extends Controller
 				
 			}
 
-			return view('memeslam', ['user' => $user, 'bet_rating' => $bet_rating, 
+			return view('memeslam', ['user' => $user, 'bet_rating' => $bet_rating, 'match_detail', 
 									 'bet_mogs' => $bet_mogs, 'captured_mogs' => $captured_mogs])
 					->withEncryptedCsrfToken(Crypt::encrypt(csrf_token()));
 
@@ -136,5 +139,14 @@ class MemeSlamController extends Controller
 		$response = $match->getTurn();
 
 		return $response;
+	}
+
+	public function getGameState($match_id,$user_id) {
+
+		$response = [];
+		$response[] = GameState::getGameState($match_id, $user_id);
+
+		return $response;
+		// return response()->json($response);
 	}
 }

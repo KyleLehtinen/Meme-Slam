@@ -1,5 +1,17 @@
-$(function(){
+$(function() {
 	
+	var GameState = {};
+
+	var gameViews = {
+		preSearch: $('.pre-search'),
+		gameSearch: $('.game-search'),
+		promptAccept: $('.prompt-accept'),
+		attemptJoin: $('.attempt-join'),
+		joinSuccess: $('.join-successful'),
+		dispMiniGame: $('.slammer-game')
+	};
+
+
 	var matchID;
 	var playerAcceptedMatch;
 	var p1Turn;
@@ -13,6 +25,8 @@ $(function(){
 		userID: userID,
 		betRating: betRating
 	};	
+
+	
 
 	//setup ajax call request headers
 	$.ajaxSetup({
@@ -30,7 +44,7 @@ $(function(){
 		e.preventDefault();
 		
 		//change gamefield view to reflect match is being searched for
-		updateGameView('gameSearch');
+		switchGameView('gameSearch');
 
 		$.ajax({
 			url: '/api/search_for_match',
@@ -59,23 +73,6 @@ $(function(){
 		});
 	});
 
-	function updateGameView(select) {
-		var gameViews = {
-			preSearch: $('.pre-search'),
-			gameSearch: $('.game-search'),
-			promptAccept: $('.prompt-accept'),
-			attemptJoin: $('.attempt-join'),
-			displayFirstPlayer: $('.display-first-player')
-		};
-
-		$('.game-field').children().each(function(){
-			$(this).removeAttr('hidden');
-			$(this).attr('hidden', '');
-		});
-
-		gameViews[select].removeAttr('hidden');
-	}
-
 	function stopPolling(event) {
 		clearInterval(event);
 	}
@@ -85,7 +82,7 @@ $(function(){
 		console.log('MATCH FOUND! PLEASE ACCEPT!');
 
 		//update view
-		updateGameView('promptAccept');
+		switchGameView('promptAccept');
 
 		var data = {
 			matchID: matchID,
@@ -98,7 +95,7 @@ $(function(){
 
 			playerAcceptedMatch = true;
 
-			updateGameView('attemptJoin');
+			switchGameView('attemptJoin');
 		});
 
 		setTimeout(function() {
@@ -117,11 +114,12 @@ $(function(){
 
 			        		initializeMatch(data.matchID);
 			        		
-			        		getOpponentDetail(data.matchID, data.playerRoll);
+			        		// getOpponentDetail(data.matchID, data.playerRoll);
 
-			        		getFirstTurn(data.matchID, data.playerRoll);
+			        		// getFirstTurn(data.matchID, data.playerRoll);
 
-			        		updateGameView('displayFirstPlayer');
+			        		switchGameView('joinSuccess');
+			        		getGameState(data.matchID);
 			        	} else {
 			        		console.log("Opponent has not yet accepted...Rechecking...");
 			        		setTimeout(function() {
@@ -138,11 +136,12 @@ $(function(){
 							        		
 							        		initializeMatch(data.matchID);
 
-							        		getOpponentDetail(data.matchID, data.playerRoll);
+							        		// getOpponentDetail(data.matchID, data.playerRoll);
 
-							        		getFirstTurn(data.matchID, data.playerRoll);
+							        		// getFirstTurn(data.matchID, data.playerRoll);
 
-							        		updateGameView('displayFirstPlayer');
+							        		switchGameView('joinSuccess');
+							        		getGameState(data.matchID);
 
 							        	} else {
 							        		console.log("THIS IS WHERE WE WOULD DROP THE MATCH AND RESET");
@@ -150,7 +149,7 @@ $(function(){
 							        		dropMatch(data.matchID);
 							        		
 							        		//reset view to starting view
-							        		updateGameView('preSearch')
+							        		switchGameView('preSearch')
 							        	}
 							        },
 							        error: function (request, status, error) {
@@ -171,9 +170,75 @@ $(function(){
 			} else {
 				console.log("PLAYER DID NOT ACCEPT THE MATCH!!!");
 
-				updateGameView('preSearch');
+				switchGameView('preSearch');
 			}
 		}, acceptTimerValue, playerAcceptedMatch, data);
+	}
+
+	function getGameState(matchID) {
+		$.ajax({
+			url: '/api/get_game_state/' + matchID + '/' + userID
+		}).done(function(update){
+			updateGameState(update);
+		}).fail(function (request, status, error) {
+		        console.log("Error while retrieving current game state...");
+		        console.dir(error);
+		});
+	}
+
+	function updateGameState(objGameState) {
+		GameState = objGameState[0];
+
+		updateGameView();
+	}
+
+	function updateGameView() {
+		
+		var refreshedList = '';
+
+		//get users playing mogs from GameState
+		var playingMogs = GameState.player.playing_mogs;
+
+		//remove old list of mogs
+		$('.user-mogs').children().remove();
+
+		for(var i = 0; i < playingMogs.length; i++) {
+			var id = playingMogs[i].active_id;
+			var title = playingMogs[i].name + ' | ' + playingMogs[i].rating;
+			var name = playingMogs[i].name;
+			var rating = playingMogs[i].rating;
+			var style = 'background-image: url(\/images\/mogs\/' + playingMogs[i].active_id + ')';
+			var data = playingMogs[i].src_url;
+
+			$('.user-mogs').append('<div id=\"' + id + '\" class=\"mog-img\" title=\"' + title + '\" name=\"' + name 
+									+ '\" rating=\"' + rating + '\"style=\"' + style + '\" data=\"' + data + '\"></div>');
+
+			// refreshedList += htmlEntities('<div id="'+$(this).active_id+'"
+			// 					class="mog-img"
+			// 					title="'+$(this).name+' | '+$(this).rating+'"
+			// 					name="'+$(this).name+'"
+			// 					rating="'$(this).rating+'"
+			// 					style="background-image: url(/images/mogs/'+$(this).active_id+'"
+			// 					data="'+$(this).src_url+'"
+			// 					</div>');
+		}
+
+		$('.user-mogs').append(refreshedList);
+
+	}
+
+	function htmlEntities(str) {
+	    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+	}
+
+	function switchGameView(select) {
+
+		$('.game-field').children().each(function(){
+			$(this).removeAttr('hidden');
+			$(this).attr('hidden', '');
+		});
+
+		gameViews[select].removeAttr('hidden');
 	}
 
 	function initializeMatch(matchID) {

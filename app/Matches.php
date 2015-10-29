@@ -11,7 +11,7 @@ class Matches extends Model
 	protected $fillable = ['players_matched','in_progress',
 							'p1_id','p1_bet_rating','p1_accept',
 							'p2_id','p2_bet_rating','p2_accept',
-							'p1_turn','match_complete','p1_new_mogs','p2_new_mogs'];
+							'active_player_id','match_state','match_complete','p1_new_mogs','p2_new_mogs'];
 
 	//logic that searches for a match, if none found calls createMatch
 	//This is a flawed approach to match making and will need to be updated should meme slam
@@ -31,11 +31,12 @@ class Matches extends Model
 	}
 
 	//return match details given match id
-	public function getMatchDetails() {
-		$match = Matches::find($this->id);
+	// public function getMatch() {
+		
+	// 	$match = Matches::find($this->id);
 
-		return $match;
-	}
+	// 	return $match;
+	// }
 
 	public function getMatchPlayers() {
 
@@ -240,11 +241,17 @@ class Matches extends Model
 
 	public static function chooseFirstTurn($match_id) {
 		
-		$player = rand(0,1);
+		$match = Matches::find($match_id);
+
+		if(rand(0,1)) {
+			$player = $match->p1_id;
+		} else {
+			$player = $match->p2_id;
+		}
 
 		DB::table('Matches')
 					->where('id', $match_id)
-					->update(['p1_turn' => $player]);
+					->update(['active_player_id' => $player]);
 
 		return true; 
 	}
@@ -258,5 +265,19 @@ class Matches extends Model
 					  match_complete = 0
 			', ['match_id'=>$match_id]);
 
+	}
+
+	public static function getOpponentID($match_id, $player_id) {
+
+		$match = Matches::find($match_id);
+		
+		// print_r($match);
+		if($match['p1_id'] == $player_id) {
+			$opponent_id = $match['p2_id'];
+		} else {
+			$opponent_id = $match['p1_id'];
+		}
+
+		return $opponent_id;
 	}
 }

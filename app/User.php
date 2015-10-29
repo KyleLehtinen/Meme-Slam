@@ -94,7 +94,18 @@ class User extends Model implements AuthenticatableContract,
     }
 
     public static function getUsername($id) {
-        $username = DB::table('User')->where('id', '=', $id)->get('username');
+        
+        // $id = (int) $id;
+
+        // $user = User::find($id);
+        // echo "<br>GETTING THE USER OBJECT!!!";
+        // print_r($user);
+        // echo $user['name'];
+        // $username = $user['name'];
+        // echo "$username";
+        $row = DB::table('User')->where('id', '=', $id)->get();
+        // print_r($row[0]->name);
+        $username = $row[0]->name;
         
         return $username;
     }

@@ -30,20 +30,22 @@ class PlayField extends Model
 
 	//Returns mogs tied to the match
 	public static function getUsersBettedMogs($match_id,$owner_id) {
-
+		// echo "getting betted mogs for $owner_id";
 		$mogs = DB::select('
-						SELECT pm.mog_id as active_id, pm.owner_id as owner_id, mm.id, mm.name, mm.src_url, mm.rating
+						SELECT pm.mog_id as active_id, pm.owner_id as owner_id, mm.id, mm.name, mm.rating, mm.src_url, mm.rating
 	                    FROM MogMaster as mm
 	                    RIGHT JOIN PlayField as pm
 	                    ON mm.id = pm.mog_id
 	                    WHERE pm.match_id = :match_id and pm.owner_id = :owner_id and flipped = 0
 					',['match_id' => $match_id, 'owner_id' => $owner_id]);
-
+		// echo "<br>";
+		// print_r($mogs);
+		// echo "<br>";
 		return $mogs;
 	}
 
 	public static function getUsersCapturedMogs($match_id,$owner_id) {
-
+		// echo "getting captured mogs for $owner_id";
 		$mogs = DB::select('
 						SELECT pm.mog_id as active_id, pm.owner_id as owner_id, mm.id, mm.name, mm.src_url, mm.rating
 	                    FROM MogMaster as mm

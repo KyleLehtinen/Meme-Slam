@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="logo-container">
-                <img src="" alt="meme-slam">
+                <img src="../../images/memeslam.png" alt="meme-slam">
             </div>
 
             <form method="POST" action="/auth/login">
