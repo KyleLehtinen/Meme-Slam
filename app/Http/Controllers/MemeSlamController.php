@@ -9,24 +9,50 @@ use Illuminate\Routing\Controller;
 use App\User;
 use App\ActivatedMogs;
 use App\Matches;
+use App\PlayField;
 
 
 class MemeSlamController extends Controller
 {
-	public function preInitialize($user_id) {
+	public function initialize($user_id) {
 
 		$required_bet_count = 20;
 
 		if(count(User::getBettedMogs($user_id)) == $required_bet_count) {
 
+			//get the user
 			$user = Auth::user();
-			
-			$bet_mogs = User::getBettedMogs($user_id);
 
+			//Get the user's bet rating
 			$bet_rating = ActivatedMogs::getBetRating($user_id);
 
-			return view('memeslam', ['bet_mogs' => $bet_mogs, 'bet_rating' => $bet_rating, 'user' => $user])
+			//Check if the user is already in a match
+			$active_match_id = $user->getActiveMatch();
+
+			if($active_match_id) {//user is in a match
+
+
+				//get the match record to know the current state of the match
+				$match = Matches::find($active_match_id);
+				
+				//get the mogs that are in the play field
+				$bet_mogs = PlayField::getUsersBettedMogs($active_match_id, $user->id);
+
+				$captured_mogs = PlayField::getUsersCapturedMogs($active_match_id, $user->id);
+
+			} else {//user is not in a match
+
+				//Get user's betted mogs
+				$bet_mogs = User::getBettedMogs($user_id);
+				
+				$captured_mogs = [];
+				
+			}
+
+			return view('memeslam', ['user' => $user, 'bet_rating' => $bet_rating, 
+									 'bet_mogs' => $bet_mogs, 'captured_mogs' => $captured_mogs])
 					->withEncryptedCsrfToken(Crypt::encrypt(csrf_token()));
+
 		} else {
 			return redirect('/');
 		}
@@ -66,11 +92,6 @@ class MemeSlamController extends Controller
 		
 		$response = [];
 		$response['playersAcceptedMatch'] = Matches::checkPlayersAcceptedMatch($match_id);
-
-		if($response['playersAcceptedMatch'] == true){
-			$match = Matches::find($match_id);
-			$match->initializeGame();
-		}
 		
 		return $response;
 	}
@@ -83,17 +104,36 @@ class MemeSlamController extends Controller
 		return "success";
 	}
 
-	public function getOpponentDetails($match_id, $requester) {
+	public function initializeMatch($match_id) {
+		
+		$match = Matches::find($match_id);
+		$match->initializeGame();
+
+		return "success";
+	}
+
+	public function getOpponentDetails($match_id, $requestor) {
 
 		$match = Matches::find($match_id);
 
 		$players = $match->getMatchPlayers();
 
-		if($requester == 1){
+		if($requestor == 1){
 			$response['opponent'] = Matches::getOpponentDetail($players['player2']);
 		} else {
 			$response['opponent'] = Matches::getOpponentDetail($players['player1']);
 		}
+
+		// $response['p1Turn'] = $match->getTurn();
+
+		return $response;
+	}
+
+	public function getTurn($match_id) {
+		
+		$match = Matches::find($match_id);
+
+		$response = $match->getTurn();
 
 		return $response;
 	}

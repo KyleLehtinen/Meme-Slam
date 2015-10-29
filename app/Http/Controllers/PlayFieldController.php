@@ -15,9 +15,7 @@ class PlayFieldController extends Controller
 {
 	public function loadGameMogs($match_id) {
 
-		$match_players = Matches::getMatchPlayerIDs($match_id);
-
-		PlayField::loadGameMogs($match_id, $match_players);
+		
 
 		// return "success";
 	}

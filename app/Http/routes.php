@@ -23,7 +23,7 @@ Route::get('/', ['middleware' => 'auth', 'uses' => 'UserController@getUser']);
 Route::get('home', ['middleware' => 'auth', 'uses' => 'UserController@getUser']);
 
 //routes to MemeSlam page
-Route::get('/meme_slam/{user_id}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@preInitialize']);
+Route::get('/meme_slam/{user_id}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@initialize']);
 
 // Authentication routes...
 Route::get('auth/login', 'Auth\AuthController@getLogin');
@@ -42,6 +42,8 @@ Route::post('/api/player_accepts_match', ['middleware' => 'auth', 'uses' => 'Mem
 Route::post('/api/player_drop_match', ['middleware' => 'auth', 'uses' => 'MemeSlamController@playerDropMatch']);
 Route::post('/api/drop_match', ['middleware' => 'auth', 'uses' => 'MemeSlamController@dropMatch']);
 
+Route::get('/api/initialize_match/{match_id}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@initializeMatch']);
 Route::get('/api/check_opponent_joined/{match_id}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@checkP2Joined']);
 Route::get('/api/check_players_accepted/{match_id}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@checkPlayersAcceptedMatch']);
-Route::get('/api/get_match_players/{match_id}/{requester}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@getOpponentDetails']);
+Route::get('/api/get_match_players/{match_id}/{requestor}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@getOpponentDetails']);
+Route::get('/api/get_match_turn/{match_id}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@getTurn']);

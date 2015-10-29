@@ -21,6 +21,25 @@ class User extends Model implements AuthenticatableContract,
     protected $fillable = ['name', 'email', 'password', 'collection_rating'];
     protected $hidden = ['password', 'remember_token'];
 
+    public function getActiveMatch() {
+
+        $result = 0;
+        
+        $row = DB::table('Matches')
+                    ->where('match_complete', '=', 0)
+                    ->where(function($query){
+                        $query->where('p1_id', '=', $this->id)
+                            ->orWhere('p2_id', '=', $this->id);
+                    })
+                    ->get();
+
+        if(!empty($row)){
+            $result = $row[0]->id;
+        }
+
+        return $result;                                  
+    }
+
     public function recalcCollectionRating() {
    
         //get this instance's owner mogs
@@ -62,7 +81,7 @@ class User extends Model implements AuthenticatableContract,
     public static function getBettedMogs($owner_id) {
 
         $mogs = DB::select('
-                    SELECT am.id as active_id, mm.id, mm.name, mm.src_url, mm.rating
+                    SELECT am.id as active_id, am.owner_id as owner_id, mm.id, mm.name, mm.src_url, mm.rating
                     FROM MogMaster as mm
                     RIGHT JOIN ActivatedMogs as am
                     ON mm.id = am.mog_id

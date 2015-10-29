@@ -19,11 +19,22 @@ class Matches extends Model
 
 	public function initializeGame() {
 
-		Matches::chooseFirstTurn($this->id);
-		$match_players = $this->getMatchPlayers();
-		PlayField::loadGameMogs($this->id, $match_players);
+		if($this->in_progress == 0) {
 
-		return true;
+			DB::table('Matches')->where('id',$this->id)->update(['in_progress'=>1]);
+			
+			Matches::chooseFirstTurn($this->id);
+			
+			$match_players = $this->getMatchPlayers();
+			PlayField::loadGameMogs($this->id, $match_players);
+		}
+	}
+
+	//return match details given match id
+	public function getMatchDetails() {
+		$match = Matches::find($this->id);
+
+		return $match;
 	}
 
 	public function getMatchPlayers() {
@@ -38,6 +49,19 @@ class Matches extends Model
 
 		$result['player1'] = $row[0]->p1_id;
 		$result['player2'] = $row[0]->p2_id;
+
+		return $result;
+	}
+
+	public function getTurn() {
+
+		$row = DB::select('
+							SELECT p1_turn
+							FROM Matches
+							WHERE id = :id
+						',['id' => $this->id]);
+
+		$result = $row[0]->p1_turn;
 
 		return $result;
 	}
@@ -180,6 +204,7 @@ class Matches extends Model
 										  p2_accept = 1 and
 										  id = :match_id
 								', ['match_id' => $match_id]);
+
 		if(!empty($players_matched)) {
 			DB::update('
 						UPDATE Matches

@@ -2,6 +2,37 @@ $(function(){
 
 	var requiredBetMogs = 20;
 
+
+	//controls mog selection from bet pod and inventory for hero area
+	$('body').on('click','.mog-img', function(e){
+		var title_rating = $(this).attr('title');
+		var style = $(this).attr('style');
+		var url = $(this).attr('data');
+
+		$('.selected-mog').attr('style',style);
+		$('.selected-mog-name').text('Mog Name: ' + title_rating.substring(0,(title_rating.indexOf('|') - 1)));
+		$('.selected-mog-rating').text('Rating: ' + title_rating.substring(title_rating.indexOf('|') + 1));
+		$('.selected-mog-url > a').attr('href',url);
+	});
+
+	//Events for adding/removing mogs from Bet Pod
+	$(".inv-mogs").sortable({
+		connectWith: ".bet-pod-mogs",
+		receive: sortableReceiveLogic,
+		stop: updateBetPodRating
+		
+	});
+
+	$(".bet-pod-mogs").sortable({
+		connectWith: ".inv-mogs",
+		receive: sortableReceiveLogic,
+		stop: updateBetPodRating
+	});
+
+	$('.nav-memeslam').on('click', function(){
+		
+	});
+
 	//Support Jquery UI events - Prevents adding more than requiredBetMogs
 	function sortableReceiveLogic(event,ui) {
 		if ($('.bet-pod-mogs').children().length > requiredBetMogs) {
@@ -75,29 +106,5 @@ $(function(){
 		return betMogCount;
 	}
 
-	//controls mog selection from bet pod and inventory for hero area
-	$('body').on('click','.mog-img', function(e){
-		var title_rating = $(this).attr('title');
-		var style = $(this).attr('style');
-		var url = $(this).attr('data');
-
-		$('.selected-mog').attr('style',style);
-		$('.selected-mog-name').text('Mog Name: ' + title_rating.substring(0,(title_rating.indexOf('|') - 1)));
-		$('.selected-mog-rating').text('Rating: ' + title_rating.substring(title_rating.indexOf('|') + 1));
-		$('.selected-mog-url > a').attr('href',url);
-	});
-
-	//Events for adding/removing mogs from Bet Pod
-	$(".inv-mogs").sortable({
-		connectWith: ".bet-pod-mogs",
-		receive: sortableReceiveLogic,
-		stop: updateBetPodRating
-		
-	});
-
-	$(".bet-pod-mogs").sortable({
-		connectWith: ".inv-mogs",
-		receive: sortableReceiveLogic,
-		stop: updateBetPodRating
-	});
+	
 });

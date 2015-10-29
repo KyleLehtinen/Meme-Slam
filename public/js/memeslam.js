@@ -2,7 +2,8 @@ $(function(){
 	
 	var matchID;
 	var playerAcceptedMatch;
-	var userID = $('.game-field').attr('data');
+	var p1Turn;
+	var userID = $('.game-field').attr('userid');
 	var betRating = $('.game-field').attr('rating');
 	var joinIntervalPollTime = 2000;
 	var acceptTimerValue = 10000;
@@ -24,6 +25,40 @@ $(function(){
         }
     });
 
+    $('.search-for-match').on('click', function(e){
+
+		e.preventDefault();
+		
+		//change gamefield view to reflect match is being searched for
+		updateGameView('gameSearch');
+
+		$.ajax({
+			url: '/api/search_for_match',
+			method: 'post',
+			data: data,
+			dataType: 'json',
+			success: function(e) {
+				matchFound = e.matchFound;
+				matchID = e.matchID;
+				playerRoll = e.playerRoll;
+
+				console.log("Match found???: " + e.matchFound);
+				console.log("Match ID: " + matchID);
+				console.log("Player Roll: " + e.playerRoll);
+				
+				if(matchFound) {
+					promptAccept(matchID, playerRoll, acceptTimerValue);
+				} else {
+					checkPlayerJoin(joinIntervalPollTime,matchID);
+				}
+			},
+			error: function(request, status, error){
+				console.log("Error while searchinf for a match...");
+				console.dir(error);
+			}
+		});
+	});
+
 	function updateGameView(select) {
 		var gameViews = {
 			preSearch: $('.pre-search'),
@@ -44,20 +79,6 @@ $(function(){
 	function stopPolling(event) {
 		clearInterval(event);
 	}
-
-	// function getOpponentDetails(playerRoll) {
-		
-	// 	var opponentRoll = 1
-
-	// 	if(playerRoll == 2) {
-	// 		opponentRoll = 2;
-	// 	} 
-
-	// 	$.ajax({
-	// 		url: '/api/get_opponent_details/' + ,
-	// 		method: 'get',
-	// 	});
-	// }
 
 	function promptAccept(matchID, playerRoll, acceptTimerValue) {
 		var playerAcceptedMatch = false;
@@ -92,12 +113,17 @@ $(function(){
 			        	playersMatched = e.playersMatched;
 
 			        	if(playersMatched) {
-			        		console.log("BOTH PLAYERS ACCEPT! ON TO THE COIN FLIP!")
+			        		console.log("BOTH PLAYERS ACCEPT!")
+
+			        		initializeMatch(data.matchID);
 			        		
 			        		getOpponentDetail(data.matchID, data.playerRoll);
 
+			        		getFirstTurn(data.matchID, data.playerRoll);
+
 			        		updateGameView('displayFirstPlayer');
 			        	} else {
+			        		console.log("Opponent has not yet accepted...Rechecking...");
 			        		setTimeout(function() {
 			        			$.ajax({
 									url: '/api/check_players_accepted/' + data.matchID,
@@ -108,9 +134,13 @@ $(function(){
 							        	var playersAcceptedMatch = e.playersAcceptedMatch;
 
 							        	if(playersAcceptedMatch) {
-							        		console.log("BOTH PLAYERS HAVE ACCEPTED THE MATCH! ON TO THE COIN FLIP!");
+							        		console.log("BOTH PLAYERS HAVE ACCEPTED THE MATCH!");
 							        		
+							        		initializeMatch(data.matchID);
+
 							        		getOpponentDetail(data.matchID, data.playerRoll);
+
+							        		getFirstTurn(data.matchID, data.playerRoll);
 
 							        		updateGameView('displayFirstPlayer');
 
@@ -144,6 +174,20 @@ $(function(){
 				updateGameView('preSearch');
 			}
 		}, acceptTimerValue, playerAcceptedMatch, data);
+	}
+
+	function initializeMatch(matchID) {
+		$.ajax({
+			url: '/api/initialize_match/' + matchID,
+			method: 'get',
+	        success: function() {
+	        	console.log("Match initialized!");	
+	        },
+	        error: function(request, status, error){
+				console.log("Error while checking if opponent joined the match...");
+				console.dir(error);
+			}
+		});
 	}
 
 	function checkPlayerJoin(joinIntervalPollTime,matchID) {
@@ -187,40 +231,6 @@ $(function(){
 		});
 	}
 
-	$('.search-for-match').on('click', function(e){
-
-		e.preventDefault();
-		
-		//change gamefield view to reflect match is being searched for
-		updateGameView('gameSearch');
-
-		$.ajax({
-			url: '/api/search_for_match',
-			method: 'post',
-			data: data,
-			dataType: 'json',
-			success: function(e) {
-				matchFound = e.matchFound;
-				matchID = e.matchID;
-				playerRoll = e.playerRoll;
-
-				console.log("Match found???: " + e.matchFound);
-				console.log("Match ID: " + matchID);
-				console.log("Player Roll: " + e.playerRoll);
-				
-				if(matchFound) {
-					promptAccept(matchID, playerRoll, acceptTimerValue);
-				} else {
-					checkPlayerJoin(joinIntervalPollTime,matchID);
-				}
-			},
-			error: function(request, status, error){
-				console.log("Error while searchinf for a match...");
-				console.dir(error);
-			}
-		});
-	});
-
 	function getOpponentDetail(matchID, requestor) {
 		$.ajax({
 			url: '/api/get_match_players/' + matchID + '/' + requestor ,
@@ -233,5 +243,47 @@ $(function(){
 				console.dir(error);
 			}
 		});
+	}
+
+	function getFirstTurn(matchID, playerRoll) {
+		$.ajax({
+			url: '/api/get_match_turn/' + matchID,
+			method: 'get',
+			dataType: 'json',
+			success: function(p1Turn) {
+				if(playerRoll == 1) {
+					if(p1Turn){
+						$('.first-player').text('You');	
+					} else {
+						$('.first-player').text('Opponent');
+					}
+				} else {
+					if(p1Turn) {
+						$('.first-player').text('Opponent');
+					} else {
+						$('.first-player').text('You');	
+					}
+				}
+			},
+			error: function(request, status, error){
+				console.dir(error);
+			}
+		});
+	}
+
+	function getCurrentTurn(matchID) {
+		$.ajax({
+			url: '/api/get_match_turn/' + matchID,
+			method: 'get',
+			dataType: 'json',
+			success: function(e) {
+				p1Turn = e;
+			},
+			error: function(request, status, error){
+				console.dir(error);
+			}
+		});
+
+		return p1Turn;
 	}
 });
