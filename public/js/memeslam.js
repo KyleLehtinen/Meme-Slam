@@ -207,7 +207,7 @@ $(function() {
 			var title = playingMogs[i].name + ' | ' + playingMogs[i].rating;
 			var name = playingMogs[i].name;
 			var rating = playingMogs[i].rating;
-			var style = 'background-image: url(\/images\/mogs\/' + playingMogs[i].active_id + ')';
+			var style = 'background-image: url(\/images\/mogs\/' + playingMogs[i].id + ')';
 			var data = playingMogs[i].src_url;
 
 			$('.user-mogs').append('<div id=\"' + id + '\" class=\"mog-img\" title=\"' + title + '\" name=\"' + name 
