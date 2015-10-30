@@ -4,11 +4,13 @@
 @endsection
 
 @section('main')
-<div class="background">
-    <div class="background-mogs-container">
+<div class="background-mogs-container">
+{{--     <div class="background-mogs-container">
         
-    </div>
-    <div class="login-container">
+    </div> --}}
+    
+</div>
+<div class="login-container">
         <div class="login-container-content">
             <div class="register-login">
                 <div class="register">
@@ -45,5 +47,4 @@
             </form>
         </div>
     </div>
-</div>
 @endsection
