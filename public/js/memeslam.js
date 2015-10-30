@@ -194,7 +194,7 @@ $(function() {
 		$.ajax({
 			url: '/api/check_for_active_match/' + userID
 		}).done(function(match) {
-			if(match) {
+			if(match != "0") {
 				matchID = match;
 				getGameState(match)
 			}
