@@ -156,4 +156,11 @@ class MemeSlamController extends Controller
 
 		return $result;
 	}
+
+	public static function checkForActiveMatch($user_id) {
+
+		$match_id = Matches::checkForActiveMatch($user_id);
+
+		return $match_id;
+	}
 }

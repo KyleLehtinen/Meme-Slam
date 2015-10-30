@@ -5,9 +5,9 @@
 
 @section('main')
 <div class="background-mogs-container">
-{{--     <div class="background-mogs-container">
-        
-    </div> --}}
+
+</div>
+<div class="background-cover">
     
 </div>
 <div class="login-container">
@@ -39,7 +39,7 @@
                     
                 </div>
                 <button class="btn-submit">
-                    Submit
+                    Login
                 </button>
             
             </form>

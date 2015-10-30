@@ -27,6 +27,35 @@
 			<h3>Randomly selecting who goes first... Done!</h3>
 			<h3><span class="first-player"></span> will go first...</h3>
 		</div>
+		<div class="display-stack" hidden>
+			<h3>It's <span class="current-player"></span>'s turn!</h3>
+			<div class="stack mog-imgs">
+				
+			</div>
+		</div>
+		<div class="slammer-game" hidden>
+			<div class="slammer">
+				<div class="upper"></div>
+				<div class="gates">
+					<div class="enter"></div>
+					<div class="exit"></div>
+				</div>
+				<div class="lower"></div>
+			</div>
+		</div>
+		<div class="slammer-explosion" hidden>
+			
+		</div>
+		<div class="process-slammer-game" hidden>
+			
+		</div>
+		<div class="slammer-game-results" hidden>
+			<h3 class=""></h3>
+			<h3></h3>
+		</div>
+		<div class="match-results">
+			
+		</div>	
 	</div>
 	<div class="game-details-container">
 		<div class="game-details">

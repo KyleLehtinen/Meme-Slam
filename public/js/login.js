@@ -8,6 +8,7 @@ $(function(){
         $('#conf-pass').removeAttr('hidden');
         $('#username').removeAttr('hidden');
         $('#remember-me').attr('hidden','');
+        $('.btn-submit').text('Register');
 
         $('.register-login').children().removeClass('login-selected');
         $(this).addClass('login-selected');
@@ -19,7 +20,7 @@ $(function(){
         $('#conf-pass').attr('hidden','');
         $('#username').attr('hidden','');
         $('#remember-me').removeAttr('hidden');
-
+        $('.btn-submit').text('Login');
         $('.register-login').children().removeClass('login-selected');
         $(this).addClass('login-selected');
     });

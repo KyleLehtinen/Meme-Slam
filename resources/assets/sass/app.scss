@@ -27,6 +27,15 @@ html {
     height: 100%;
 }
 
+.background-cover {
+    position: absolute;
+    background: rgba(252, 136, 29, 0.7);
+    top: 0;
+    bottom: 0;
+    width: 100%;
+
+}
+
 .background-mogs-container .mog-img {
     margin: 10px;
     position: relative;
@@ -102,7 +111,7 @@ LOGIN SCREEN CSS
 .login-container {
     overflow: hidden;
     width: 400px;
-    background: rgba(238, 238, 238, 0.95);
+    background: rgba(238, 238, 238, 1);
     height: 480px;
     position: absolute;
     border-radius: 2%;
@@ -127,12 +136,6 @@ LOGIN SCREEN CSS
     margin: 0 10px;
 }
 
-/*
-.register:hover {
-  background-color: #E96308;
-}
-*/
-
 .register > a {
     /* margin: 2.7em 0 0 4em; */
     /* display: inline-block; */
@@ -150,11 +153,11 @@ LOGIN SCREEN CSS
     margin: 0 10px;
 }
 
-/*
-.login:hover {
-    background-color: #E96308;
+
+.login:hover, .register:hover {
+    cursor:pointer
 }
-*/
+
 
 .login > a {
     /* margin: 45px 0 0 50px; */
@@ -168,7 +171,7 @@ LOGIN SCREEN CSS
 
 .fields-container input {
     padding: 5px 0px;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
     border-radius: 5px;
     outline: none;
     border: 1px solid #bbb;
@@ -176,6 +179,7 @@ LOGIN SCREEN CSS
 
 .register-login {
     position: absolute;
+    font-size: 1.1em;
     top: 230px;
     left: 50%;
     -webkit-transform: translateX(-50%);
@@ -217,7 +221,7 @@ form {
     flex-direction: column;
     -webkit-justify-content: space-around;
     -ms-flex-pack: distribute;
-    justify-content: space-around;
+    justify-content: flex-start;
     top: 255px;
     left: 50%;
     -webkit-transform: translateX(-50%);
@@ -229,14 +233,15 @@ form {
 
 #remember-me {
     position: absolute;
-    top: 400px;
+    top: 337px;
     left: 72px;
     width: 110px;
     font-size: 11px;
 }
 
 .btn-submit {
-    top: 425px;
+    top: 418px;
+    padding: 10px 0;
     left: 50%;
     -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
@@ -244,8 +249,8 @@ form {
     outline: 0;
     border: none;
     width: 250px;
-    height: 35px;
-    background: rgba(253, 195, 70, 0.95);
+    /* height: 35px; */
+    background: #FC881D;
     border-radius: 5px;
     color: white;
 }

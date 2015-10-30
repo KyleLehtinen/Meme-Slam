@@ -8,7 +8,12 @@ $(function() {
 		promptAccept: $('.prompt-accept'),
 		attemptJoin: $('.attempt-join'),
 		joinSuccess: $('.join-successful'),
-		dispMiniGame: $('.slammer-game')
+		0: $('.display-stack'),
+		1: $('.slammer-game'),
+		2: $('.slammer-explosion'),
+		3: $('.process-slammer-game'),
+		4: $('.slammer-game-results'),
+		5: $('.match-results')
 	};
 
 
@@ -26,7 +31,8 @@ $(function() {
 		betRating: betRating
 	};	
 
-	
+	//check if user is in an existing match
+	checkForActiveMatch(userID);
 
 	//setup ajax call request headers
 	$.ajaxSetup({
@@ -39,6 +45,7 @@ $(function() {
         }
     });
 
+    //MATCHMAKING EVENTS
     $('.search-for-match').on('click', function(e){
 
 		e.preventDefault();
@@ -72,10 +79,6 @@ $(function() {
 			}
 		});
 	});
-
-	function stopPolling(event) {
-		clearInterval(event);
-	}
 
 	function promptAccept(matchID, playerRoll, acceptTimerValue) {
 		var playerAcceptedMatch = false;
@@ -118,7 +121,7 @@ $(function() {
 
 			        		// getFirstTurn(data.matchID, data.playerRoll);
 
-			        		switchGameView('joinSuccess');
+			        		// switchGameView('joinSuccess');
 			        		getGameState(data.matchID);
 			        	} else {
 			        		console.log("Opponent has not yet accepted...Rechecking...");
@@ -140,8 +143,10 @@ $(function() {
 
 							        		// getFirstTurn(data.matchID, data.playerRoll);
 
-							        		switchGameView('joinSuccess');
+							        		// switchGameView('joinSuccess');
 							        		getGameState(data.matchID);
+
+							        		//call 
 
 							        	} else {
 							        		console.log("THIS IS WHERE WE WOULD DROP THE MATCH AND RESET");
@@ -175,26 +180,59 @@ $(function() {
 		}, acceptTimerValue, playerAcceptedMatch, data);
 	}
 
+	//GAME EVENTS
+
+
+
+
+	//FUNCTION CALLS
+	function stopPolling(event) {
+		clearInterval(event);
+	}
+
+	function checkForActiveMatch(userID) {
+		$.ajax({
+			url: '/api/check_for_active_match/' + userID
+		}).done(function(match) {
+			if(match) {
+				matchID = match;
+				getGameState(match)
+			}
+		}).fail(function (request, status, error) {
+		    console.log("Error while retrieving current game state...");
+		    console.dir(error);
+		});
+	}
+
 	function getGameState(matchID) {
 		$.ajax({
 			url: '/api/get_game_state/' + matchID + '/' + userID
 		}).done(function(update){
 			updateGameState(update);
 		}).fail(function (request, status, error) {
-		        console.log("Error while retrieving current game state...");
-		        console.dir(error);
+		    console.log("Error while retrieving current game state...");
+		    console.dir(error);
 		});
 	}
 
 	function updateGameState(objGameState) {
 		GameState = objGameState[0];
 
+		//get match_state from GameState
+		var matchState = GameState.match_state;;
+
+		//check if it's the players turn
+		//if not
+			//trigger polling event
+
+		//else players turn check current match state 
+
 		updateGameView();
 	}
 
 	function updateGameView() {
 		
-		var refreshedList = '';
+		
 
 		//get users playing mogs from GameState
 		var playingMogs = GameState.player.playing_mogs;
@@ -213,9 +251,6 @@ $(function() {
 			$('.user-mogs').append('<div id=\"' + id + '\" class=\"mog-img\" title=\"' + title + '\" name=\"' + name 
 									+ '\" rating=\"' + rating + '\"style=\"' + style + '\" data=\"' + data + '\"></div>');
 		}
-
-		$('.user-mogs').append(refreshedList);
-
 	}
 
 	function switchGameView(select) {
@@ -283,53 +318,15 @@ $(function() {
 		});
 	}
 
-	function getOpponentDetail(matchID, requestor) {
-		$.ajax({
-			url: '/api/get_match_players/' + matchID + '/' + requestor ,
-			method: 'get',
-			dataType: 'json',
-			success: function(e) {
-				$('.opponent-player').text(e.opponent);
-			},
-			error: function(request, status, error){
-				console.dir(error);
-			}
-		});
-	}
-
-	function getFirstTurn(matchID, playerRoll) {
-		$.ajax({
-			url: '/api/get_match_turn/' + matchID,
-			method: 'get',
-			dataType: 'json',
-			success: function(p1Turn) {
-				if(playerRoll == 1) {
-					if(p1Turn){
-						$('.first-player').text('You');	
-					} else {
-						$('.first-player').text('Opponent');
-					}
-				} else {
-					if(p1Turn) {
-						$('.first-player').text('Opponent');
-					} else {
-						$('.first-player').text('You');	
-					}
-				}
-			},
-			error: function(request, status, error){
-				console.dir(error);
-			}
-		});
-	}
+	
 
 	function getCurrentTurn(matchID) {
 		$.ajax({
 			url: '/api/get_match_turn/' + matchID,
 			method: 'get',
 			dataType: 'json',
-			success: function(e) {
-				p1Turn = e;
+			success: function(isTurn) {
+
 			},
 			error: function(request, status, error){
 				console.dir(error);
@@ -338,4 +335,60 @@ $(function() {
 
 		return p1Turn;
 	}
+
+
+
+
+
+
+
+
+
+	// function checkGameState() {
+	// 	var pollForUpdate = setInterval(function(){
+	// 		$.ajax({
+	// 			url: '/api/check_game_state/'+match userID,
+	// 		});
+	// 	},1000);
+	// }
+
+	// function getOpponentDetail(matchID, requestor) {
+	// 	$.ajax({
+	// 		url: '/api/get_match_players/' + matchID + '/' + requestor ,
+	// 		method: 'get',
+	// 		dataType: 'json',
+	// 		success: function(e) {
+	// 			$('.opponent-player').text(e.opponent);
+	// 		},
+	// 		error: function(request, status, error){
+	// 			console.dir(error);
+	// 		}
+	// 	});
+	// }
+
+	// function getFirstTurn(matchID, playerRoll) {
+	// 	$.ajax({
+	// 		url: '/api/get_match_turn/' + matchID,
+	// 		method: 'get',
+	// 		dataType: 'json',
+	// 		success: function(p1Turn) {
+	// 			if(playerRoll == 1) {
+	// 				if(p1Turn){
+	// 					$('.first-player').text('You');	
+	// 				} else {
+	// 					$('.first-player').text('Opponent');
+	// 				}
+	// 			} else {
+	// 				if(p1Turn) {
+	// 					$('.first-player').text('Opponent');
+	// 				} else {
+	// 					$('.first-player').text('You');	
+	// 				}
+	// 			}
+	// 		},
+	// 		error: function(request, status, error){
+	// 			console.dir(error);
+	// 		}
+	// 	});
+	// }
 });

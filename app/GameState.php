@@ -7,13 +7,13 @@ class GameState
 {
 	public $player;
 	public $opponent;
-	public $game_state;
+	public $match_state;
 	public $active_player;
 
-	public function __construct($player, $opponent, $game_state, $active_player) {
+	public function __construct($player, $opponent, $match_state, $active_player) {
 		$this->player = $player;
 		$this->opponenet = $opponent;
-		$this->game_state = $game_state;
+		$this->match_state = $match_state;
 		$this->active_player = $active_player;
 	}
 
@@ -21,7 +21,6 @@ class GameState
 
 		//get match
 		$match = Matches::find($match_id);
-		// $match = Matches::getMatch($match_id);
 
 		//get player's opponent id
 		$opponent_id = Matches::getOpponentID($match_id, $player_id);

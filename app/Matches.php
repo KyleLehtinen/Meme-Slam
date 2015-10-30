@@ -67,6 +67,27 @@ class Matches extends Model
 		return $result;
 	}
 
+	public static function checkForActiveMatch($user_id) {
+
+		$result = 0;
+
+		//see if given user id is player 1 or 2 in an active match
+		$row = DB::table('Matches')
+					->where('in_progress', '=', 1)
+					->where(function($query) use($user_id){
+						$query->where('p1_id', '=', $user_id)
+							  ->orWhere('p2_id', '=', $user_id);
+					})
+					->get();
+
+		//if match exists prep to return it
+		if(!empty($row)) {
+			$result = $row[0]->id;
+		}
+
+		return $result;
+	}
+
 	public static function getOpponentDetail($opponent_id) {
 		$opponent = DB::select('
 							SELECT name
