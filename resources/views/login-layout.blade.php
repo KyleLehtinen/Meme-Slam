@@ -5,7 +5,7 @@
 	<title>Meme Slam</title>
 	{!! HTML::style('css/app.css') !!}
 </head>
-<body>
+<body class="login-body">
 
 	@yield('header')
 	@yield('main')
