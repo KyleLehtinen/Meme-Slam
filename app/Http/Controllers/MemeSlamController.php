@@ -12,6 +12,7 @@ use App\Matches;
 use App\PlayField;
 use App\GameState;
 use App\Player;
+use App\MogMaster;
 
 class MemeSlamController extends Controller
 {
@@ -147,6 +148,12 @@ class MemeSlamController extends Controller
 		$response[] = GameState::getGameState($match_id, $user_id);
 
 		return $response;
-		// return response()->json($response);
+	}
+
+	public static function getBackgroundMogs() {
+
+		$result = MogMaster::getBackgroundMogs();
+
+		return $result;
 	}
 }

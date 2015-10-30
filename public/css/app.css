@@ -2,20 +2,40 @@
 /************
 RESETS
 ************/
-/*
 html {
-    box-sizing: border-box;
-    color: #444;
-    font: 12pt 'Open Sans', Arial;
-    font-weight: 400;
-}
+  box-sizing: border-box;
+  color: #444;
+  font: 12pt 'Open Sans', Arial;
+  font-weight: 400; }
 
 *, *::before, *::after {
-    box-sizing: inherit;
-    color: inherit;
-    font: inherit;
-}
-*/
+  box-sizing: inherit;
+  color: inherit;
+  font: inherit; }
+
+.background-mogs-container {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  overflow: hidden; }
+
+.background-mogs-container .mog-img {
+  margin: 0.7em;
+  position: relative;
+  /* display: inline-block; */
+  background-size: cover;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: solid #FEBF44 2px;
+  box-shadow: 0px 10px 30px -8px rgba(0, 0, 0, 0.75); }
+
 body {
   margin: 0;
   padding: 0;
@@ -68,7 +88,7 @@ LOGIN SCREEN CSS
 .login-container {
   overflow: hidden;
   width: 25em;
-  background: rgba(216, 216, 216, 0.6);
+  background: rgba(238, 238, 238, 0.95);
   height: 25em;
   position: absolute;
   border-radius: 50%;
@@ -76,44 +96,47 @@ LOGIN SCREEN CSS
   left: 50%;
   vertical-align: baseline;
   -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%); }
-
-.register-login {
-  /*overflow: hidden;*/ }
+  transform: translate(-50%, -50%);
+  box-shadow: 0px 8px 54px -11px black; }
 
 .register {
-  /*overflow: hidden;*/
   position: absolute;
-  left: 3em;
+  left: 0em;
   top: 0em;
-  border-bottom: solid black;
-  width: 9.5em;
+  border-bottom: solid rgba(0, 0, 0, 0.8) 1px;
+  width: 200px;
   height: 4.4em;
   text-align: center;
-  border-right: solid black; }
+  border-right: solid rgba(0, 0, 0, 0.8) 1px; }
 
+/*
 .register:hover {
-  background-color: red;
-  /*overflow: hidden;*/ }
-
+  background-color: #E96308;
+}
+*/
 .register > a {
-  margin: 2.7em 0 0 1em;
+  margin: 2.7em 0 0 4em;
   display: inline-block; }
 
 .login {
   position: absolute;
-  left: 12.7em;
+  left: 200px;
   top: 0em;
-  border-bottom: solid black;
-  width: 9.4em;
-  height: 4.4em; }
+  border-bottom: solid rgba(0, 0, 0, 0.8) 1px;
+  width: 201px;
+  height: 70px; }
 
+/*
 .login:hover {
-  background-color: green; }
-
+    background-color: #E96308;
+}
+*/
 .login > a {
-  margin: 2.7em 0 0 2.6em;
+  margin: 45px 0 0 50px;
   display: inline-block; }
+
+.login-selected {
+  background-color: #FC881D; }
 
 .register-login {
   display: -webkit-flex;
@@ -127,11 +150,13 @@ LOGIN SCREEN CSS
   text-align: center;
   position: absolute;
   top: 4.4em;
-  left: 7.2em; }
+  left: 50%;
+  -webkit-transform: translatex(-50%);
+  transform: translatex(-50%); }
 
 .logo-container > img {
-  width: 10.8em;
-  height: 10.8em; }
+  width: 172px;
+  height: 172px; }
 
 form {
   position: absolute;
@@ -140,8 +165,8 @@ form {
   text-align: center; }
 
 .fields-container {
-  width: 15em;
-  height: 6em;
+  width: 200px;
+  height: 110px;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -152,37 +177,33 @@ form {
   -webkit-justify-content: space-around;
   -ms-flex-pack: distribute;
   justify-content: space-around;
-  top: 14.9em;
-  left: 5em; }
+  top: 240px;
+  left: 100px; }
 
 #remember-me {
   position: absolute;
-  top: 25.2em;
-  left: 11em;
-  width: 8em;
-  font-size: 0.8em; }
+  top: 334px;
+  left: 140px;
+  width: 110px;
+  font-size: 11px; }
 
-/*
 .btn-submit {
-    position: absolute;
-    height: 2.8em;
-    top: 22em;
-    left: 4.5em;
-    border-top: solid black;
-    width: 16em;
-}
-*/
+  position: absolute;
+  height: 2.8em;
+  top: 22em;
+  left: 4.5em;
+  width: 16em; }
+
 .btn-submit button {
   position: absolute;
-  height: 5.8em;
-  top: 31em;
-  left: 5.5em;
-  border-top: solid black;
-  width: 25.3em;
-  background: rgba(206, 206, 206, 0); }
-
-.btn-submit button:hover {
-  background-color: lightblue; }
+  height: 50px;
+  /* top: 31em; */
+  left: 50%;
+  border-top: solid rgba(0, 0, 0, 0.8) 1px;
+  width: 260px;
+  background: rgba(253, 195, 70, 0.95);
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%); }
 
 /************
 Jamaican Css in full force below
@@ -422,6 +443,20 @@ SLAMMER CSS
   right: 0px;
   z-index: 1; }
 
+::-webkit-input-placeholder {
+  text-align: center; }
+
+:-moz-placeholder {
+  /* Firefox 18- */
+  text-align: center; }
+
+::-moz-placeholder {
+  /* Firefox 19+ */
+  text-align: center; }
+
+:-ms-input-placeholder {
+  text-align: center; }
+
 /*
 .mog-img:hover:before {
   display: block;
@@ -457,6 +492,8 @@ SLAMMER CSS
   top: -8px;
   left:1em;
 }
+
+
 */
 /*
 .mog-content h5, h6 {

@@ -5,13 +5,16 @@
 
 @section('main')
 <div class="background">
+    <div class="background-mogs-container">
+        
+    </div>
     <div class="login-container">
         <div class="login-container-content">
             <div class="register-login">
                 <div class="register">
                     <a>Register</a>
                 </div>
-                <div class="login">
+                <div class="login login-selected">
                     <a>Login</a>
                 </div>
             </div>

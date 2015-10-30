@@ -212,23 +212,10 @@ $(function() {
 
 			$('.user-mogs').append('<div id=\"' + id + '\" class=\"mog-img\" title=\"' + title + '\" name=\"' + name 
 									+ '\" rating=\"' + rating + '\"style=\"' + style + '\" data=\"' + data + '\"></div>');
-
-			// refreshedList += htmlEntities('<div id="'+$(this).active_id+'"
-			// 					class="mog-img"
-			// 					title="'+$(this).name+' | '+$(this).rating+'"
-			// 					name="'+$(this).name+'"
-			// 					rating="'$(this).rating+'"
-			// 					style="background-image: url(/images/mogs/'+$(this).active_id+'"
-			// 					data="'+$(this).src_url+'"
-			// 					</div>');
 		}
 
 		$('.user-mogs').append(refreshedList);
 
-	}
-
-	function htmlEntities(str) {
-	    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 	}
 
 	function switchGameView(select) {
