@@ -19,7 +19,7 @@ $(function(){
         $('#conf-pass').attr('hidden','');
         $('#username').attr('hidden','');
         $('#remember-me').removeAttr('hidden');
-        
+
         $('.register-login').children().removeClass('login-selected');
         $(this).addClass('login-selected');
     });
@@ -29,10 +29,19 @@ $(function(){
     }
 
     function loadBackground() {
+
+        var w = window.innerWidth;
+        var h = window.innerHeight;    
+
+        var multiplier = Math.floor(h /120) + 1;
+        var count = (Math.floor((multiplier * (w / 120)))) + 5;
+
+        // for(var i = 0; i < )
+
         $.ajax({
-            url: '/api/get_background_mogs',
+            url: '/api/get_background_mogs/',
         }).done(function(data){
-            for(var i = 0; i < 105; i++) {
+            for(var j = 0; j < count; j++) {
 
                 var randomIdx = Math.floor(getRandomArbitrary(1,data.length));
                 var style = 'background-image: url(\/images\/mogs\/' + data[randomIdx] + ')';

@@ -27,7 +27,7 @@
             <form method="POST" action="/auth/login">
                 {!! csrf_field() !!}
                 <div class="fields-container">
-                    <input type="email" name="email" placeholder="Enter E-mail">
+                    <input type="email" name="email" placeholder="Email Address">
                     <input id="username"type="text" name="name" value="" placeholder="Username" hidden>
                     <input type="password" name="password" id="password" placeholder="Password">
                     <input id="conf-pass" type="password" name="password_confirmation" placeholder="Confirm Password" hidden>
@@ -38,12 +38,10 @@
                     </label>
                     
                 </div>
-
-                <div class="btn-submit">
-                   <button>
-                       Submit
-                   </button>
-                </div>
+                <button class="btn-submit">
+                    Submit
+                </button>
+            
             </form>
         </div>
     </div>

@@ -28,7 +28,7 @@ html {
 }
 
 .background-mogs-container .mog-img {
-    margin: 0.7em;
+    margin: 10px;
     position: relative;
     /* display: inline-block; */
     background-size: cover;
@@ -86,37 +86,38 @@ a {
 LOGIN SCREEN CSS
 ****/
 .login-container-content {
-  position: relative;
-  width: 25em;
-  height: 25em;
-  /*overflow: hidden;*/
+    position: relative;
+    width: 25em;
+    height: 25em;
+    /* overflow: hidden; */
 }
 
 .login-container {
     overflow: hidden;
-    width: 25em;
+    width: 400px;
     background: rgba(238, 238, 238, 0.95);
-    height: 25em;
+    height: 480px;
     position: absolute;
-    border-radius: 50%;
+    border-radius: 2%;
     top: 50%;
     left: 50%;
     vertical-align: baseline;
+    -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
-    -webkit-box-shadow: 0px 8px 54px -11px rgba(0,0,0,1);
-    -moz-box-shadow: 0px 8px 54px -11px rgba(0,0,0,1);
-    box-shadow: 0px 8px 54px -11px rgba(0,0,0,1);
+    box-shadow: 0px 8px 54px -11px black;
 }
 
 .register {
-    position: absolute;
-    left: 0em;
-    top: 0em;
-    border-bottom: solid rgba(0, 0, 0, 0.8) 1px;
-    width: 200px;
-    height: 4.4em;
-    text-align: center;
-    border-right: solid rgba(0, 0, 0, 0.8) 1px;
+    /* position: absolute; */
+    /* left: 0em; */
+    /* top: 0em; */
+    /* border-bottom: solid rgba(0, 0, 0, 0.8) 1px; */
+    /* width: 200px; */
+    /* height: 4.4em; */
+    /* text-align: center; */
+    /* border-right: solid rgba(0, 0, 0, 0.8) 1px; */
+    display: inline-block;
+    margin: 0 10px;
 }
 
 /*
@@ -126,17 +127,20 @@ LOGIN SCREEN CSS
 */
 
 .register > a {
-    margin: 2.7em 0 0 4em;
-    display: inline-block;
+    /* margin: 2.7em 0 0 4em; */
+    /* display: inline-block; */
 }
 
 .login {
-    position: absolute;
-    left: 200px;
-    top: 0em;
-    border-bottom: solid rgba(0, 0, 0, 0.8) 1px;
-    width: 201px;
-    height: 70px;
+    /* position: absolute; */
+    /* left: 200px; */
+    /* top: 0em; */
+    /* border-bottom: solid rgba(0, 0, 0, 0.8) 1px; */
+    /* width: 201px; */
+    /* height: 70px; */
+    /* display: inline-block; */
+    display: inline-block;
+    margin: 0 10px;
 }
 
 /*
@@ -146,42 +150,57 @@ LOGIN SCREEN CSS
 */
 
 .login > a {
-    margin: 45px 0 0 50px;
-    display: inline-block;
+    /* margin: 45px 0 0 50px; */
+    /* display: inline-block; */
 }
 
 .login-selected {
-    background-color: #FC881D;
+    /* background-color: #FC881D; */
+    color: #FC881D;
+}
+
+.fields-container input {
+    padding: 5px 0px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid #bbb;
 }
 
 .register-login {
-  display: flex;
-  justify-content: space-around;
+    position: absolute;
+    top: 230px;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    width: 200px;
+    text-align: center;
 }
 
 .logo-container {
     text-align: center;
     position: absolute;
-    top: 4.4em;
+    top: 20px;
     left: 50%;
+    -webkit-transform: translatex(-50%);
     transform: translatex(-50%);
 }
 
-.logo-container > img{
-    width: 172px;
-    height: 172px;
+.logo-container > img {
+    width: 185px;
+    height: 185px;
 }
 
 form {
-  position: absolute;
-  /*display: flex;*/
-  padding: 1em;
-  text-align: center;
+    /* position: absolute; */
+    /* display: flex; */
+    /* padding: 1em; */
+    /* text-align: center; */
 }
 
 .fields-container {
-    width: 200px;
-    height: 110px;
+    width: 270px;
+    height: 175px;
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
@@ -192,37 +211,37 @@ form {
     -webkit-justify-content: space-around;
     -ms-flex-pack: distribute;
     justify-content: space-around;
-    top: 240px;
-    left: 100px;
+    top: 255px;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    padding: 10px;
+    border-radius: 5px;
+    /* background-color: white; */
 }
 
 #remember-me {
     position: absolute;
-    top: 334px;
-    left: 140px;
+    top: 400px;
+    left: 71px;
     width: 110px;
     font-size: 11px;
 }
 
-
 .btn-submit {
-    position: absolute;
-    height: 2.8em;
-    top: 22em;
-    left: 4.5em;
-    width: 16em;
-}
-
-
-.btn-submit button {
-    position: absolute;
-    height: 50px;
-    /* top: 31em; */
+    top: 425px;
+    padding: 9px 0px;
     left: 50%;
-    border-top: solid rgba(0, 0, 0, 0.8) 1px;
-    width: 260px;
-    background: rgba(253, 195, 70, .95);
+    -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
+    position: absolute;
+    outline: 0;
+    border: none;
+    width: 250px;
+    height: 35px;
+    background: rgba(253, 195, 70, 0.95);
+    border-radius: 5px;
+    color: white;
 }
 
 /************
@@ -466,20 +485,21 @@ SLAMMER CSS
 }
 
 ::-webkit-input-placeholder {
-   text-align: center;
+   padding-left: 5px;
 }
-
-:-moz-placeholder { /* Firefox 18- */
+/*
+:-moz-placeholder {
    text-align: center;  
 }
 
-::-moz-placeholder {  /* Firefox 19+ */
+::-moz-placeholder {  
    text-align: center;  
 }
 
 :-ms-input-placeholder {  
    text-align: center; 
 }
+*/
 
 /*
 .mog-img:hover:before {
