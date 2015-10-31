@@ -1,13 +1,5 @@
 $(function() {
-	
-	// $.keepalive =     
-	//     setInterval(function() {
-	//        $.ajax({
-	//           url: '/ping.html',
-	//           cache: false
-	//        });         
- //    }, 60000);    
-
+  
 	var GameState = {};
 
 	var gameViews = {
@@ -24,10 +16,8 @@ $(function() {
 		5: $('.match-results')
 	};
 
-
 	var matchID;
 	var playerAcceptedMatch;
-	var p1Turn;
 	var userID = $('.game-field').attr('userid');
 	var betRating = $('.game-field').attr('rating');
 	var joinIntervalPollTime = 2000;
@@ -39,9 +29,6 @@ $(function() {
 		betRating: betRating
 	};	
 
-	//check if user is in an existing match
-	checkForActiveMatch(userID);
-
 	//setup ajax call request headers
 	$.ajaxSetup({
         beforeSend: function (xhr) {
@@ -52,6 +39,9 @@ $(function() {
             }
         }
     });
+
+	//check if user is in an existing match
+	checkForActiveMatch(userID);
 
     //MATCHMAKING EVENTS
     $('.search-for-match').on('click', function(e){
@@ -198,35 +188,44 @@ $(function() {
 	});
 
 	//poll for turn
-	$('body').on('poll')
-
-	
-
+	$('body').on('checkForPlayersTurn', function(e, matchID, userID){
+		checkForPlayersTurn(matchID, userID);
+	})
 
 	//FUNCTION CALLS
 	function gameLoop(matchID) {
-		// GameState = {};
+
 		console.log("Game Loop Triggered for Match " + matchID);
 		
 		console.log("Checking if GameState initialized...");
 		if(isEmpty(GameState)) {
+
 			console.log("GameState is NOT initialized. Initializing...");
 			getGameState(matchID);
 		} else {
-			console.log("GameState is initialized.")
+			console.log("GameState is initialized.");
 			//check if player's turn
 			if(GameState.active_player == userID) {//Player's turn - Run turn logic
+				
 				//logic to complete turn
-				console.log("It's your turn...")
+				console.log("It's your turn...");
+
+
+
 			} else {//Opponent turn - Poll for player's turn
-				//function that polls for the match being the player's turn
+				
 				console.log("It's opponent's turn... waiting for it to be your turn.");
-				checkForPlayersTurn(matchID, userID);
+
+				//call function that polls for the match being the player's turn
+				$('body').trigger('checkForPlayersTurn', matchID, userID);
 			}
 		}
 
 	}
 
+	function processTurn(matchID, userID) {
+		
+	}
 
 	function stopPolling(event) {
 		clearInterval(event);
@@ -374,7 +373,7 @@ $(function() {
 					if(isPlayersTurn) {
 						stopPolling(pollForTurn);
 						console.log("It's now your turn!");
-						// $('body').trigger('gameLoop', matchID);
+						$('body').trigger('gameLoop', matchID);
 					} else {
 						console.log("It's not your turn yet... rechecking.");
 
@@ -387,68 +386,4 @@ $(function() {
 			});
 		},3000, matchID, userID);
 	}
-
-
-
-
-
-
-
-
-	//polling event
-	function checkGameState() {
-		
-		//check turn
-		var playerTurn = GameState.active_player;
-
-
-		if(playerTurn == userID) {//it's the player's turn
-
-		}
-		// var pollForUpdate = setInterval(function(){
-		// 	$.ajax({
-		// 		url: '/api/check_game_state/'+match userID,
-		// 	});
-		// },1000);
-	}
-
-	// function getOpponentDetail(matchID, requestor) {
-	// 	$.ajax({
-	// 		url: '/api/get_match_players/' + matchID + '/' + requestor ,
-	// 		method: 'get',
-	// 		dataType: 'json',
-	// 		success: function(e) {
-	// 			$('.opponent-player').text(e.opponent);
-	// 		},
-	// 		error: function(request, status, error){
-	// 			console.dir(error);
-	// 		}
-	// 	});
-	// }
-
-	// function getFirstTurn(matchID, playerRoll) {
-	// 	$.ajax({
-	// 		url: '/api/get_match_turn/' + matchID,
-	// 		method: 'get',
-	// 		dataType: 'json',
-	// 		success: function(p1Turn) {
-	// 			if(playerRoll == 1) {
-	// 				if(p1Turn){
-	// 					$('.first-player').text('You');	
-	// 				} else {
-	// 					$('.first-player').text('Opponent');
-	// 				}
-	// 			} else {
-	// 				if(p1Turn) {
-	// 					$('.first-player').text('Opponent');
-	// 				} else {
-	// 					$('.first-player').text('You');	
-	// 				}
-	// 			}
-	// 		},
-	// 		error: function(request, status, error){
-	// 			console.dir(error);
-	// 		}
-	// 	});
-	// }
 });
