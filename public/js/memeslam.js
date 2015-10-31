@@ -1,5 +1,13 @@
 $(function() {
 	
+	// $.keepalive =     
+	//     setInterval(function() {
+	//        $.ajax({
+	//           url: '/ping.html',
+	//           cache: false
+	//        });         
+ //    }, 60000);    
+
 	var GameState = {};
 
 	var gameViews = {
@@ -122,7 +130,10 @@ $(function() {
 			        		// getFirstTurn(data.matchID, data.playerRoll);
 
 			        		// switchGameView('joinSuccess');
-			        		getGameState(data.matchID);
+			        		// getGameState(data.matchID);
+
+			        		getGameState(matchID);
+			        		$('body').trigger('gameLoop', data.matchID);
 			        	} else {
 			        		console.log("Opponent has not yet accepted...Rechecking...");
 			        		setTimeout(function() {
@@ -144,9 +155,10 @@ $(function() {
 							        		// getFirstTurn(data.matchID, data.playerRoll);
 
 							        		// switchGameView('joinSuccess');
-							        		getGameState(data.matchID);
-
+							        		
+							        		getGameState(matchID);
 							        		//call 
+							        		$('body').trigger('gameLoop', data.matchID);
 
 							        	} else {
 							        		console.log("THIS IS WHERE WE WOULD DROP THE MATCH AND RESET");
@@ -181,13 +193,47 @@ $(function() {
 	}
 
 	//GAME EVENTS
+	$('body').on('gameLoop', function(e, matchID){
+		gameLoop(matchID);
+	});
 
+	//poll for turn
+	$('body').on('poll')
 
+	
 
 
 	//FUNCTION CALLS
+	function gameLoop(matchID) {
+		// GameState = {};
+		console.log("Game Loop Triggered for Match " + matchID);
+		
+		console.log("Checking if GameState initialized...");
+		if(isEmpty(GameState)) {
+			console.log("GameState is NOT initialized. Initializing...");
+			getGameState(matchID);
+		} else {
+			console.log("GameState is initialized.")
+			//check if player's turn
+			if(GameState.active_player == userID) {//Player's turn - Run turn logic
+				//logic to complete turn
+				console.log("It's your turn...")
+			} else {//Opponent turn - Poll for player's turn
+				//function that polls for the match being the player's turn
+				console.log("It's opponent's turn... waiting for it to be your turn.");
+				checkForPlayersTurn(matchID, userID);
+			}
+		}
+
+	}
+
+
 	function stopPolling(event) {
 		clearInterval(event);
+	}
+
+	function isEmpty(obj) {
+	    return Object.keys(obj).length === 0;
 	}
 
 	function checkForActiveMatch(userID) {
@@ -195,8 +241,11 @@ $(function() {
 			url: '/api/check_for_active_match/' + userID
 		}).done(function(match) {
 			if(match != "0") {
+				console.log("You are already in an active match! Match:" + match);
 				matchID = match;
-				getGameState(match)
+				$('body').trigger('gameLoop',matchID);
+			} else {
+				console.log("You are NOT in an existing match.");
 			}
 		}).fail(function (request, status, error) {
 		    console.log("Error while retrieving current game state...");
@@ -205,34 +254,29 @@ $(function() {
 	}
 
 	function getGameState(matchID) {
+		console.log("Retreiving Game State from server...");
 		$.ajax({
 			url: '/api/get_game_state/' + matchID + '/' + userID
 		}).done(function(update){
+			console.log("Update Received!");
 			updateGameState(update);
+			console.log("Game State Updated...");
+			$('body').trigger('gameLoop',matchID);
 		}).fail(function (request, status, error) {
 		    console.log("Error while retrieving current game state...");
 		    console.dir(error);
 		});
 	}
 
+	//updates the GameState global Variable
 	function updateGameState(objGameState) {
 		GameState = objGameState[0];
-
-		//get match_state from GameState
-		var matchState = GameState.match_state;;
-
-		//check if it's the players turn
-		//if not
-			//trigger polling event
-
-		//else players turn check current match state 
-
-		updateGameView();
 	}
 
 	function updateGameView() {
 		
-		
+
+		switchGameView()
 
 		//get users playing mogs from GameState
 		var playingMogs = GameState.player.playing_mogs;
@@ -320,20 +364,28 @@ $(function() {
 
 	
 
-	function getCurrentTurn(matchID) {
-		$.ajax({
-			url: '/api/get_match_turn/' + matchID,
-			method: 'get',
-			dataType: 'json',
-			success: function(isTurn) {
+	function checkForPlayersTurn(matchID, userID) {
+		var pollForTurn = setInterval(function(){
+			$.ajax({
+				url: '/api/get_match_turn/'+matchID+'/'+userID,
+				method: 'get',
+				dataType: 'json',
+				success: function(isPlayersTurn) {
+					if(isPlayersTurn) {
+						stopPolling(pollForTurn);
+						console.log("It's now your turn!");
+						// $('body').trigger('gameLoop', matchID);
+					} else {
+						console.log("It's not your turn yet... rechecking.");
 
-			},
-			error: function(request, status, error){
-				console.dir(error);
-			}
-		});
+					}
 
-		return p1Turn;
+				},
+				error: function(request, status, error){
+					console.dir(error);
+				}
+			});
+		},3000, matchID, userID);
 	}
 
 
@@ -343,14 +395,22 @@ $(function() {
 
 
 
+	//polling event
+	function checkGameState() {
+		
+		//check turn
+		var playerTurn = GameState.active_player;
 
-	// function checkGameState() {
-	// 	var pollForUpdate = setInterval(function(){
-	// 		$.ajax({
-	// 			url: '/api/check_game_state/'+match userID,
-	// 		});
-	// 	},1000);
-	// }
+
+		if(playerTurn == userID) {//it's the player's turn
+
+		}
+		// var pollForUpdate = setInterval(function(){
+		// 	$.ajax({
+		// 		url: '/api/check_game_state/'+match userID,
+		// 	});
+		// },1000);
+	}
 
 	// function getOpponentDetail(matchID, requestor) {
 	// 	$.ajax({

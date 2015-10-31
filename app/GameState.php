@@ -12,7 +12,7 @@ class GameState
 
 	public function __construct($player, $opponent, $match_state, $active_player) {
 		$this->player = $player;
-		$this->opponenet = $opponent;
+		$this->opponent = $opponent;
 		$this->match_state = $match_state;
 		$this->active_player = $active_player;
 	}

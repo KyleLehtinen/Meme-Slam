@@ -54,15 +54,18 @@ class Matches extends Model
 		return $result;
 	}
 
-	public function getTurn() {
+	public static function checkTurn($match_id, $user_id) {
 
-		$row = DB::select('
-							SELECT p1_turn
-							FROM Matches
-							WHERE id = :id
-						',['id' => $this->id]);
+		$result = 0;
 
-		$result = $row[0]->p1_turn;
+		$row = DB::table('Matches')
+						->where('id', '=', $match_id)
+						->where('active_player_id', '=', $user_id)
+						->get();
+
+		if(!empty($row)) {
+			$result = 1;
+		}
 
 		return $result;
 	}
@@ -74,6 +77,7 @@ class Matches extends Model
 		//see if given user id is player 1 or 2 in an active match
 		$row = DB::table('Matches')
 					->where('in_progress', '=', 1)
+					->where('match_complete', '=', 0)
 					->where(function($query) use($user_id){
 						$query->where('p1_id', '=', $user_id)
 							  ->orWhere('p2_id', '=', $user_id);
