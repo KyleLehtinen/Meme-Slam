@@ -48,7 +48,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background-color: white; }
+  background-color: #EAEAEA; }
 
 body.login-body {
   margin: -25px 0 0 0;
@@ -407,8 +407,40 @@ Jamaican Css in full force below
   min-width: 480px;
   width: 85%;
   height: 600px;
-  background-color: gray;
+  background-color: white;
   position: relative; }
+
+.mog-stack {
+  position: relative;
+  width: 150px;
+  height: 600px;
+  margin: auto; }
+
+.stack-item {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border: 2px solid orange;
+  background: url("/images/memeslam.png");
+  background-color: white;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 50%;
+  -webkit-transform: rotate3d(1, 0, 0, 60deg);
+  box-shadow: 0px 1px 0px 1px #e8e8e8; }
+
+.stack-item:first-child {
+  box-shadow: 15px 10px 20px 1px #adadad; }
+
+.game-field h3 {
+  position: absolute;
+  text-align: center;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  top: 50px;
+  font-size: 3em; }
 
 .game-details h3 {
   padding-left: 3em; }

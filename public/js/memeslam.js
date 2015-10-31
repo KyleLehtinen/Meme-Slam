@@ -78,6 +78,7 @@ $(function() {
 		});
 	});
 
+    //
 	function promptAccept(matchID, playerRoll, acceptTimerValue) {
 		var playerAcceptedMatch = false;
 		console.log('MATCH FOUND! PLEASE ACCEPT!');
@@ -111,20 +112,17 @@ $(function() {
 			        	playersMatched = e.playersMatched;
 
 			        	if(playersMatched) {
+			        		
 			        		console.log("BOTH PLAYERS ACCEPT!")
 
 			        		initializeMatch(data.matchID);
-			        		
-			        		// getOpponentDetail(data.matchID, data.playerRoll);
-
-			        		// getFirstTurn(data.matchID, data.playerRoll);
-
-			        		// switchGameView('joinSuccess');
-			        		// getGameState(data.matchID);
 
 			        		getGameState(matchID);
+
 			        		$('body').trigger('gameLoop', data.matchID);
+			        	
 			        	} else {
+			        		
 			        		console.log("Opponent has not yet accepted...Rechecking...");
 			        		setTimeout(function() {
 			        			$.ajax({
@@ -136,15 +134,10 @@ $(function() {
 							        	var playersAcceptedMatch = e.playersAcceptedMatch;
 
 							        	if(playersAcceptedMatch) {
+							        		
 							        		console.log("BOTH PLAYERS HAVE ACCEPTED THE MATCH!");
 							        		
 							        		initializeMatch(data.matchID);
-
-							        		// getOpponentDetail(data.matchID, data.playerRoll);
-
-							        		// getFirstTurn(data.matchID, data.playerRoll);
-
-							        		// switchGameView('joinSuccess');
 							        		
 							        		getGameState(matchID);
 							        		//call 
@@ -182,17 +175,39 @@ $(function() {
 		}, acceptTimerValue, playerAcceptedMatch, data);
 	}
 
-	//GAME EVENTS
+	//////////////GAME EVENTS///////////////
 	$('body').on('gameLoop', function(e, matchID){
 		gameLoop(matchID);
 	});
 
 	//poll for turn
 	$('body').on('checkForPlayersTurn', function(e, matchID, userID){
+		
+		//update screen to display Mog Stack
+		switchGameView(0);
 		checkForPlayersTurn(matchID, userID);
-	})
+	});
 
-	//FUNCTION CALLS
+	//fire process turn function
+	$('body').on('processTurn', function(e, matchID, userID) {
+		processTurn(matchID, userID);
+	});
+
+	//updates game view and calls slammer mini game
+	$('body').on('slammerMiniGame', function(e, matchID, userID) {
+		
+		switchGameView(1);
+		slammerMiniGame(matchID, userID);
+
+	});
+
+	//////////FUNCTION CALLS/////////////
+	function slammerMiniGame(matchID, userID) {
+		console.log("Slammer Mini Game Displayed.");
+	}
+
+	//Routes logic based on GameState, retrieves GameState if client is not updated, 
+	//triggers turn processing or polling depending on GameState
 	function gameLoop(matchID) {
 
 		console.log("Game Loop Triggered for Match " + matchID);
@@ -210,7 +225,8 @@ $(function() {
 				//logic to complete turn
 				console.log("It's your turn...");
 
-
+				//move to process turn function
+				$('body').trigger('processTurn', processTurn(matchID, userID));
 
 			} else {//Opponent turn - Poll for player's turn
 				
@@ -223,18 +239,37 @@ $(function() {
 
 	}
 
+	//main method that processes the turn by calling other events and advancing the game state
 	function processTurn(matchID, userID) {
-		
+
+		if(GameState.match_state == '0') { //Mog Stack displayed to Slammer Mini Game 
+			
+			$('body').trigger('slammerMiniGame', matchID, userID);
+
+		} else if (GameState.match_state == '1') { //Slammer mini game to slammer explosion animation
+
+		} else if (GameState.match_state == '2') { //slammer explosion animation to results processing
+			
+		} else if (GameState.match_state == '3') { //Results processing to results output
+			
+		} else if (GameState.match_state == '4') { //checks for game over: if game over shows results, else cycles back
+			
+		} else {
+
+		}
 	}
 
+	//support function to terminate polling
 	function stopPolling(event) {
 		clearInterval(event);
 	}
 
+	//support function to check if an object is empty
 	function isEmpty(obj) {
 	    return Object.keys(obj).length === 0;
 	}
 
+	//polls server on script load to see if player is in an active match
 	function checkForActiveMatch(userID) {
 		$.ajax({
 			url: '/api/check_for_active_match/' + userID
@@ -252,6 +287,7 @@ $(function() {
 		});
 	}
 
+	//polls server for gamestate and updates local GameState, fired after each progression of the game
 	function getGameState(matchID) {
 		console.log("Retreiving Game State from server...");
 		$.ajax({
@@ -272,30 +308,44 @@ $(function() {
 		GameState = objGameState[0];
 	}
 
-	function updateGameView() {
-		
+	//updates the displayed playing and captured mogs according to gamestate
+	function updateMogs() {
 
-		switchGameView()
-
-		//get users playing mogs from GameState
+		//get users playing and captured mogs from GameState
 		var playingMogs = GameState.player.playing_mogs;
+		var capturedMogs = GameState.player.captured_mogs;
+
+		//array containing 
+		var updatedMogs = [playingMogs,capturedMogs];
 
 		//remove old list of mogs
 		$('.user-mogs').children().remove();
+		$('.won-mogs').children().remove();	
 
-		for(var i = 0; i < playingMogs.length; i++) {
-			var id = playingMogs[i].active_id;
-			var title = playingMogs[i].name + ' | ' + playingMogs[i].rating;
-			var name = playingMogs[i].name;
-			var rating = playingMogs[i].rating;
-			var style = 'background-image: url(\/images\/mogs\/' + playingMogs[i].id + ')';
-			var data = playingMogs[i].src_url;
+		//loops through playing and captured mogs to build html and append it
+		for(var j = 0; j < updatedMogs.length; j++) {
+			for(var i = 0; i < updatedMogs[j].length; i++) {
+				var id = updatedMogs[j][i].active_id;
+				var title = updatedMogs[j][i].name + ' | ' + updatedMogs[j][i].rating;
+				var name = updatedMogs[j][i].name;
+				var rating = updatedMogs[j][i].rating;
+				var style = 'background-image: url(\/images\/mogs\/' + updatedMogs[j][i].id + ')';
+				var data = updatedMogs[j][i].src_url;
 
-			$('.user-mogs').append('<div id=\"' + id + '\" class=\"mog-img\" title=\"' + title + '\" name=\"' + name 
-									+ '\" rating=\"' + rating + '\"style=\"' + style + '\" data=\"' + data + '\"></div>');
+				if(j == 0) {
+					$('.user-mogs').append('<div id=\"' + id + '\" class=\"mog-img\" title=\"' + title + '\" name=\"' + name 
+										+ '\" rating=\"' + rating + '\"style=\"' + style + '\" data=\"' + data + '\"></div>');
+				} else {
+					$('.won-mogs').append('<div id=\"' + id + '\" class=\"mog-img\" title=\"' + title + '\" name=\"' + name 
+										+ '\" rating=\"' + rating + '\"style=\"' + style + '\" data=\"' + data + '\"></div>');
+				}
+				
+			}
+
 		}
 	}
 
+	//toggles hidden attribute of html to switch view
 	function switchGameView(select) {
 
 		$('.game-field').children().each(function(){
@@ -303,9 +353,32 @@ $(function() {
 			$(this).attr('hidden', '');
 		});
 
+		if(select == 0) {
+			$('.current-player').text(GameState.opponent.name);
+
+			//load in stack of mogs for view
+			var stackCount = GameState.player.playing_mogs.length +
+								GameState.opponent.playing_mogs.length;
+
+			renderStack(stackCount);
+		}
+
+		if(select == 4) {
+			updateMogs();
+		}
+
 		gameViews[select].removeAttr('hidden');
 	}
 
+	function renderStack(count) {
+		for(var i = 0; i < count; i++) {
+			$('.mog-stack').append(
+				'<div class=\"stack-item\" style=\"bottom: '+(10 + (i + 1))+'px;\"></div>'
+			);
+		}
+	}
+
+	//api call following successful match to call server to initialize the match
 	function initializeMatch(matchID) {
 		$.ajax({
 			url: '/api/initialize_match/' + matchID,
@@ -320,6 +393,7 @@ $(function() {
 		});
 	}
 
+	//ajax call to check if a player joined the match
 	function checkPlayerJoin(joinIntervalPollTime,matchID) {
 		console.log('Check Player Join Fire')
 		var pollOpponentJoin = setInterval(function() {
@@ -342,6 +416,7 @@ $(function() {
 		}, joinIntervalPollTime);
 	}
 
+	//drops match if matchmaking fails
 	function dropMatch(matchID) {
 		var data = {
 			matchID: matchID
@@ -361,8 +436,7 @@ $(function() {
 		});
 	}
 
-	
-
+	//polls server till it is the players turn
 	function checkForPlayersTurn(matchID, userID) {
 		var pollForTurn = setInterval(function(){
 			$.ajax({

@@ -29,7 +29,7 @@
 		</div>
 		<div class="display-stack" hidden>
 			<h3>It's <span class="current-player"></span>'s turn!</h3>
-			<div class="stack mog-imgs">
+			<div class="mog-stack">
 				
 			</div>
 		</div>
