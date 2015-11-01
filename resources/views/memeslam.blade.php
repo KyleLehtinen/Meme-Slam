@@ -28,7 +28,7 @@
 			<h3><span class="first-player"></span> will go first...</h3>
 		</div>
 		<div class="display-stack" hidden>
-			<h3>It's <span class="current-player"></span>'s turn!</h3>
+			<h3></h3>
 			<div class="mog-stack">
 				
 			</div>

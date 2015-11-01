@@ -245,15 +245,15 @@ $(function() {
 		} 
 
 		if ((lastState != '0' || lastState != '1') && (newState == '0' || newState == '1')) {//display stack
-			$('.current-player').text(GameState.opponent.name);
+			
+			$('.display-stack > h3').text("It's currently " + GameState.opponent.name + "'s turn! Waiting for opponent...");
 
 			//load in stack of mogs for view
 			var stackCount = GameState.player.playing_mogs.length +
 								GameState.opponent.playing_mogs.length;
-
 			renderStack(stackCount);
-
 			switchGameView(0);
+
 		} else if (lastState != '2' && newState == '2') {//display explosion
 			switchGameView(2);
 		} else if (lastState != '3' && newState == '3') {//display mini game result
@@ -308,7 +308,7 @@ $(function() {
 			$.ajax({
 				url: '/api/check_for_active_match/' + userID
 			}).done(function(match) {
-				if(match != '0' || match != 'undefined') {
+				if(!(match == '0' || match == 'undefined')) {
 					console.log("You are already in an active match! Match:" + match);
 					matchID = match;
 					$('body').trigger('gameLoop',matchID);
@@ -376,7 +376,6 @@ $(function() {
 				}
 				
 			}
-
 		}
 	}
 
@@ -388,21 +387,13 @@ $(function() {
 			$(this).attr('hidden', '');
 		});
 
-		// if(select == 0) {
-			
-		// }
-
-		// if(select == 4) {
-		// 	updateMogs();
-		// }
-
 		gameViews[select].removeAttr('hidden');
 	}
 
 	function renderStack(count) {
 		for(var i = 0; i < count; i++) {
 			$('.mog-stack').append(
-				'<div class=\"stack-item\" style=\"bottom: '+(10 + (i + 1))+'px;\"></div>'
+				'<div class=\"stack-item\" style=\"left: '+Math.floor((Math.random() * 5) + 1)+'px; bottom: '+(10 + (i + 1))+'px;\"></div>'
 			);
 		}
 	}
