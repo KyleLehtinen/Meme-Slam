@@ -133,9 +133,9 @@ class MemeSlamController extends Controller
 		return $response;
 	}
 
-	public function checkTurn($match_id, $user_id) {
+	public function checkForUpdate($match_id, $last_update) {
 	
-		$response = Matches::checkTurn($match_id, $user_id);
+		$response = Matches::checkForUpdate($match_id, $last_update);
 
 		return $response;
 	}

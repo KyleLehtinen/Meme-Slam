@@ -37,8 +37,6 @@ $(function(){
         var multiplier = Math.floor(h /120) + 1;
         var count = (Math.floor((multiplier * (w / 120)))) + 5;
 
-        // for(var i = 0; i < )
-
         $.ajax({
             url: '/api/get_background_mogs/',
         }).done(function(data){

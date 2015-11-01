@@ -433,7 +433,7 @@ Jamaican Css in full force below
 .stack-item:first-child {
   box-shadow: 15px 10px 20px 1px #adadad; }
 
-.game-field h3 {
+.display-stack h3 {
   position: absolute;
   text-align: center;
   left: 50%;

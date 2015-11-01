@@ -11,7 +11,9 @@ class Matches extends Model
 	protected $fillable = ['players_matched','in_progress',
 							'p1_id','p1_bet_rating','p1_accept',
 							'p2_id','p2_bet_rating','p2_accept',
-							'active_player_id','match_state','match_complete','p1_new_mogs','p2_new_mogs'];
+							'active_player_id','match_state','match_complete','p1_new_mogs','p2_new_mogs',
+							'updated_at'
+						  ];
 
 	//logic that searches for a match, if none found calls createMatch
 	//This is a flawed approach to match making and will need to be updated should meme slam
@@ -54,16 +56,15 @@ class Matches extends Model
 		return $result;
 	}
 
-	public static function checkTurn($match_id, $user_id) {
+	public static function checkForUpdate($match_id, $last_update) {
 
 		$result = 0;
 
 		$row = DB::table('Matches')
 						->where('id', '=', $match_id)
-						->where('active_player_id', '=', $user_id)
 						->get();
-
-		if(!empty($row)) {
+		// print_r($row[0]->updated_at);
+		if($row[0]->updated_at != $last_update) {
 			$result = 1;
 		}
 

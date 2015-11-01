@@ -11,12 +11,12 @@ $(function() {
 		0: $('.display-stack'),
 		1: $('.slammer-game'),
 		2: $('.slammer-explosion'),
-		3: $('.process-slammer-game'),
-		4: $('.slammer-game-results'),
-		5: $('.match-results')
+		3: $('.slammer-game-results'),
+		4: $('.match-results')
 	};
 
 	var matchID;
+	var lastState;
 	var playerAcceptedMatch;
 	var userID = $('.game-field').attr('userid');
 	var betRating = $('.game-field').attr('rating');
@@ -117,7 +117,7 @@ $(function() {
 
 			        		initializeMatch(data.matchID);
 
-			        		getGameState(matchID);
+			        		// getGameState(matchID);
 
 			        		$('body').trigger('gameLoop', data.matchID);
 			        	
@@ -139,7 +139,7 @@ $(function() {
 							        		
 							        		initializeMatch(data.matchID);
 							        		
-							        		getGameState(matchID);
+							        		// getGameState(matchID);
 							        		//call 
 							        		$('body').trigger('gameLoop', data.matchID);
 
@@ -181,11 +181,9 @@ $(function() {
 	});
 
 	//poll for turn
-	$('body').on('checkForPlayersTurn', function(e, matchID, userID){
-		
-		//update screen to display Mog Stack
-		switchGameView(0);
-		checkForPlayersTurn(matchID, userID);
+	$('body').on('pollForUpdate', function(e, matchID){
+		// processTurn(matchID, userID);
+		pollForUpdate(matchID);
 	});
 
 	//fire process turn function
@@ -204,6 +202,7 @@ $(function() {
 	//////////FUNCTION CALLS/////////////
 	function slammerMiniGame(matchID, userID) {
 		console.log("Slammer Mini Game Displayed.");
+
 	}
 
 	//Routes logic based on GameState, retrieves GameState if client is not updated, 
@@ -214,39 +213,71 @@ $(function() {
 		
 		console.log("Checking if GameState initialized...");
 		if(isEmpty(GameState)) {
-
 			console.log("GameState is NOT initialized. Initializing...");
 			getGameState(matchID);
 		} else {
 			console.log("GameState is initialized.");
 			//check if player's turn
 			if(GameState.active_player == userID) {//Player's turn - Run turn logic
-				
 				//logic to complete turn
 				console.log("It's your turn...");
-
-				//move to process turn function
-				$('body').trigger('processTurn', processTurn(matchID, userID));
-
+				//trigger process event
+				$('body').trigger('processTurn', matchID, userID);
 			} else {//Opponent turn - Poll for player's turn
-				
-				console.log("It's opponent's turn... waiting for it to be your turn.");
+				console.log("It's opponent's turn... Checking for state change...");
 
+				if(lastState != GameState.match_state) {
+					opponentViewUpdate();
+				}
 				//call function that polls for the match being the player's turn
-				$('body').trigger('checkForPlayersTurn', matchID, userID);
+				$('body').trigger('pollForUpdate', matchID);
 			}
 		}
+	}
 
+	//Used to govern opponent player's view.
+	function opponentViewUpdate() {
+
+		var newState = GameState.match_state
+
+		if(typeof lastState === 'undefined') { //check if lastState is initialized
+			lastState = GameState.match_state;
+		} else if ((lastState != '0' || lastState != '1') && (newState == '0' || newState == '1')) {//display stack
+			$('.current-player').text(GameState.opponent.name);
+
+			//load in stack of mogs for view
+			var stackCount = GameState.player.playing_mogs.length +
+								GameState.opponent.playing_mogs.length;
+
+			renderStack(stackCount);
+			
+			switchGameView(0);
+		} else if (lastState != '2' && newState == '2') {//display explosion
+			switchGameView(2);
+		} else if (lastState != '3' && newState == '3') {//display mini game result
+			switchGameView(3);
+		} else { //display end game results
+			switchGameView(4);
+		}
+
+		lastState = newState;
 	}
 
 	//main method that processes the turn by calling other events and advancing the game state
 	function processTurn(matchID, userID) {
 
 		if(GameState.match_state == '0') { //Mog Stack displayed to Slammer Mini Game 
+			$('.current-player').text(GameState.opponent.name);
+
+			//load in stack of mogs for view
+			var stackCount = GameState.player.playing_mogs.length +
+								GameState.opponent.playing_mogs.length;
+
+			renderStack(stackCount);
+			
+		} else if (GameState.match_state == '1') { //Slammer mini game to slammer explosion animation
 			
 			$('body').trigger('slammerMiniGame', matchID, userID);
-
-		} else if (GameState.match_state == '1') { //Slammer mini game to slammer explosion animation
 
 		} else if (GameState.match_state == '2') { //slammer explosion animation to results processing
 			
@@ -295,7 +326,6 @@ $(function() {
 		}).done(function(update){
 			console.log("Update Received!");
 			updateGameState(update);
-			console.log("Game State Updated...");
 			$('body').trigger('gameLoop',matchID);
 		}).fail(function (request, status, error) {
 		    console.log("Error while retrieving current game state...");
@@ -306,6 +336,7 @@ $(function() {
 	//updates the GameState global Variable
 	function updateGameState(objGameState) {
 		GameState = objGameState[0];
+		console.log("Game State Updated...");
 	}
 
 	//updates the displayed playing and captured mogs according to gamestate
@@ -353,19 +384,13 @@ $(function() {
 			$(this).attr('hidden', '');
 		});
 
-		if(select == 0) {
-			$('.current-player').text(GameState.opponent.name);
+		// if(select == 0) {
+			
+		// }
 
-			//load in stack of mogs for view
-			var stackCount = GameState.player.playing_mogs.length +
-								GameState.opponent.playing_mogs.length;
-
-			renderStack(stackCount);
-		}
-
-		if(select == 4) {
-			updateMogs();
-		}
+		// if(select == 4) {
+		// 	updateMogs();
+		// }
 
 		gameViews[select].removeAttr('hidden');
 	}
@@ -437,22 +462,23 @@ $(function() {
 	}
 
 	//polls server till it is the players turn
-	function checkForPlayersTurn(matchID, userID) {
-		var pollForTurn = setInterval(function(){
+	function pollForUpdate(matchID) {
+		
+		var lastUpdate = GameState.last_update;
+
+		var checkServer = setInterval(function(){
 			$.ajax({
-				url: '/api/get_match_turn/'+matchID+'/'+userID,
+				url: '/api/check_for_update/'+matchID+'/'+lastUpdate,
 				method: 'get',
 				dataType: 'json',
-				success: function(isPlayersTurn) {
-					if(isPlayersTurn) {
-						stopPolling(pollForTurn);
-						console.log("It's now your turn!");
-						$('body').trigger('gameLoop', matchID);
+				success: function(newUpdate) {
+					if(newUpdate) {
+						stopPolling(checkServer);
+						console.log("Game State has changed! Getting new Game State");
+						getGameState(matchID);
 					} else {
-						console.log("It's not your turn yet... rechecking.");
-
+						console.log("Game State has not changed... rechecking.");
 					}
-
 				},
 				error: function(request, status, error){
 					console.dir(error);
