@@ -421,17 +421,19 @@ Jamaican Css in full force below
   width: 150px;
   height: 150px;
   border: 2px solid orange;
-  background: url("/images/memeslam.png");
-  background-color: white;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
   border-radius: 50%;
   -webkit-transform: rotate3d(1, 0, 0, 60deg);
   box-shadow: 0px 1px 0px 1px #e8e8e8; }
 
 .stack-item:first-child {
   box-shadow: 15px 10px 20px 1px #adadad; }
+
+.stack-item:last-child {
+  background: url("/images/memeslam.png");
+  background-color: white;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; }
 
 .display-stack h3 {
   position: absolute;
