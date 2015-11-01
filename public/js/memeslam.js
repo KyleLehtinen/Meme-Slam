@@ -242,7 +242,9 @@ $(function() {
 
 		if(typeof lastState === 'undefined') { //check if lastState is initialized
 			lastState = GameState.match_state;
-		} else if ((lastState != '0' || lastState != '1') && (newState == '0' || newState == '1')) {//display stack
+		} 
+
+		if ((lastState != '0' || lastState != '1') && (newState == '0' || newState == '1')) {//display stack
 			$('.current-player').text(GameState.opponent.name);
 
 			//load in stack of mogs for view
@@ -250,7 +252,7 @@ $(function() {
 								GameState.opponent.playing_mogs.length;
 
 			renderStack(stackCount);
-			
+
 			switchGameView(0);
 		} else if (lastState != '2' && newState == '2') {//display explosion
 			switchGameView(2);
@@ -302,20 +304,22 @@ $(function() {
 
 	//polls server on script load to see if player is in an active match
 	function checkForActiveMatch(userID) {
-		$.ajax({
-			url: '/api/check_for_active_match/' + userID
-		}).done(function(match) {
-			if(match != "0") {
-				console.log("You are already in an active match! Match:" + match);
-				matchID = match;
-				$('body').trigger('gameLoop',matchID);
-			} else {
-				console.log("You are NOT in an existing match.");
-			}
-		}).fail(function (request, status, error) {
-		    console.log("Error while retrieving current game state...");
-		    console.dir(error);
-		});
+		if(/^(.*)\/meme_slam\//.test(window.location.href)){
+			$.ajax({
+				url: '/api/check_for_active_match/' + userID
+			}).done(function(match) {
+				if(match != '0' || match != 'undefined') {
+					console.log("You are already in an active match! Match:" + match);
+					matchID = match;
+					$('body').trigger('gameLoop',matchID);
+				} else {
+					console.log("You are NOT in an existing match.");
+				}
+			}).fail(function (request, status, error) {
+			    console.log("Error while retrieving current game state...");
+			    console.dir(error);
+			});
+		}
 	}
 
 	//polls server for gamestate and updates local GameState, fired after each progression of the game
