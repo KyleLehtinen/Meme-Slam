@@ -359,6 +359,7 @@ $(function() {
 		}).done(function(update){
 			console.log("Update Received!");
 			updateGameState(update);
+			updateMogs();
 			$('body').trigger('gameLoop',matchID);
 		}).fail(function (request, status, error) {
 		    console.log("Error while retrieving current game state...");
