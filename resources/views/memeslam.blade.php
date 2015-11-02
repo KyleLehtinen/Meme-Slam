@@ -6,7 +6,7 @@
 
 @section('main')
 	<div class="game-field" userID="{{$user->id}}" name="{{$user->name}}" rating="{{$bet_rating}}">
-		<div class="pre-search">
+		<div class="pre-search" hidden>
 			<h3>Your Bet Pod Rating is {{$bet_rating}}</h3>
 			<h3>You will be matched against other players with a BP rating between {{$bet_rating - 300}} and {{$bet_rating + 300}}</h3>
 			<button class="search-for-match">Search for Match</button>
@@ -34,13 +34,16 @@
 			</div>
 		</div>
 		<div class="slammer-game" hidden>
-			<div class="slammer">
-				<div class="upper"></div>
-				<div class="gates">
-					<div class="enter"></div>
-					<div class="exit"></div>
+			<div class="slammer-container">
+				<h3>3...2...1...</h3>
+				<div class="slammer" hidden>
+					<div class="upper"></div>
+					<div class="gates">
+						<div class="enter"></div>
+						<div class="exit"></div>
+					</div>
+					<div class="lower"></div>
 				</div>
-				<div class="lower"></div>
 			</div>
 		</div>
 		<div class="slammer-explosion" hidden>

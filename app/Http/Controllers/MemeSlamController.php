@@ -161,4 +161,20 @@ class MemeSlamController extends Controller
 
 		return $match_id;
 	}
+
+	public static function updateMatchState() {
+		
+		$match_id = Request::input('matchID');
+
+		$match = Matches::find($match_id);
+
+		$state_detail = array(
+				"current_state" => Request::input('currentState'),
+				"state_data" => Request::input('data')
+			);
+
+		$response = $match->updateMatchState($state_detail);
+
+		return $response;
+	}
 }

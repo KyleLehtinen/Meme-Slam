@@ -56,6 +56,20 @@ class Matches extends Model
 		return $result;
 	}
 
+	public function updateMatchState($arr) {
+
+		$result = 0;
+
+		if($arr["current_state"] == 0) {
+			DB::table('Matches')
+					->where('id', '=', $this->id)
+					->update(['match_state' => 1]);
+			$result = 1;
+		}
+
+		return $result;
+	}
+
 	public static function checkForUpdate($match_id, $last_update) {
 
 		$result = 0;

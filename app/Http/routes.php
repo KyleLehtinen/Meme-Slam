@@ -41,6 +41,7 @@ Route::post('/api/search_for_match', ['middleware' => 'auth', 'uses' => 'MemeSla
 Route::post('/api/player_accepts_match', ['middleware' => 'auth', 'uses' => 'MemeSlamController@playerAcceptsMatch']);
 Route::post('/api/player_drop_match', ['middleware' => 'auth', 'uses' => 'MemeSlamController@playerDropMatch']);
 Route::post('/api/drop_match', ['middleware' => 'auth', 'uses' => 'MemeSlamController@dropMatch']);
+Route::post('/api/update_match_state', ['middleware' => 'auth', 'uses' => 'MemeSlamController@updateMatchState']);
 
 Route::get('/api/get_background_mogs', 'MemeSlamController@getBackgroundMogs');
 Route::get('/api/initialize_match/{match_id}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@initializeMatch']);

@@ -14,8 +14,9 @@
 	{!! HTML::script('js/jquery.js') !!}
 	{!! HTML::script('js/jquery-ui.min.js') !!}
     {!! HTML::script('js/login.js') !!}
-    {!! HTML::script('js/snabbt.min.js') !!}
+    {!! HTML::script('js/snabbt.js') !!}
     {!! HTML::script('js/dashboard.js') !!}
     {!! HTML::script('js/memeslam.js') !!}
+    {!! HTML::script('js/slammerMiniGame.js')!!}
 </body>
 </html>

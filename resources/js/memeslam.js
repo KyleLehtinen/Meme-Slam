@@ -196,6 +196,84 @@ $(function() {
 	});
 
 //////////FUNCTION CALLS/////////////
+	function slammerMiniGame(matchID, userID) {
+		
+		console.log("Slammer Mini Game started...");
+
+		var entered = false;
+		var failed = false;
+
+		$('.slammer-container h3').attr('hidden','');
+		$('.slammer').removeAttr('hidden');
+
+		$('.slammer').snabbt({
+			rotation: [0,0,2*Math.PI],
+			duration: 5000
+		});
+
+		$('body').on('mouseenter', '.upper, .lower', function() {
+			failed = true;
+			$('.slammer').fadeOut(400,function(){
+				
+				$(this).attr('hidden','');
+			});
+			processRound();
+		});
+
+		$('body').on('mouseenter', '.enter', function(e) {
+			entered = true;
+		});
+
+		$('body').on('mouseenter', '.exit', function(e) {
+			if(entered){
+				
+				var resultMessage;
+
+				getResultMessage();
+
+				$('.slammer').fadeOut(300,function(){
+					$(this).attr('hidden','');
+				});
+				$('.slammer-container h3').text(resultMessage).removeAttr('hidden');
+				processRound();
+			} else {
+				failed = true;
+				$('.slammer').fadeOut(300,function(){
+					$(this).attr('hidden','');
+				});
+				processRound();
+			}
+		});
+
+		//process outcome of minigame here...
+		function processRound() {
+			if(failed){
+				console.log(resultMessage + " You failed the slammer game!");
+			} else {
+				console.log(resultMessage);
+			}
+		}
+
+		//check calculation and get result message
+		function getResultMessage() {
+			if(slammerTime <= 200) {
+				resultMessage = "PERFECT!";
+			} else if (slammerTime > 200 && slammerTime <= 600) {
+				resultMessage = "MARVELOUS!";
+			} else if (slammerTime > 600 && slammerTime <= 1100) {
+				resultMessage = "Great!";
+			} else if (slammerTime > 1100 && slammerTime <= 1600) {
+				resultMessage = "Good.";
+			} else if (slammerTime > 1600 && slammerTime <= 2500) {
+				resultMessage = "Fair...";
+			} else if (slammerTime > 2500 && slammerTime <= 5000) {
+				resultMessage = "Poor...";
+			} else {
+				resultMessage = "Too Bad!";
+			}
+		}
+	}
+
 	//Routes logic based on GameState, retrieves GameState if client is not updated, 
 	//triggers turn processing or polling depending on GameState
 	function gameLoop(matchID) {

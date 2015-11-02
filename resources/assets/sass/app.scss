@@ -479,8 +479,18 @@ Jamaican Css in full force below
 /****
 SLAMMER CSS
 ***/
+.slammer-container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.slammer-container > h3 {
+    font-size: 3em;
+}
+
 .slammer {
-    margin: 25em auto 0 auto;
     width: 400px;
     position: relative;
 }
