@@ -422,6 +422,39 @@ Jamaican Css in full force below
     position: relative;
 }
 
+.mog-drop-container {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        margin: auto;
+    }
+
+    .slammer-explosion {
+        position: relative;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+    }
+
+    .explosion-container {
+        position: relative;
+        left: 30%;
+        /* top: 25%; */
+        transform: translateX(-50%);
+        background: url('memeslam.png');
+        width: 300px;
+        height: 300px;
+        background-color: white;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .stack-itm-contr {
+         position: absolute;
+        -webkit-transform: rotate3d(1,0, 0,60deg);
+    }
+
 .mog-stack {
     position: relative;
     width: 150px;

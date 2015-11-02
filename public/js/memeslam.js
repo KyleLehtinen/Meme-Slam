@@ -18,6 +18,7 @@ $(function() {
 	var matchID;
 	var lastState;
 	var playerAcceptedMatch;
+	var outcomeViewed;
 	var userID = $('.game-field').attr('userid');
 	var betRating = $('.game-field').attr('rating');
 	var joinIntervalPollTime = 2000;
@@ -250,13 +251,14 @@ $(function() {
 			renderStack(stackCount);
 			switchGameView(0);
 
-		} else if (lastState != '2' && newState == '2') {//display explosion
+		} else if (lastState != '2' && newState == '2') {//display explosion and round result
 			switchGameView(2);
-		} else if (lastState != '3' && newState == '3') {//display mini game result
+		} else if (lastState != '3' && newState == '3') {//display match result
 			switchGameView(3);
-		} else { //display end game results
-			switchGameView(4);
-		}
+		} 
+		// else { //display end game results
+		// 	switchGameView(4);
+		// }
 
 		lastState = newState;
 	}
@@ -285,6 +287,26 @@ $(function() {
 	
 		} else if (GameState.match_state == '2') { //slammer explosion and result animation 
 			
+			if(typeof lastState === 'undefined') { //check if lastState is initialized
+				lastState = GameState.match_state;
+			} 
+
+			if(lastState == '2' && GameState.match_state == '2') {//first time player seeing results
+
+
+
+			} else { //catch case where other player has not yet seen the update
+				//show stack and display text
+				$('.display-stack > h3').text("Your turn is now over.");
+				//load in stack of mogs for view
+				var stackCount = GameState.player.playing_mogs.length +
+									GameState.opponent.playing_mogs.length;
+				renderStack(stackCount);
+				switchGameView(0);
+				setTimeout(function(){
+					$('body').trigger('pollForUpdate', [matchID]);
+				},3000, matchID);
+			}
 		} else if (GameState.match_state == '3') { //Results processing to results output
 			
 		} else if (GameState.match_state == '4') { //checks for game over: if game over shows results, else cycles back
@@ -511,5 +533,48 @@ $(function() {
 				}
 			});
 		},3000, matchID, userID);
+	}
+
+	//function that plays explosion animation and round results
+	function showRoundResults(){
+		$('.slammer-explosion').removeAttr('hidden');
+		$('.explosion-container').snabbt({
+			scale: [1.8,1.8],
+			duration: 100,
+			complete: function(){
+				console.log("animation done");
+				$('.explosion-container').fadeOut(400, function(){
+					$('.mog-drop-container').removeAttr('hidden','');
+					renderRoundResultMogs(28);
+				})
+				
+			}
+		})
+		//hold view to show fallen mogs then switch to results view
+	}
+
+	//function used to render mog drop during round results
+	function renderRoundResultMogs(count) {
+		var maxHeight = 400;
+		var minHeight = 155;
+		var minWidth = 155;
+		var maxWidth = $('.round-results').parent().width() - 155;
+
+		for(var i = 0; i < count; i++) {
+			$('.mog-drop-container').append('<div class=\"stack-itm-contr\" style=\"left: '+Math.floor((Math.random() * (maxWidth)))+'px; top: -400px\"><div class=\"stack-item '+i+'\"></div></div>'
+											);
+			$('.stack-item.'+i).snabbt({
+				delay: 400,
+				duration: 400,
+				position: [0,(Math.floor((Math.random() * (maxHeight)) + 750)),0],
+				complete: function(){
+					console.log("Mog " + i + " added!");
+				}
+			}).snabbt('attention',{
+				rotation: [0,0,Math.PI/2],
+				springConstant: 1.9,
+				springDeceleration: 0.9
+			});
+		}
 	}
 });

@@ -46,16 +46,15 @@
 				</div>
 			</div>
 		</div>
-		<div class="slammer-explosion" hidden>
-			
+		<div class="slammer-explosion round-results" hidden>
+			<div class="explosion-container"></div>
+			<div class="slammer-game-results" hidden>
+				<h3 class=""></h3>
+				<h3></h3>
+			</div>
 		</div>
-		<div class="process-slammer-game" hidden>
-			
-		</div>
-		<div class="slammer-game-results" hidden>
-			<h3 class=""></h3>
-			<h3></h3>
-		</div>
+
+		
 		<div class="match-results">
 			
 		</div>	
