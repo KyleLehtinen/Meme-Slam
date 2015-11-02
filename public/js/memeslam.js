@@ -276,14 +276,14 @@ $(function() {
 				$('body').trigger('updateMatchState', matchID);
 			}, 2000, matchID);
 			
-		} else if (GameState.match_state == '1') { //Slammer mini game to slammer explosion animation
+		} else if (GameState.match_state == '1') { //Slammer mini game 
 			
 			switchGameView(1);
 			setTimeout(function(){
 				$('body').trigger('slammerMiniGame',[matchID]);
 			},3000);
 	
-		} else if (GameState.match_state == '2') { //slammer explosion animation to results processing
+		} else if (GameState.match_state == '2') { //slammer explosion and result animation 
 			
 		} else if (GameState.match_state == '3') { //Results processing to results output
 			
@@ -420,6 +420,7 @@ $(function() {
 	}
 
 	function renderStack(count) {
+		$('.mog-stack').children().remove();
 		for(var i = 0; i < count; i++) {
 			$('.mog-stack').append(
 				'<div class=\"stack-item\" style=\"left: '+Math.floor((Math.random() * 5) + 1)+'px; bottom: '+(10 + (i + Math.floor((Math.random() * 3) + 1)))+'px;\"></div>'
