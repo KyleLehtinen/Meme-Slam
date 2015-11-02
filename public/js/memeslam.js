@@ -191,8 +191,13 @@ $(function() {
 	});
 
 	//updates game view and calls slammer mini game
-	$('body').on('slammerMiniGame', function(e, matchID, userID) {
-		slammerMiniGame(matchID, userID);
+	$('body').on('slammerMiniGame', function(e, matchID) {
+		slammerMiniGame(matchID);
+	});
+
+	$('body').on('updateMatchState', function(e, matchID, stateData){
+		state = GameState.match_state;
+		updateMatchState(matchID, state, stateData);
 	});
 
 //////////FUNCTION CALLS/////////////
@@ -259,7 +264,7 @@ $(function() {
 	//main method that processes the turn by calling other events and advancing the game state
 	function processTurn(matchID, userID) {
 
-		if(GameState.match_state == '0') { //Mog Stack displayed to Slammer Mini Game 
+		if(GameState.match_state == '0') { //Display stack
 			
 			$('.display-stack > h3').text("It's your turn! Get ready...");
 			//load in stack of mogs for view
@@ -268,14 +273,14 @@ $(function() {
 			renderStack(stackCount);
 			switchGameView(0);
 			setTimeout(function(){
-				updateMatchState(matchID, 0);
+				$('body').trigger('updateMatchState', matchID);
 			}, 2000, matchID);
 			
 		} else if (GameState.match_state == '1') { //Slammer mini game to slammer explosion animation
 			
 			switchGameView(1);
 			setTimeout(function(){
-				$('body').trigger('slammerMiniGame');
+				$('body').trigger('slammerMiniGame',[matchID]);
 			},3000);
 	
 		} else if (GameState.match_state == '2') { //slammer explosion animation to results processing
@@ -417,7 +422,7 @@ $(function() {
 	function renderStack(count) {
 		for(var i = 0; i < count; i++) {
 			$('.mog-stack').append(
-				'<div class=\"stack-item\" style=\"left: '+Math.floor((Math.random() * 5) + 1)+'px; bottom: '+(10 + (i + 1))+'px;\"></div>'
+				'<div class=\"stack-item\" style=\"left: '+Math.floor((Math.random() * 5) + 1)+'px; bottom: '+(10 + (i + Math.floor((Math.random() * 3) + 1)))+'px;\"></div>'
 			);
 		}
 	}

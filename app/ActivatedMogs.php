@@ -132,4 +132,16 @@ class ActivatedMogs extends Model
 
 		return true;
 	}
+
+	//update the owner of the given array of activated mogs
+	public static function updateOwner($arr_activated_ids, $new_owner_id) {
+
+		//update owner of given array of mogs
+		DB::table('ActivatedMogs')->whereIn('id', $arr_activated_ids)->update(['owner_id' => $new_owner_id,
+																			   'recent' => 1]);
+
+		//determine new ones for use in incrementing exchanges
+		////later if I have time...
+	}
+
 }

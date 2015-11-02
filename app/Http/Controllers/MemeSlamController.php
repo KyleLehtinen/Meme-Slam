@@ -170,11 +170,13 @@ class MemeSlamController extends Controller
 
 		$state_detail = array(
 				"current_state" => Request::input('currentState'),
-				"state_data" => Request::input('data')
+				"state_data" => Request::input('stateData')
 			);
 
 		$response = $match->updateMatchState($state_detail);
 
 		return $response;
 	}
+
+
 }

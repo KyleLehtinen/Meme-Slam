@@ -1,18 +1,28 @@
 
-function slammerMiniGame(matchID, userID) {
+function slammerMiniGame(matchID) {
 	
 	console.log("Slammer Mini Game started...");
 
 	var entered = false;
 	var failed = false;
+	var passed = false;
 	var resultMessage;
 
 	$('.slammer-container h3').attr('hidden','');
+	
 	$('.slammer').removeAttr('hidden');
 
 	$('.slammer').snabbt({
 		rotation: [0,0,2*Math.PI],
-		duration: 5000
+		duration: 5000,
+		complete: function(){
+			if(!passed){
+				failed = true;
+				$(this).attr('hidden','');
+				$('.slammer-container h3').text("Too Bad!").removeAttr('hidden');
+				processRound(resultMessage);
+			}
+		}
 	});
 
 	$('body').on('mouseenter', '.upper, .lower', function() {
@@ -31,6 +41,7 @@ function slammerMiniGame(matchID, userID) {
 	$('body').on('mouseenter', '.exit', function(e) {
 		if(entered){
 			$('.slammer').fadeOut(300,function(){
+				passed = true;
 				$(this).attr('hidden','');
 				getResultMessage();
 				$('.slammer-container h3').text(resultMessage).removeAttr('hidden');
@@ -48,11 +59,20 @@ function slammerMiniGame(matchID, userID) {
 
 	//process outcome of minigame here...
 	function processRound() {
+
+		var result = 0;
+
 		if(failed){
 			console.log("Player failed Slammer Game.");
 		} else {
 			console.log("Player Passed Slammer Game! Result " + slammerTime);
+			result = Math.floor(slammerTime);
 		}
+
+		setTimeout(function(){
+			$('body').trigger('updateMatchState', [matchID, result]);
+			// updateMatchState(matchID, 1, result);
+		}, 2000, matchID, result);
 	}
 
 	//check calculation and get result message

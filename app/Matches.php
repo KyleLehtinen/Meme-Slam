@@ -60,14 +60,64 @@ class Matches extends Model
 
 		$result = 0;
 
-		if($arr["current_state"] == 0) {
+		if($arr["current_state"] == 0) {//post stack 
 			DB::table('Matches')
 					->where('id', '=', $this->id)
 					->update(['match_state' => 1]);
 			$result = 1;
+		} else if ($arr["current_state"] == 1){//post slammer
+			$this->calcRoundOutcome($arr['state_data']);
+			// DB::table('Matches')
+			// 		->where('id', '=', $this->id)
+			// 		->update(['match_state' => 2]);
+			$result = 1;
 		}
 
 		return $result;
+	}
+
+	public function calcRoundOutcome($slam_time) {
+
+		//determine round_bias from given slam time
+		
+		if($slam_time == 0) {
+			$round_bias = 0;
+		} else if($slam_time > 1 && $slam_time <= 200) {
+			$round_bias = 1;
+		} else if ($slam_time > 200 && $slam_time <= 300) {
+			$round_bias = 0.9;
+		} else if ($slam_time > 300 && $slam_time <= 600) {
+			$round_bias = 0.8;
+		} else if ($slam_time > 600 && $slam_time <= 900) {
+			$round_bias = 0.7;
+		} else if ($slam_time > 900 && $slam_time <= 1100) {
+			$round_bias = 0.6;
+		} else if ($slam_time > 1100 && $slam_time <= 1300) {
+			$round_bias = 0.5;
+		} else if ($slam_time > 1300 && $slam_time <= 1600) {
+			$round_bias = 0.4;
+		} else if ($slam_time > 1600 && $slam_time <= 2500) {
+			$round_bias = 0.3;
+		} else if ($slam_time > 2500 && $slam_time <= 4000) {
+			$round_bias = 0.2;
+		} else {
+			$round_bias = 0.1;
+		} 
+
+		//get count of available mogs for this match
+		$available_mog_count = PlayField::getActiveMogs($this->id);
+		$available_mog_count = count((array)$available_mog_count);
+
+		//get number to be flipped
+		$flip_count = 40 * $round_bias;
+
+		//make sure number to be flipped doesn't exceed available
+		if($flip_count > $available_mog_count) {
+			$flip_count = $available_mog_count;
+		}
+
+		//Flip the mogs
+		PlayField::flipMogs($this->id, $this->active_player_id, $flip_count);
 	}
 
 	public static function checkForUpdate($match_id, $last_update) {
@@ -77,7 +127,7 @@ class Matches extends Model
 		$row = DB::table('Matches')
 						->where('id', '=', $match_id)
 						->get();
-		// print_r($row[0]->updated_at);
+
 		if($row[0]->updated_at != $last_update) {
 			$result = 1;
 		}
