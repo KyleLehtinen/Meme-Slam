@@ -19,9 +19,15 @@ class MemeSlamController extends Controller
 	public function initialize($user_id) {
 
 		$required_bet_count = 20;
-		// if(count(User::getBettedMogs($user_id)) == $required_bet_count)
 
-		if(Auth::user()) {
+		$in_active_match = Matches::checkForActiveMatch($user_id);
+
+		// if() {
+		// 	return redirect("meme_slam/$user_id");
+		// }
+
+		if(count(User::getBettedMogs($user_id)) == $required_bet_count || $in_active_match){
+
 
 			//get the user
 			$user = Auth::user();
@@ -57,6 +63,7 @@ class MemeSlamController extends Controller
 			return view('memeslam', ['user' => $user, 'bet_rating' => $bet_rating, 'match_detail', 
 									 'bet_mogs' => $bet_mogs, 'captured_mogs' => $captured_mogs])
 					->withEncryptedCsrfToken(Crypt::encrypt(csrf_token()));
+			
 		} else {
 			return redirect('/');
 		}

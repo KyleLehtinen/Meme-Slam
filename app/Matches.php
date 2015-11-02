@@ -67,9 +67,9 @@ class Matches extends Model
 			$result = 1;
 		} else if ($arr["current_state"] == 1){//post slammer
 			$this->calcRoundOutcome($arr['state_data']);
-			// DB::table('Matches')
-			// 		->where('id', '=', $this->id)
-			// 		->update(['match_state' => 2]);
+			DB::table('Matches')
+					->where('id', '=', $this->id)
+					->update(['match_state' => 2]);
 			$result = 1;
 		}
 
