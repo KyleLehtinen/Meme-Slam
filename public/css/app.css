@@ -48,7 +48,8 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background-color: white; }
+  background-color: white;
+  padding-bottom: 1em; }
 
 body.login-body {
   margin: -25px 0 0 0;
@@ -447,10 +448,10 @@ Jamaican Css in full force below
   min-width: 480px;
   width: 85%;
   height: 600px;
-  background-color: #EEEEEE;
+  background-color: white;
   position: relative;
   overflow: hidden;
-  border-radius: 5px; }
+  border-bottom: solid black 1px; }
 
 .mog-drop-container {
   width: 100%;
@@ -464,6 +465,9 @@ Jamaican Css in full force below
   top: 50%;
   -webkit-transform: translateX(-50%) translateY(-50%);
   transform: translateX(-50%) translateY(-50%); }
+
+.slammer-game-results {
+  text-align: center; }
 
 .explosion-container {
   position: absolute;
@@ -522,6 +526,7 @@ Jamaican Css in full force below
   box-shadow: 0px 1px 0px 1px #e8e8e8; }
 
 .display-stack h3 {
+  width: 400px;
   position: absolute;
   text-align: center;
   left: 50%;
@@ -622,7 +627,14 @@ SLAMMER CSS
   font-size: 1.5em; }
 
 .search-for-match {
-  background-color: blue; }
+  background-color: #FDC045;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  padding: 0.5em; }
+
+.search-for-match:active {
+  background-color: orange; }
 
 /*
 :-moz-placeholder {

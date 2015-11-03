@@ -52,7 +52,7 @@
 			</div>
 			<div class="mog-drop-container" hidden></div>
 			<div class="slammer-game-results" hidden>
-				<h3>Mogs Won this round:</h3>
+				<h3>Mogs Won this round</h3>
 			</div>
 		</div>
 		<div class="match-results" hidden>
