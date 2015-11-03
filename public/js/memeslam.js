@@ -245,7 +245,7 @@ $(function() {
 				console.log("Opponent View changed to Stack...");
 
 				lastState = newState;
-				$('.display-stack > h3').text("It's currently " + GameState.opponent.name + "'s turn! Waiting for opponent...");
+				$('.display-stack > h3').text("It's " + GameState.opponent.name + "'s turn! Waiting for opponent...");
 
 				//load in stack of mogs for view
 				var stackCount = GameState.player.playing_mogs.length +
@@ -332,7 +332,7 @@ $(function() {
 			} else { //catch case where other player has not yet seen the update
 				console.log("Other user has not seen view, resetting outcomeViewed and polling for players viewed round results...");
 				//show stack and display text
-				$('.display-stack > h3').text("Your turn is now over...waiting for opponent.");
+				$('.display-stack > h3').text("Your turn is now over...");
 				//load in stack of mogs for view
 				var stackCount = GameState.player.playing_mogs.length +
 									GameState.opponent.playing_mogs.length;
@@ -578,6 +578,7 @@ $(function() {
 					//reset container properties for next round
 					$('.explosion-container').attr('hidden','');
 					$('.explosion-container').removeAttr('style');
+					$('.explosion').removeAttr('style');
 					
 					//call render results
 					$('.mog-drop-container').removeAttr('hidden');
@@ -620,6 +621,7 @@ $(function() {
 			console.log("Revealing results...");
 			$('.slammer-game-results').removeAttr('hidden');
 			setTimeout(function(){
+				$('.slammer-game-results').attr('hidden','');
 				console.log("Calling updateMatchState since user should have seen view now...");
 				$('body').trigger('updateMatchState',[matchID,userID]);
 			},5000,matchID, userID);

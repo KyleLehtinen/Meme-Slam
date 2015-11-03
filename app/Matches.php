@@ -128,13 +128,14 @@ class Matches extends Model
 			DB::table('Matches')->where('id','=',$this->id)->update(['p1_viewed_round' => 1]);
 		} else if(($row[0]->p2_id == $player_id && $row[0]->p2_viewed_round == 0)) {
 			DB::table('Matches')->where('id','=',$this->id)->update(['p2_viewed_round' => 1]);
-		} else {
-			if($this->checkIfGameOver()) {//check if game over and update match state if so to alert clients
-				DB::table('Matches')->where('id', '=', $this->id)->update(['match_state' => 3]);
-			} else {//reset the round if not game over
-				$this->resetRound();
-			}
+		} 
+
+		if($this->checkIfGameOver()) {//check if game over and update match state if so to alert clients
+			DB::table('Matches')->where('id', '=', $this->id)->update(['match_state' => 3]);
+		} else if ($this->checkPlayersViewedResultsScreen()){//reset the round if not game over
+			$this->resetRound();
 		}
+	
 
 
 
