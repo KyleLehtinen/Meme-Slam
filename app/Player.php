@@ -16,8 +16,6 @@ class Player
 	}
 
 	public static function getPlayerState($match_id, $player_id) {
-		
-		
 
 		//get player username
 		$name = User::getUserName($player_id);

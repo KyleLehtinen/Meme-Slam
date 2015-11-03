@@ -11,13 +11,12 @@ class Matches extends Model
 	protected $fillable = ['players_matched','in_progress',
 							'p1_id','p1_bet_rating','p1_accept',
 							'p2_id','p2_bet_rating','p2_accept',
-							'active_player_id','match_state','match_complete','p1_new_mogs','p2_new_mogs',
+							'active_player_id','match_state','match_complete','p1_mog_count','p2_mog_count',
 							'p1_viewed_round','p2_viewed_round','updated_at'];
 
 	//logic that searches for a match, if none found calls createMatch
 	//This is a flawed approach to match making and will need to be updated should meme slam
 	//be deployed publicly
-
 	public function initializeGame() {
 
 		if($this->in_progress == 0) {
@@ -30,14 +29,6 @@ class Matches extends Model
 			PlayField::loadGameMogs($this->id, $match_players);
 		}
 	}
-
-	//return match details given match id
-	// public function getMatch() {
-		
-	// 	$match = Matches::find($this->id);
-
-	// 	return $match;
-	// }
 
 	public function getMatchPlayers() {
 
@@ -131,35 +122,72 @@ class Matches extends Model
 		} 
 
 		if($this->checkIfGameOver()) {//check if game over and update match state if so to alert clients
-			DB::table('Matches')->where('id', '=', $this->id)->update(['match_state' => 3]);
+			$this->processGameOver();
+			// DB::table('Matches')->where('id', '=', $this->id)->update(['match_state' => 3]);
 		} else if ($this->checkPlayersViewedResultsScreen()){//reset the round if not game over
 			$this->resetRound();
 		}
-	
+	}
+
+	//logic that handles game over
+	public function processGameOver(){
+		//set match state, match complete, and in progress
+		$this->in_progress = 0;
+		$this->match_complete = 1;
+		$this->match_state = 3;
+
+		//update game count for players
+		DB::table('User')->whereIn('id', array($this->p1_id,$this->p2_id))->increment('game_count',1);
+
+		//determine who wins
+		if($this->p1_mog_count > $this->p2_mog_count) {//player 1 wins
+			$winner = $p1_id;
+			$loser = $p2_id;
+		} else if ($this->p1_mog_count < $this->p2_mog_count) {//player 2 wins
+			$winner = $p2_id;
+			$loser = $p1_id;
+		} else {//tie
+			$winner = 0;
+		}
+
+		//update winners game count
+		DB::table('User')->where('id','=',$winner)->increment('keeps_wins', 1)->increment('total_wins', 1);
+
+		//call new mog drops for winner/loser respectively
+		if(!$winner) {//if tie users get low common drop
+			ActivatedMogs::activateNew(5,0,0, $this->p1_id);
+			ActivatedMogs::activateNew(5,0,0, $this->p2_id);
+		} else {
+			//values for drops
+			$commonNum = 15;
+			$rareNum = 0;
+			$legendaryNum = 0;
+
+			//rare roll...
+			if(rand(0,10) > 8) {
+				$rareNum = rand(1,4);
+			}
+
+			//legendary roll...
+			if(rand(0,10) >= 9) {
+				$legendaryNum = 1;
+			}
+
+			$commonNum -= ($rareNum - $legendaryNum); 
+			ActivatedMogs::activateNew($commonNum,$rareNum,$legendaryNum, $winner);
+			ActivatedMogs::activateNew(5,0,0, $this->$loser);
+		}
 
 
+		//reset players mog bet status
+		ActivatedMogs::resetBetStatus($p1_id);
+		ActivatedMogs::resetBetStatus($p2_id);
 
+		//increment user game counters
+		
 
-
-
-		// if($row[0]->p1_viewed_round == 0 && $row[0]->p2_viewed_round == 0) {
-		// 	//update which player viewed
-		// 	if($row[0]->p1_id == $player_id) {
-		// 		DB::table('Matches')->where('id','=',$this->id)->update(['p1_viewed_round' => 1]);
-		// 	} 
-		// 	if($row[0]->p2_id == $player_id) {
-		// 		DB::table('Matches')->where('id','=',$this->id)->update(['p2_viewed_round' => 1]);
-		// 	}
-		// } else {
-		// 	//check if both players checked in, if not do nothing
-		// 	if(!($row[0]->p1_viewed_round == 1 && $player_id)) {
-		// 		if($this->checkIfGameOver()) {//check if game over and update match state if so to alert clients
-		// 			DB::table('Matches')->where('id', '=', $this->id)->update(['match_state' => 3]);
-		// 		} else {//reset the round if not game over
-		// 			$this->resetRound();
-		// 		}
-		// 	}
-		// }
+		//save changes
+		$this->save();
 	}
 
 	//checks to see if both players have observe round outcome
@@ -218,6 +246,14 @@ class Matches extends Model
 
 		//Flip the mogs
 		PlayField::flipMogs($this->id, $this->active_player_id, $flip_count);
+
+		//update count of mogs for player
+		if($this->active_player_id == $this->p1_id) {
+			$this->p1_mog_count .= $flip_count;
+		} else {
+			$this->p2_mog_count .= $flip_count;
+		}
+		$this->save();
 	}
 
 	public static function checkForUpdate($match_id, $last_update) {
