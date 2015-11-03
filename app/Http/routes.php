@@ -32,8 +32,6 @@ Route::get('auth/logout', 'Auth\AuthController@getLogout');
 
 // Registration routes...
 Route::post('auth/register', 'Auth\AuthController@postRegister');
-// Route::get('auth/register', 'Auth\AuthController@getRegister'); <Login page handles registration
-
 
 //APIs for Dashboard
 Route::post('/api/update_bet_status', ['middleware' => 'auth', 'uses' => 'ActivatedMogsController@updateBetStatus']);
@@ -53,5 +51,3 @@ Route::get('/api/get_game_state/{match_id}/{user_id}', ['middleware' => 'auth', 
 Route::get('/api/check_for_active_match/{user_id}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@checkForActiveMatch']);
 Route::get('/api/check_players_viewed_round_results/{match_id}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@checkPlayersViewedRoundResults']);
 Route::get('/api/get_game_over_detail/{match_id}',['middleware' => 'auth', 'uses' => 'MemeSlamController@getGameOverDetail']);
-// Route::get('/api/check_players_turn/{match_id}/{user_id', ['middleware' => 'auth', 'uses' => 'MemeSlamController@'])
-// Route::get('/api/check_game_state/{match_id}/{user_id}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@'])
