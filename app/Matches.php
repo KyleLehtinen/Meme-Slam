@@ -137,21 +137,34 @@ class Matches extends Model
 		$this->match_state = 3;
 
 		//update game count for players
-		DB::table('User')->whereIn('id', array($this->p1_id,$this->p2_id))->increment('game_count',1);
+		// DB::table('User')->whereIn('id', array($this->p1_id,$this->p2_id))->increment('game_count',1);
 
 		//determine who wins
 		if($this->p1_mog_count > $this->p2_mog_count) {//player 1 wins
-			$winner = $p1_id;
-			$loser = $p2_id;
+			$winner = User::find($this->p1_id);
+			$loser = User::find($this->p2_id);
+			$winner->game_count .= 1;
+			$winner->save();
+			$loser->game_count .= 1;
+			$loser->save();
 		} else if ($this->p1_mog_count < $this->p2_mog_count) {//player 2 wins
-			$winner = $p2_id;
-			$loser = $p1_id;
+			$winner =  User::find($this->p2_id);
+			$loser =  User::find($this->p1_id);
+			
 		} else {//tie
 			$winner = 0;
+			$player1 = User::find($this->p1_id);
+			$player2 = User::find($this->p2_id);
+			$player1->game_count .= 1;
+			$player2->game_count .= 2;
+			$player1->save();
+			$player2->save();
 		}
 
+
 		//update winners game count
-		DB::table('User')->where('id','=',$winner)->increment('keeps_wins', 1)->increment('total_wins', 1);
+		$winner->total_wins .= 1;
+		// DB::table('User')->where('id','=',$winner)->increment('keeps_wins', 1)->increment('total_wins', 1);
 
 		//call new mog drops for winner/loser respectively
 		if(!$winner) {//if tie users get low common drop
@@ -174,19 +187,20 @@ class Matches extends Model
 			}
 
 			$commonNum -= ($rareNum - $legendaryNum); 
-			ActivatedMogs::activateNew($commonNum,$rareNum,$legendaryNum, $winner);
-			ActivatedMogs::activateNew(5,0,0, $this->$loser);
+			ActivatedMogs::activateNew($commonNum,$rareNum,$legendaryNum, $winner->id);
+			ActivatedMogs::activateNew(5,0,0, $loser->id);
+			$winner->game_count .= 1;
+			$winner->save();
+			$loser->game_count .= 1;
+			$loser->save();
 		}
 
-
 		//reset players mog bet status
-		ActivatedMogs::resetBetStatus($p1_id);
-		ActivatedMogs::resetBetStatus($p2_id);
-
-		//increment user game counters
-		
+		ActivatedMogs::resetBetStatus($this->p1_id);
+		ActivatedMogs::resetBetStatus($this->p2_id);
 
 		//save changes
+
 		$this->save();
 	}
 

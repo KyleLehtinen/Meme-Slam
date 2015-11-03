@@ -52,13 +52,14 @@
 			</div>
 			<div class="mog-drop-container" hidden></div>
 			<div class="slammer-game-results" hidden>
-				<div class="rnd-rslt-won-mogs">
-					<h3>Mogs Won this round:</h3>
-				</div>
-{{-- 				<div class="rnd-rslt-new-mogs">
-					<h3>New Mogs:</h3>
-				</div> --}}
+				<h3>Mogs Won this round:</h3>
 			</div>
+		</div>
+		<div class="match-results" hidden>
+			<h3>Game Over!</h3>
+			<h3 class="winner"></h3>
+			<h3 class="players-won-mogs-count"></h3>
+			<h3>New Mogs have been added to your dashboard. Thanks for playing.</h3>
 		</div>
 	</div>
 	<div class="game-details-container">

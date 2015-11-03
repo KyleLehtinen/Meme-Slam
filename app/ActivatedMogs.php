@@ -144,4 +144,8 @@ class ActivatedMogs extends Model
 		////later if I have time...
 	}
 
+	public static function resetBetStatus($user_id) {
+		DB::table('ActivatedMogs')->where('owner_id','=',$user_id)->update(['on_bet' => 0]);
+	}
+
 }

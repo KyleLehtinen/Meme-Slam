@@ -5,9 +5,18 @@ $(function(){
 
 	//controls mog selection from bet pod and inventory for hero area
 	$('body').on('click','.mog-img', function(e){
+		$('.selected-mog').removeClass('legendary');
+		$('.selected-mog').removeClass('rare');
+
 		var title_rating = $(this).attr('title');
 		var style = $(this).attr('style');
 		var url = $(this).attr('data');
+
+		if($(this).attr('rating').val() >= 900) {
+			$('.select-mog').addClass('legendary');
+		} else if($(this).attr('rating').val() < 900 && $(this).attr('rating').val() >= 600) {
+			$('.select-mog').addClass('rare');
+		}
 
 		$('.selected-mog').attr('style',style);
 		$('.selected-mog-name').text('Mog Name: ' + title_rating.substring(0,(title_rating.indexOf('|') - 1)));

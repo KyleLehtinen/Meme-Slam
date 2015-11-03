@@ -192,4 +192,11 @@ class MemeSlamController extends Controller
 
 		return $match->checkPlayersViewedResultsScreen();
 	}
+
+	public function getGameOverDetail($match_id) {
+
+		$response = Matches::find($match_id);
+
+		return $response;
+	}
 }

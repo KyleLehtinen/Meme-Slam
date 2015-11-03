@@ -1,30 +1,67 @@
-
 function slammerMiniGame(matchID) {
 	
-	console.log("Slammer Mini Game started...");
+	console.log("Slammer Mini Game started... ");
 
 	var entered = false;
 	var failed = false;
 	var passed = false;
 	var resultMessage;
-	$('.slammer-container h3').text('3...2...1...');
+
+	var rotateSlammer = function(element) {
+		console.log("Firing slammer rotate!");
+		element.snabbt({
+			rotation: [0,0,2*Math.PI],
+			duration: 5000,
+			complete: function(){
+				console.log("Slammer animation finished");
+				if(!passed && !failed){
+					failed = true;
+					$(this).attr('hidden','');
+					$(this).removeAttr('style');
+					$(this).removeAttr('transform');
+					$('.slammer-container h3').text("Too Bad!").removeAttr('hidden');
+					processRound();
+				}
+			}
+		});
+	}
+
+	rotateSlammer($('.slammer'));
+	// if(!passed) {
+	// 	$('body').trigger('rotateSlammer');
+	// }
+	
 	$('.slammer-container h3').attr('hidden','');
+
 	
 	$('.slammer').removeAttr('hidden');
 
-	$('.slammer').snabbt({
-		rotation: [0,0,2*Math.PI],
-		duration: 5000,
-		complete: function(){
-			if(!passed){
-				failed = true;
-				$(this).attr('hidden','');
-				$(this).removeAttr('style');
-				$('.slammer-container h3').text("Too Bad!").removeAttr('hidden');
-				processRound();
+	// $('body').on('rotateSlammer', function(){
+	// 	rotateSlammer();
+	// }
+	var rotateSlammer = function(element) {
+		console.log("Firing slammer rotate!");
+		element.snabbt({
+			rotation: [0,0,2*Math.PI],
+			duration: 5000,
+			complete: function(){
+				console.log("Slammer animation finished");
+				if(!passed && !failed){
+					failed = true;
+					$(this).attr('hidden','');
+					$(this).removeAttr('style');
+					$(this).removeAttr('transform');
+					$('.slammer-container h3').text("Too Bad!").removeAttr('hidden');
+					processRound();
+				}
 			}
-		}
-	});
+		});
+	}
+
+	// $('body').on('rotateSlammer', function(){
+		
+		
+	// })
 
 	$('body').on('mouseenter', '.upper, .lower', function() {
 		failed = true;

@@ -17,11 +17,12 @@ $(function() {
 	var matchID;
 	var lastState;
 	var playerAcceptedMatch;
+	var ggDetail;
 	var userID = $('.game-field').attr('userid');
 	var betRating = $('.game-field').attr('rating');
 	var joinIntervalPollTime = 2000;
-	var acceptTimerValue = 10000;
-	var recheckPlayersAcceptTimerValue = 5000;
+	var acceptTimerValue = 5000;
+	var recheckPlayersAcceptTimerValue = 3000;
 
 	var data = {
 		userID: userID,
@@ -191,7 +192,7 @@ $(function() {
 
 	//updates game view and calls slammer mini game
 	$('body').on('slammerMiniGame', function(e, matchID) {
-		$('.slammer-container h3').text('3...2...1...');
+		console.log("Executing Slammer Game...");
 		slammerMiniGame(matchID);
 	});
 
@@ -219,7 +220,7 @@ $(function() {
 			console.log("GameState is initialized.");
 			//check if player's turn
 			if(GameState.active_player == userID) {//Player's turn - Run turn logic
-				//logic to complete turn
+
 				console.log("It's your turn...");
 				//trigger process event
 				$('body').trigger('processTurn', matchID, userID);
@@ -227,9 +228,6 @@ $(function() {
 				console.log("It's opponent's turn... Checking for state change...");
 
 				opponentViewUpdate();
-				// if(lastState != GameState.match_state) {
-				// 	opponentViewUpdate();
-				// }
 			}
 		}
 	}
@@ -285,10 +283,28 @@ $(function() {
 				$('body').trigger('pollForUpdate', matchID);
 			}
 		} else {//display match result
-			lastState = newState;
-			console.log("Opponent View is set to show end of match...");
-			// switchGameView(3);
+			if(lastState != '3') {
+				lastState = newState;
+				console.log("Opponent View is set to show end of match...");
+				getGameOverDetail(matchID);
+				setTimeout(function(){
+					$('.winner').text(ggDetail.id);
+					switchGameView(3);	
+				},2000,ggDetail);
+			}
 		} 	
+	}
+
+	function getGameOverDetail(matchID) {
+		$.ajax({
+			url: '/api/get_game_over_detail/' + matchID,
+		}).done(function(response){
+			console.log("Game Over Details received!");
+			ggDetail = response;
+		}).fail(function (request, status, error) {
+		    console.log("Error getting game over detail...");
+		    console.dir(error);
+		});
 	}
 
 	//main method that processes the turn by calling other events and advancing the game state
@@ -296,30 +312,35 @@ $(function() {
 		var newState = GameState.match_state;
 
 		if(newState == '0') { //Display stack
-			lastState = newState;
-
-			console.log("Game State is 0, displaying stack...");
-			$('.display-stack > h3').text("It's your turn! Get ready...");
-			//load in stack of mogs for view
-			var stackCount = GameState.player.playing_mogs.length +
-								GameState.opponent.playing_mogs.length;
-			renderStack(stackCount);
-			switchGameView(0);
-
-			setTimeout(function(){
-				$('body').trigger('updateMatchState', matchID);
-			}, 2000, matchID);
 			
+			if(lastState != '0') {
+				lastState = newState;
+
+				console.log("Game State is 0, displaying stack...");
+				$('.display-stack > h3').text("It's your turn! Get ready...");
+				//load in stack of mogs for view
+				var stackCount = GameState.player.playing_mogs.length +
+									GameState.opponent.playing_mogs.length;
+				renderStack(stackCount);
+				switchGameView(0);
+
+				setTimeout(function(){
+					$('body').trigger('updateMatchState', matchID);
+				}, 2000, matchID);
+			}	
 		} else if (newState == '1') { //Slammer mini game 
-			lastState = newState;
-
-			console.log("Game State is 1, displaying slammer...");
-			switchGameView(1);
 			
-			setTimeout(function(){
-				$('body').trigger('slammerMiniGame',[matchID]);
-			},3000);
-	
+			if(lastState != '1') {
+				lastState = newState;
+				$('.slammer-container h3').text('3...2...1...');
+				console.log("Game State is 1, displaying slammer...");
+				switchGameView(1);
+			
+				setTimeout(function(){
+					$('body').trigger('slammerMiniGame',[matchID]);
+				},3000);
+
+			} 
 		} else if (newState == '2') { //slammer explosion and result animation 
 			console.log("Game State is 2, showing results...");
 
@@ -343,7 +364,15 @@ $(function() {
 				},3000, matchID);
 			}
 		} else { //end of game
-			console.log("THE GAME IS OVER NOW");
+			if(lastState != '3') {
+				lastState = newState;
+				console.log("Opponent View is set to show end of match...");
+				getGameOverDetail(matchID);
+				setTimeout(function(){
+					$('.winner').text(ggDetail.id);
+					switchGameView(3);	
+				},2000,ggDetail);
+			}
 		}
 	}
 

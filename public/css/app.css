@@ -48,7 +48,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background-color: #EAEAEA; }
+  background-color: white; }
 
 body.login-body {
   margin: -25px 0 0 0;
@@ -69,13 +69,15 @@ navbar ul {
   text-align: center;
   margin: 0;
   padding: 0;
-  background-color: red; }
+  background-color: #FC881D;
+  box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.3); }
 
 navbar ul li {
   list-style: none;
   -webkit-flex: 1;
   -ms-flex: 1;
-  flex: 1; }
+  flex: 1;
+  border-left: 1px solid gray; }
 
 .nav-selected {
   border-bottom: solid yellow 5px; }
@@ -83,13 +85,17 @@ navbar ul li {
 a {
   text-decoration: none; }
 
+.selected-mog-url a {
+  color: blue; }
+
 .navtab {
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
-  height: 4em;
-  padding-top: 1em;
-  margin: 0; }
+  margin: 0;
+  color: white;
+  font-size: 1.3em;
+  padding: 0.7em; }
 
 /*******
 LOGIN SCREEN CSS
@@ -240,7 +246,25 @@ Jamaican Css in full force below
   border-radius: 50%;
   background-size: cover;
   margin: 1em auto;
-  border: 1px solid black; }
+  border: 1px solid black;
+  box-shadow: 0px 124px 28px -116px rgba(0, 0, 0, 0.3); }
+
+.selected-mog.legendary {
+  border: 2px solid gold; }
+
+.selected-mog.rare {
+  border: 2px solid silver; }
+
+.selected-mog-name {
+  font-size: 1.5em;
+  margin-top: .5em; }
+
+.selected-mog-rating {
+  margin-top: 1em;
+  font-size: 1.5em; }
+
+.selected-mog-url {
+  margin-top: 1em; }
 
 .user-stats {
   margin: 1em auto;
@@ -264,7 +288,8 @@ Jamaican Css in full force below
   -webkit-justify-content: space-around;
   -ms-flex-pack: distribute;
   justify-content: space-around;
-  background-color: white; }
+  background-color: #EEEEEE;
+  border-radius: 10px; }
 
 .mog-detail-view {
   -webkit-flex: 1;
@@ -272,7 +297,6 @@ Jamaican Css in full force below
   flex: 1; }
 
 .mog-details-container {
-  background-color: yellow;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -307,16 +331,22 @@ Jamaican Css in full force below
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  height: 600px; }
+  height: 600px;
+  background-color: #EEEEEE;
+  border-radius: 10px; }
 
 .mog-main-container h3 {
-  padding-left: 1em; }
+  padding-left: 1em;
+  background-color: white;
+  border-radius: 5px; }
 
 .bet-pod-container {
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  background-color: lightblue; }
+  -webkit-flex: 1.2;
+  -ms-flex: 1.2;
+  flex: 1.2; }
+
+.bet-pod-container div h4 {
+  padding-left: .5em; }
 
 .bet-pod-mogs {
   padding: 0 0.7em;
@@ -336,7 +366,8 @@ Jamaican Css in full force below
   align-content: flex-start;
   -webkit-justify-content: center;
   -ms-flex-pack: center;
-  justify-content: center; }
+  justify-content: center;
+  border-right: 1px solid black; }
 
 .bet-pod {
   overflow: scroll; }
@@ -345,8 +376,10 @@ Jamaican Css in full force below
   -webkit-flex: 4;
   -ms-flex: 4;
   flex: 4;
-  background-color: orange;
   overflow: scroll; }
+
+.mog-inventory div h4 {
+  padding-left: 1.3em; }
 
 .mog-container {
   display: -webkit-flex;
@@ -367,6 +400,12 @@ Jamaican Css in full force below
   height: 50px;
   border-radius: 50%;
   border: solid black 1px; }
+
+.mog-img.legendary {
+  border: solid gold 2px; }
+
+.mog-img.rare {
+  border: solid silver 2px; }
 
 .mog {
   margin: 0.2em;
@@ -408,9 +447,10 @@ Jamaican Css in full force below
   min-width: 480px;
   width: 85%;
   height: 600px;
-  background-color: white;
+  background-color: #EEEEEE;
   position: relative;
-  overflow: hidden; }
+  overflow: hidden;
+  border-radius: 5px; }
 
 .mog-drop-container {
   width: 100%;
@@ -505,7 +545,9 @@ Jamaican Css in full force below
   -webkit-justify-content: left;
   -ms-flex-pack: left;
   justify-content: left;
-  border-bottom: 1px solid black; }
+  min-height: 120px;
+  background-color: #EEEEEE;
+  border-radius: 10px; }
 
 /****
 SLAMMER CSS
@@ -529,19 +571,19 @@ SLAMMER CSS
   top: -170px;
   height: 200px;
   width: 400px;
-  background-color: orange;
+  background-color: black;
   border-radius: 400px 400px 0 0;
   -moz-border-radius: 400px 400px 0 0;
   -webkit-border-radius: 400px 400px 0 0; }
 
 .upper:hover, .lower:hover {
-  background-color: yellow; }
+  background-color: red; }
 
 .lower {
   height: 200px;
   position: absolute;
   width: 400px;
-  background-color: blue;
+  background-color: black;
   border-radius: 0 0 400px 400px;
   -moz-border-radius: 0 0 400px 400px;
   -webkit-border-radius: 0 0 400px 400px;
@@ -558,7 +600,8 @@ SLAMMER CSS
   position: absolute;
   height: 60px;
   width: 375px;
-  background-color: green;
+  background-color: white;
+  background-image: url("/images/mouseguide.png");
   z-index: 1; }
 
 .exit {
@@ -566,12 +609,20 @@ SLAMMER CSS
   position: absolute;
   height: 60px;
   width: 25px;
-  background-color: red;
+  background-color: white;
   right: 0px;
   z-index: 1; }
 
 ::-webkit-input-placeholder {
   padding-left: 5px; }
+
+.pre-search, .prompt-accept, .game-search, .attempt-join, .join-successful {
+  text-align: center;
+  margin: auto;
+  font-size: 1.5em; }
+
+.search-for-match {
+  background-color: blue; }
 
 /*
 :-moz-placeholder {
