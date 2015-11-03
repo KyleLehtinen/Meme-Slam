@@ -12,8 +12,7 @@ class Matches extends Model
 							'p1_id','p1_bet_rating','p1_accept',
 							'p2_id','p2_bet_rating','p2_accept',
 							'active_player_id','match_state','match_complete','p1_new_mogs','p2_new_mogs',
-							'updated_at'
-						  ];
+							'p1_viewed_round','p2_viewed_round','updated_at'];
 
 	//logic that searches for a match, if none found calls createMatch
 	//This is a flawed approach to match making and will need to be updated should meme slam
@@ -71,6 +70,89 @@ class Matches extends Model
 					->where('id', '=', $this->id)
 					->update(['match_state' => 2]);
 			$result = 1;
+		} else if ($arr["current_state"] == 2) {//mini-game results, check if game over and reset round
+			
+			//updating that the given player has seen the result
+			$result = $this->updatePlayerViewedResult($arr['state_data']);
+
+			if($result){
+				if($this->checkIfGameOver()) {
+					DB::table('Matches')->where('id', '=', $this->id)->update(['match_state' => 3]);
+				} else {
+					$this->resetRound();
+					DB::table('Matches')->where('id', '=', $this->id)->update(['match_state' => 0]);
+				}
+			}
+		}
+
+		return $result;
+	}
+
+	public function resetRound() {
+
+		//get data for logic
+		$row = DB::table('Matches')->where('id','=',$this->id)->get();
+		$p1 = $row[0]->p1_id;
+		$p2 = $row[0]->p2_id;
+
+		//swap active player
+		if($row[0]->active_player_id == $p1) {
+			DB::table('Matches')->where('id','=',$this->id)->update(['active_player_id' => $p2]);
+		} else {
+			DB::table('Matches')->where('id','=',$this->id)->update(['active_player_id' => $p1]);
+		}
+
+		//reset p1/p2 viewed round variables
+		DB::table('Matches')->where('id','=',$this->id)->update(['p1_viewed_round' => 0,
+																 'p2_viewed_round' => 0]);
+		//reset show_animation for playfield mogs
+		DB::table('PlayField')->where('match_id','=',$this->id)->update(['show_animation' => 0]);
+	}
+
+	//check if a game over state is reached by seeing if there are any remaining mogs in play
+	public function checkIfGameOver() {
+
+		$result = 0;
+
+		$row = PlayField::getActiveMogs($this->id);
+
+		if(empty($row)) {
+			$result = 1;
+		}
+
+		return $result;
+	}
+
+	//update match to indicate player has observed the round
+	public function updatePlayerViewedResult($player_id) {
+		
+		$result = 0;
+
+		$row = DB::table('Matches')->where('id','=',$this->id)->get();
+
+		if($row[0]->p1_id == $player_id && $row[0]->p1_viewed_round == 0) {
+			DB::table('Matches')->where('id','=',$this->id)->update(['p1_viewed_round' => 1]);
+		} 
+
+		if($row[0]->p2_id == $player_id && $row[0]->p2_viewed_round == 0) {
+			DB::table('Matches')->where('id','=',$this->id)->update(['p2_viewed_round' => 1]);
+		}
+
+		$result = $this->checkPlayersViewedResultsScreen();
+
+		return $result;
+	}
+
+	//checks to see if both players have observe round outcome
+	public function checkPlayersViewedResultsScreen() {
+
+		$result = 0;
+
+		$row = DB::table('Matches')->where('id', '=', $this->id)
+								   ->where('p1_viewed_round', '=', 1)
+								   ->where('p2_viewed_round', '=', 1)->get();
+		if(!empty($row)) {
+			$result = 1;
 		}
 
 		return $result;
@@ -79,7 +161,6 @@ class Matches extends Model
 	public function calcRoundOutcome($slam_time) {
 
 		//determine round_bias from given slam time
-		
 		if($slam_time == 0) {
 			$round_bias = 0;
 		} else if($slam_time > 1 && $slam_time <= 200) {

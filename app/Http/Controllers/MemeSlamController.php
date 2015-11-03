@@ -186,5 +186,10 @@ class MemeSlamController extends Controller
 		return $response;
 	}
 
+	public function checkPlayersViewedRoundResults($match_id) {
 
+		$match = Matches::find($match_id);
+
+		return $match->checkPlayersViewedResultsScreen();
+	}
 }

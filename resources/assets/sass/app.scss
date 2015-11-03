@@ -371,7 +371,7 @@ Jamaican Css in full force below
 .mog-img {
     margin: 0.5em;
     position: relative;
-    /* display: inline-block; */
+    display: inline-block;/*NOTE, I CHANGED THIS FOR END ROUND MOG VIEW*/
     background-size: cover;
     width: 50px;
     height: 50px;
@@ -420,40 +420,44 @@ Jamaican Css in full force below
     height: 600px;
     background-color: white;
     position: relative;
+    overflow: hidden;
 }
 
 .mog-drop-container {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        margin: auto;
-    }
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    /* margin: auto; */
+}
 
-    .slammer-explosion {
-        position: relative;
-        left: 50%;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
-    }
+.slammer-explosion {
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
 
-    .explosion-container {
-        position: relative;
-        left: 30%;
-        /* top: 25%; */
-        transform: translateX(-50%);
-        background: url('memeslam.png');
-        width: 300px;
-        height: 300px;
-        background-color: white;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
+.explosion-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+}
 
-    .stack-itm-contr {
-         position: absolute;
-        -webkit-transform: rotate3d(1,0, 0,60deg);
-    }
+.explosion {
+    background: url("/images/memeslam.png");
+    width: 300px;
+    height: 300px;
+    background-color: white;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center; 
+}
+
+.stack-itm-contr {
+     position: absolute;
+    -webkit-transform: rotate3d(1,0, 0,60deg);
+}
 
 .mog-stack {
     position: relative;
@@ -462,16 +466,17 @@ Jamaican Css in full force below
     margin: auto;
 }
 
-.stack-item {
+.drop-item {
     position: absolute;
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
     border: 2px solid orange;
     border-radius: 50%;
-    -webkit-transform: rotate3d(1,0, 0,60deg);
-    -webkit-box-shadow: 0px 2px 0px 1px rgba(232,232,232,1);
-    -moz-box-shadow: 0px 2px 0px 1px rgba(232,232,232,1);
-    box-shadow: 0px 1px 0px 1px rgba(232,232,232,1);
+    background-size: cover;
+    background-color: white;
+    background-position: center;
+    /* -webkit-transform: rotate3d(1, 0, 0, 60deg); */
+    box-shadow: 5px 5px 30px -9px rgba(102, 102, 102, 0.5);
 }
 
 .stack-item:first-child {
@@ -486,6 +491,16 @@ Jamaican Css in full force below
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+}
+
+.stack-item {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border: 2px solid orange;
+    border-radius: 50%;
+    -webkit-transform: rotate3d(1, 0, 0, 60deg);
+    box-shadow: 0px 1px 0px 1px #e8e8e8; 
 }
 
 .display-stack h3 {

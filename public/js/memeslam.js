@@ -11,8 +11,7 @@ $(function() {
 		0: $('.display-stack'),
 		1: $('.slammer-game'),
 		2: $('.slammer-explosion'),
-		3: $('.slammer-game-results'),
-		4: $('.match-results')
+		3: $('.match-results')
 	};
 
 	var matchID;
@@ -193,12 +192,17 @@ $(function() {
 
 	//updates game view and calls slammer mini game
 	$('body').on('slammerMiniGame', function(e, matchID) {
+		$('.slammer-container h3').text('3...2...1...');
 		slammerMiniGame(matchID);
 	});
 
 	$('body').on('updateMatchState', function(e, matchID, stateData){
 		state = GameState.match_state;
 		updateMatchState(matchID, state, stateData);
+	});
+
+	$('body').on('showRoundResults', function(e) {
+		showRoundResults();
 	});
 
 //////////FUNCTION CALLS/////////////
@@ -223,51 +227,86 @@ $(function() {
 			} else {//Opponent turn - Poll for player's turn
 				console.log("It's opponent's turn... Checking for state change...");
 
-				if(lastState != GameState.match_state) {
-					opponentViewUpdate();
-				}
-				//call function that polls for the match being the player's turn
-				$('body').trigger('pollForUpdate', matchID);
+				opponentViewUpdate();
+				// if(lastState != GameState.match_state) {
+				// 	opponentViewUpdate();
+				// }
 			}
 		}
 	}
 
 	//Used to govern opponent player's view.
 	function opponentViewUpdate() {
-
+		console.log("Entered OpponentViewUpdate Function...");
 		var newState = GameState.match_state
 
-		if(typeof lastState === 'undefined') { //check if lastState is initialized
-			lastState = GameState.match_state;
-		} 
+		// if(typeof lastState === 'undefined') { //check if lastState is initialized
+		// 	console.log("lastState not initialized, initializing...");
+		// 	lastState = GameState.match_state;
+		// } 
 
-		if ((lastState != '0' || lastState != '1') && (newState == '0' || newState == '1')) {//display stack
+		if (newState == '0' || newState == '1') {//display stack
+			//first time through
+			if(lastState != '0' && lastState != '1'){
+				console.log("Opponent View changed to Stack...");
+
+				lastState = newState;
+				$('.display-stack > h3').text("It's currently " + GameState.opponent.name + "'s turn! Waiting for opponent...");
+
+				//load in stack of mogs for view
+				var stackCount = GameState.player.playing_mogs.length +
+									GameState.opponent.playing_mogs.length;
+				renderStack(stackCount);
+				switchGameView(0);
+				console.log("Stack rendered and displayed.");
+			} 
+
+			lastState = newState;
+			//call function that polls for the match being the player's turn
+			console.log("Opponent View: Triggering pollForUpdate...");
+			$('body').trigger('pollForUpdate', matchID);
+
+		} else if (newState == '2') {//display explosion and round result
+			console.log("Opponent View is showing results view...");
 			
-			$('.display-stack > h3').text("It's currently " + GameState.opponent.name + "'s turn! Waiting for opponent...");
+			//first time through
+			if(lastState != '2') {
+				console.log("Opponent has not seen results, setting flag and setting to show...");
+				lastState = newState;
+				switchGameView(2);
+				console.log("Calling showRoundResults for opponent...");
+				$('body').trigger('showRoundResults');
+			} else {
+				console.log("Opponent has seen results, switching to show stack and resetting outcome viewed, polling for round results viewed...");
+				outcomeViewed = 0;
+				$('.display-stack > h3').text("Opponent's turn is now over. Waiting for opponent...");
+				//load in stack of mogs for view
+				var stackCount = GameState.player.playing_mogs.length +
+									GameState.opponent.playing_mogs.length;
+				renderStack(stackCount);
+				switchGameView(0);
+				console.log("Stack rendered and displayed.");
 
-			//load in stack of mogs for view
-			var stackCount = GameState.player.playing_mogs.length +
-								GameState.opponent.playing_mogs.length;
-			renderStack(stackCount);
-			switchGameView(0);
-
-		} else if (lastState != '2' && newState == '2') {//display explosion and round result
-			switchGameView(2);
+				pollPlayersViewedResults(matchID);
+			}
 		} else if (lastState != '3' && newState == '3') {//display match result
+			console.log("Opponent View is set to show end of match, we shouldn't be here yet...");
 			switchGameView(3);
 		} 
 		// else { //display end game results
 		// 	switchGameView(4);
 		// }
 
-		lastState = newState;
+		
+		
+		
 	}
 
 	//main method that processes the turn by calling other events and advancing the game state
 	function processTurn(matchID, userID) {
 
 		if(GameState.match_state == '0') { //Display stack
-			
+			console.log("Game State is 0, displaying stack...");
 			$('.display-stack > h3').text("It's your turn! Get ready...");
 			//load in stack of mogs for view
 			var stackCount = GameState.player.playing_mogs.length +
@@ -279,32 +318,36 @@ $(function() {
 			}, 2000, matchID);
 			
 		} else if (GameState.match_state == '1') { //Slammer mini game 
-			
+			console.log("Game State is 1, displaying slammer...");
 			switchGameView(1);
 			setTimeout(function(){
 				$('body').trigger('slammerMiniGame',[matchID]);
 			},3000);
 	
 		} else if (GameState.match_state == '2') { //slammer explosion and result animation 
-			
+			console.log("Game State is 2, showing results...");
 			if(typeof lastState === 'undefined') { //check if lastState is initialized
 				lastState = GameState.match_state;
 			} 
 
-			if(lastState == '2' && GameState.match_state == '2') {//first time player seeing results
-
-
-
+			if(lastState == '2' && GameState.match_state == '2' && outcomeViewed !== 1) {//first time player seeing results
+				console.log("First time through seeing match results...");
+				outcomeViewed = 1;
+				switchGameView(2);
+				$('body').trigger('showRoundResults');
+				// setTimeout(function(){},5000);
 			} else { //catch case where other player has not yet seen the update
+				console.log("Other user has not seen view, resetting outcomeViewed and polling for players viewed round results...");
+				outcomeViewed = 0;
 				//show stack and display text
-				$('.display-stack > h3').text("Your turn is now over.");
+				$('.display-stack > h3').text("Your turn is now over...waiting for opponent.");
 				//load in stack of mogs for view
 				var stackCount = GameState.player.playing_mogs.length +
 									GameState.opponent.playing_mogs.length;
 				renderStack(stackCount);
 				switchGameView(0);
 				setTimeout(function(){
-					$('body').trigger('pollForUpdate', [matchID]);
+					pollPlayersViewedResults(matchID);
 				},3000, matchID);
 			}
 		} else if (GameState.match_state == '3') { //Results processing to results output
@@ -314,6 +357,24 @@ $(function() {
 		} else {
 
 		}
+	}
+
+	//checks if both players have seen results of the round
+	function pollPlayersViewedResults(matchID) {
+		var pollViewedResults = setInterval(function(){
+			$.ajax({
+				url: '/api/check_players_viewed_round_results/' + matchID,
+			}).done(function(playersViewed){
+				if(playersViewed) {
+					stopPolling(pollViewedResults);
+					console.log("Both players have seen results! Getting GameState...");
+					getGameState(matchID);
+				}
+			}).fail(function (request, status, error) {
+			    console.log("Error sending update to server...");
+			    console.dir(error);
+			});
+		}, 3000, matchID);
 	}
 
 	//function used to push update to server
@@ -538,32 +599,78 @@ $(function() {
 	//function that plays explosion animation and round results
 	function showRoundResults(){
 		$('.slammer-explosion').removeAttr('hidden');
-		$('.explosion-container').snabbt({
+		$('.explosion').snabbt({
 			scale: [1.8,1.8],
 			duration: 100,
 			complete: function(){
 				console.log("animation done");
 				$('.explosion-container').fadeOut(400, function(){
-					$('.mog-drop-container').removeAttr('hidden','');
-					renderRoundResultMogs(28);
+					//reset container properties for next round
+					$('.explosion-container').attr('hidden','');
+					$('.explosion-container').removeAttr('style');
+					
+					//call render results
+					$('.mog-drop-container').removeAttr('hidden');
+					renderRoundResultMogs();
 				})
 				
 			}
 		})
+
+		var mogDropContainer = $('.mog-drop-container');
+
 		//hold view to show fallen mogs then switch to results view
+		setTimeout(function(){
+			console.log("Drop animation done... Moving on to Won Mogs...");
+			showRoundsWonMogs(mogDropContainer);
+		},5000,mogDropContainer);
+	}
+
+	//show won mogs
+	function showRoundsWonMogs(prevContainer){
+		
+		//clear results view before rev
+		$('.slammer-game-results').children().remove();
+		
+		//append won mogs to dom
+		for(var i = 0; i < GameState.round_result_mogs.length; i++) {
+			$('.slammer-game-results').append('<div class=\"mog-img\" style=\"background-image: url(\'/images/mogs/'+GameState.round_result_mogs[i].id+'\');\"></div>');
+		}
+
+		//fade out old view and reset properties
+		prevContainer.fadeOut(400,function(){
+			//clean up mog drop screen
+			console.log("Cleaning up last view...");
+			prevContainer.attr('hidden','');
+			prevContainer.removeAttr('style');
+			prevContainer.children().remove();
+
+			//update results view and reveal
+			console.log("Revealing results...");
+			$('.slammer-game-results').removeAttr('hidden');
+			setTimeout(function(){
+				console.log("Calling updateMatchState since user should have seen view now...");
+				$('body').trigger('updateMatchState',[matchID,userID]);
+			},5000,matchID, userID);
+		});
 	}
 
 	//function used to render mog drop during round results
 	function renderRoundResultMogs(count) {
 		var maxHeight = 400;
-		var minHeight = 155;
-		var minWidth = 155;
 		var maxWidth = $('.round-results').parent().width() - 155;
+		var countNotFlipped = (GameState.player.playing_mogs.length + GameState.opponent.playing_mogs.length) - GameState.round_result_mogs.length;
+		var countFlipped = GameState.round_result_mogs.length;
 
-		for(var i = 0; i < count; i++) {
-			$('.mog-drop-container').append('<div class=\"stack-itm-contr\" style=\"left: '+Math.floor((Math.random() * (maxWidth)))+'px; top: -400px\"><div class=\"stack-item '+i+'\"></div></div>'
-											);
-			$('.stack-item.'+i).snabbt({
+		for(var i = 0; i < (countFlipped + countNotFlipped); i++) {
+			console.log("Getting flipped mogs...");
+			if(i < (countFlipped - 1) ) {
+				$('.mog-drop-container').append('<div class=\"stack-itm-contr\" style=\"left: '+Math.floor((Math.random() * (maxWidth)))+'px; top: -400px\"><div class=\"drop-item '+i+'\" style=\"background-image: url(\'/images/mogs/'+GameState.round_result_mogs[i].id+'\')\"></div></div>');
+			} else {
+				$('.mog-drop-container').append('<div class=\"stack-itm-contr\" style=\"left: '+Math.floor((Math.random() * (maxWidth)))+'px; top: -400px\"><div class=\"drop-item '+i+'\" style=\"background-image: url(\'/images/memeslam.png\')\"></div></div>');	
+			}
+			
+			$('.drop-item.'+i).snabbt({
 				delay: 400,
 				duration: 400,
 				position: [0,(Math.floor((Math.random() * (maxHeight)) + 750)),0],
@@ -576,5 +683,6 @@ $(function() {
 				springDeceleration: 0.9
 			});
 		}
+		console.log("Mogs Dropping...");
 	}
 });

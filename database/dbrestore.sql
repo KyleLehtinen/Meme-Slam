@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.26)
 # Database: MemeSlamDev
-# Generation Time: 2015-11-02 09:26:50 +0000
+# Generation Time: 2015-11-02 21:08:38 +0000
 # ************************************************************
 
 
@@ -22,10 +22,10 @@
 
 # Dump of table ActivatedMogs
 # ------------------------------------------------------------
-
 DROP DATABASE IF EXISTS MemeSlamDev;
 CREATE DATABASE MemeSlamDev;
 USE MemeSlamDev;
+
 
 CREATE TABLE `ActivatedMogs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -164,8 +164,8 @@ CREATE TABLE `Matches` (
   `active_player_id` int(11) DEFAULT NULL,
   `in_progress` tinyint(1) NOT NULL DEFAULT '0',
   `match_state` int(11) NOT NULL DEFAULT '0',
-  `p1_viewed_animations` tinyint(1) NOT NULL DEFAULT '0',
-  `p2_viewed_animations` tinyint(1) NOT NULL DEFAULT '0',
+  `p1_viewed_round` tinyint(1) NOT NULL DEFAULT '0',
+  `p2_viewed_round` tinyint(1) NOT NULL DEFAULT '0',
   `match_complete` tinyint(1) NOT NULL DEFAULT '0',
   `p1_new_mogs` int(11) DEFAULT NULL,
   `p2_new_mogs` int(11) DEFAULT NULL,

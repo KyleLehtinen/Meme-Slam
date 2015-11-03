@@ -8,7 +8,7 @@ use DB;
 class PlayField extends Model
 {
 	protected $table = 'PlayField';
-	protected $fillable = ['match_id','mog_id','flipped','flipped_by','owner_id','new_owner_id'];
+	protected $fillable = ['match_id','mog_id','flipped','flipped_by','owner_id','new_owner_id','show_animation'];
 
 	public static function loadGameMogs($match_id, $players_arr) {
 

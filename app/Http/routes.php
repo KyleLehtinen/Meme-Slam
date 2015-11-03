@@ -51,5 +51,6 @@ Route::get('/api/get_match_players/{match_id}/{requestor}', ['middleware' => 'au
 Route::get('/api/check_for_update/{match_id}/{last_update}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@checkForUpdate']);
 Route::get('/api/get_game_state/{match_id}/{user_id}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@getGameState']);
 Route::get('/api/check_for_active_match/{user_id}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@checkForActiveMatch']);
+Route::get('/api/check_players_viewed_round_results/{match_id}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@checkPlayersViewedRoundResults']);
 // Route::get('/api/check_players_turn/{match_id}/{user_id', ['middleware' => 'auth', 'uses' => 'MemeSlamController@'])
 // Route::get('/api/check_game_state/{match_id}/{user_id}', ['middleware' => 'auth', 'uses' => 'MemeSlamController@'])

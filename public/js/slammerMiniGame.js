@@ -7,7 +7,7 @@ function slammerMiniGame(matchID) {
 	var failed = false;
 	var passed = false;
 	var resultMessage;
-
+	$('.slammer-container h3').text('3...2...1...');
 	$('.slammer-container h3').attr('hidden','');
 	
 	$('.slammer').removeAttr('hidden');
@@ -19,8 +19,9 @@ function slammerMiniGame(matchID) {
 			if(!passed){
 				failed = true;
 				$(this).attr('hidden','');
+				$(this).removeAttr('style');
 				$('.slammer-container h3').text("Too Bad!").removeAttr('hidden');
-				processRound(resultMessage);
+				processRound();
 			}
 		}
 	});
@@ -29,8 +30,9 @@ function slammerMiniGame(matchID) {
 		failed = true;
 		$('.slammer').fadeOut(400,function(){
 			$(this).attr('hidden','');
+			$(this).removeAttr('style');
 			$('.slammer-container h3').text("Too Bad!").removeAttr('hidden');
-			processRound(resultMessage);
+			processRound();
 		});
 	});
 
@@ -43,16 +45,18 @@ function slammerMiniGame(matchID) {
 			$('.slammer').fadeOut(300,function(){
 				passed = true;
 				$(this).attr('hidden','');
+				$(this).removeAttr('style');
 				getResultMessage();
 				$('.slammer-container h3').text(resultMessage).removeAttr('hidden');
-				processRound(resultMessage);
+				processRound();
 			});
 		} else {
 			failed = true;
 			$('.slammer').fadeOut(300,function(){
 				$(this).attr('hidden','');
+				$(this).removeAttr('style');
 				$('.slammer-container h3').text("Too Bad!").removeAttr('hidden');
-				processRound(resultMessage);
+				processRound();
 			});
 		}
 	});
@@ -71,7 +75,6 @@ function slammerMiniGame(matchID) {
 
 		setTimeout(function(){
 			$('body').trigger('updateMatchState', [matchID, result]);
-			// updateMatchState(matchID, 1, result);
 		}, 2000, matchID, result);
 	}
 

@@ -47,17 +47,19 @@
 			</div>
 		</div>
 		<div class="slammer-explosion round-results" hidden>
-			<div class="explosion-container"></div>
+			<div class="explosion-container">
+				<div class="explosion"></div>
+			</div>
+			<div class="mog-drop-container" hidden></div>
 			<div class="slammer-game-results" hidden>
-				<h3 class=""></h3>
-				<h3></h3>
+				<div class="rnd-rslt-won-mogs">
+					<h3>Mogs Won this round:</h3>
+				</div>
+{{-- 				<div class="rnd-rslt-new-mogs">
+					<h3>New Mogs:</h3>
+				</div> --}}
 			</div>
 		</div>
-
-		
-		<div class="match-results">
-			
-		</div>	
 	</div>
 	<div class="game-details-container">
 		<div class="game-details">
