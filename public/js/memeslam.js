@@ -17,7 +17,6 @@ $(function() {
 	var matchID;
 	var lastState;
 	var playerAcceptedMatch;
-	var outcomeViewed;
 	var userID = $('.game-field').attr('userid');
 	var betRating = $('.game-field').attr('rating');
 	var joinIntervalPollTime = 2000;
@@ -240,11 +239,6 @@ $(function() {
 		console.log("Entered OpponentViewUpdate Function...");
 		var newState = GameState.match_state
 
-		// if(typeof lastState === 'undefined') { //check if lastState is initialized
-		// 	console.log("lastState not initialized, initializing...");
-		// 	lastState = GameState.match_state;
-		// } 
-
 		if (newState == '0' || newState == '1') {//display stack
 			//first time through
 			if(lastState != '0' && lastState != '1'){
@@ -276,10 +270,10 @@ $(function() {
 				switchGameView(2);
 				console.log("Calling showRoundResults for opponent...");
 				$('body').trigger('showRoundResults');
-			} else {
+			} else {//second time through
 				console.log("Opponent has seen results, switching to show stack and resetting outcome viewed, polling for round results viewed...");
-				outcomeViewed = 0;
-				$('.display-stack > h3').text("Opponent's turn is now over. Waiting for opponent...");
+
+				$('.display-stack > h3').text("Opponent's turn is now over...");
 				//load in stack of mogs for view
 				var stackCount = GameState.player.playing_mogs.length +
 									GameState.opponent.playing_mogs.length;
@@ -287,25 +281,23 @@ $(function() {
 				switchGameView(0);
 				console.log("Stack rendered and displayed.");
 
-				pollPlayersViewedResults(matchID);
+				//Wait for match state to change
+				$('body').trigger('pollForUpdate', matchID);
 			}
-		} else if (lastState != '3' && newState == '3') {//display match result
-			console.log("Opponent View is set to show end of match, we shouldn't be here yet...");
-			switchGameView(3);
-		} 
-		// else { //display end game results
-		// 	switchGameView(4);
-		// }
-
-		
-		
-		
+		} else {//display match result
+			lastState = newState;
+			console.log("Opponent View is set to show end of match...");
+			// switchGameView(3);
+		} 	
 	}
 
 	//main method that processes the turn by calling other events and advancing the game state
 	function processTurn(matchID, userID) {
+		var newState = GameState.match_state;
 
-		if(GameState.match_state == '0') { //Display stack
+		if(newState == '0') { //Display stack
+			lastState = newState;
+
 			console.log("Game State is 0, displaying stack...");
 			$('.display-stack > h3').text("It's your turn! Get ready...");
 			//load in stack of mogs for view
@@ -313,32 +305,32 @@ $(function() {
 								GameState.opponent.playing_mogs.length;
 			renderStack(stackCount);
 			switchGameView(0);
+
 			setTimeout(function(){
 				$('body').trigger('updateMatchState', matchID);
 			}, 2000, matchID);
 			
-		} else if (GameState.match_state == '1') { //Slammer mini game 
+		} else if (newState == '1') { //Slammer mini game 
+			lastState = newState;
+
 			console.log("Game State is 1, displaying slammer...");
 			switchGameView(1);
+			
 			setTimeout(function(){
 				$('body').trigger('slammerMiniGame',[matchID]);
 			},3000);
 	
-		} else if (GameState.match_state == '2') { //slammer explosion and result animation 
+		} else if (newState == '2') { //slammer explosion and result animation 
 			console.log("Game State is 2, showing results...");
-			if(typeof lastState === 'undefined') { //check if lastState is initialized
-				lastState = GameState.match_state;
-			} 
 
-			if(lastState == '2' && GameState.match_state == '2' && outcomeViewed !== 1) {//first time player seeing results
+			if(lastState != '2') {//first time player seeing results
+				lastState = newState;
 				console.log("First time through seeing match results...");
-				outcomeViewed = 1;
 				switchGameView(2);
 				$('body').trigger('showRoundResults');
 				// setTimeout(function(){},5000);
 			} else { //catch case where other player has not yet seen the update
 				console.log("Other user has not seen view, resetting outcomeViewed and polling for players viewed round results...");
-				outcomeViewed = 0;
 				//show stack and display text
 				$('.display-stack > h3').text("Your turn is now over...waiting for opponent.");
 				//load in stack of mogs for view
@@ -347,34 +339,12 @@ $(function() {
 				renderStack(stackCount);
 				switchGameView(0);
 				setTimeout(function(){
-					pollPlayersViewedResults(matchID);
+					$('body').trigger('pollForUpdate', matchID);
 				},3000, matchID);
 			}
-		} else if (GameState.match_state == '3') { //Results processing to results output
-			
-		} else if (GameState.match_state == '4') { //checks for game over: if game over shows results, else cycles back
-			
-		} else {
-
+		} else { //end of game
+			console.log("THE GAME IS OVER NOW");
 		}
-	}
-
-	//checks if both players have seen results of the round
-	function pollPlayersViewedResults(matchID) {
-		var pollViewedResults = setInterval(function(){
-			$.ajax({
-				url: '/api/check_players_viewed_round_results/' + matchID,
-			}).done(function(playersViewed){
-				if(playersViewed) {
-					stopPolling(pollViewedResults);
-					console.log("Both players have seen results! Getting GameState...");
-					getGameState(matchID);
-				}
-			}).fail(function (request, status, error) {
-			    console.log("Error sending update to server...");
-			    console.dir(error);
-			});
-		}, 3000, matchID);
 	}
 
 	//function used to push update to server
@@ -631,7 +601,8 @@ $(function() {
 		
 		//clear results view before rev
 		$('.slammer-game-results').children().remove();
-		
+		$('.slammer-game-results').append('<h3>Mogs Won this round:</h3>');
+
 		//append won mogs to dom
 		for(var i = 0; i < GameState.round_result_mogs.length; i++) {
 			$('.slammer-game-results').append('<div class=\"mog-img\" style=\"background-image: url(\'/images/mogs/'+GameState.round_result_mogs[i].id+'\');\"></div>');

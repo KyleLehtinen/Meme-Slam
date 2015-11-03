@@ -30,7 +30,7 @@ class PlayField extends Model
 
 	//get count of active mogs for a given match_id
 	public static function getActiveMogs($match_id) {
-
+		
 		$rows = DB::table('PlayField')
 						->where('match_id', '=', $match_id)
 						->where('flipped', '=', '0')->get();

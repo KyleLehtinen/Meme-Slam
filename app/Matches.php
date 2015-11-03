@@ -73,16 +73,9 @@ class Matches extends Model
 		} else if ($arr["current_state"] == 2) {//mini-game results, check if game over and reset round
 			
 			//updating that the given player has seen the result
-			$result = $this->updatePlayerViewedResult($arr['state_data']);
+			$this->updatePlayerViewedResult($arr['state_data']);
 
-			if($result){
-				if($this->checkIfGameOver()) {
-					DB::table('Matches')->where('id', '=', $this->id)->update(['match_state' => 3]);
-				} else {
-					$this->resetRound();
-					DB::table('Matches')->where('id', '=', $this->id)->update(['match_state' => 0]);
-				}
-			}
+			$result = 1;
 		}
 
 		return $result;
@@ -95,15 +88,17 @@ class Matches extends Model
 		$p1 = $row[0]->p1_id;
 		$p2 = $row[0]->p2_id;
 
-		//swap active player
+		//determine next active player
 		if($row[0]->active_player_id == $p1) {
-			DB::table('Matches')->where('id','=',$this->id)->update(['active_player_id' => $p2]);
+			$new_active_player = $p2;
 		} else {
-			DB::table('Matches')->where('id','=',$this->id)->update(['active_player_id' => $p1]);
+			$new_active_player = $p1;
 		}
 
-		//reset p1/p2 viewed round variables
-		DB::table('Matches')->where('id','=',$this->id)->update(['p1_viewed_round' => 0,
+		//reset match
+		DB::table('Matches')->where('id','=',$this->id)->update(['match_state' => 0,
+																 'active_player_id' => $new_active_player,
+																 'p1_viewed_round' => 0,
 																 'p2_viewed_round' => 0]);
 		//reset show_animation for playfield mogs
 		DB::table('PlayField')->where('match_id','=',$this->id)->update(['show_animation' => 0]);
@@ -125,22 +120,45 @@ class Matches extends Model
 
 	//update match to indicate player has observed the round
 	public function updatePlayerViewedResult($player_id) {
-		
-		$result = 0;
 
 		$row = DB::table('Matches')->where('id','=',$this->id)->get();
 
+		//update players viewed
 		if($row[0]->p1_id == $player_id && $row[0]->p1_viewed_round == 0) {
 			DB::table('Matches')->where('id','=',$this->id)->update(['p1_viewed_round' => 1]);
-		} 
-
-		if($row[0]->p2_id == $player_id && $row[0]->p2_viewed_round == 0) {
+		} else if(($row[0]->p2_id == $player_id && $row[0]->p2_viewed_round == 0)) {
 			DB::table('Matches')->where('id','=',$this->id)->update(['p2_viewed_round' => 1]);
+		} else {
+			if($this->checkIfGameOver()) {//check if game over and update match state if so to alert clients
+				DB::table('Matches')->where('id', '=', $this->id)->update(['match_state' => 3]);
+			} else {//reset the round if not game over
+				$this->resetRound();
+			}
 		}
 
-		$result = $this->checkPlayersViewedResultsScreen();
 
-		return $result;
+
+
+
+
+		// if($row[0]->p1_viewed_round == 0 && $row[0]->p2_viewed_round == 0) {
+		// 	//update which player viewed
+		// 	if($row[0]->p1_id == $player_id) {
+		// 		DB::table('Matches')->where('id','=',$this->id)->update(['p1_viewed_round' => 1]);
+		// 	} 
+		// 	if($row[0]->p2_id == $player_id) {
+		// 		DB::table('Matches')->where('id','=',$this->id)->update(['p2_viewed_round' => 1]);
+		// 	}
+		// } else {
+		// 	//check if both players checked in, if not do nothing
+		// 	if(!($row[0]->p1_viewed_round == 1 && $player_id)) {
+		// 		if($this->checkIfGameOver()) {//check if game over and update match state if so to alert clients
+		// 			DB::table('Matches')->where('id', '=', $this->id)->update(['match_state' => 3]);
+		// 		} else {//reset the round if not game over
+		// 			$this->resetRound();
+		// 		}
+		// 	}
+		// }
 	}
 
 	//checks to see if both players have observe round outcome
