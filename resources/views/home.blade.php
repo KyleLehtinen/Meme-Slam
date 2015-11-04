@@ -38,7 +38,13 @@
 					{{$mogs[0]->name}}
 				</div>
 				<div class="selected-mog-rating">
-					{{'Rating: ' . $mogs[0]->rating}}
+					@if($mogs[0]->rating >= 900)
+						{{'Rating: ' . $mogs[0]->rating . ' Legendary'}}
+					@elseif($mogs[0]->rating < 900 && $mogs[0]->rating >= 600)
+						{{'Rating: ' . $mogs[0]->rating . ' Rare'}}
+					@else
+						{{'Rating: ' . $mogs[0]->rating . ' Common'}}
+					@endif
 				</div>
 				<div class="selected-mog-url">
 					<a href="{{$mogs[0]->src_url}}" target=”_blank”>Learn More at KnowYourMeme</a>

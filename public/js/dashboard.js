@@ -10,19 +10,23 @@ $(function(){
 		var title_rating = $(this).attr('title');
 		var style = $(this).attr('style');
 		var url = $(this).attr('data');
+		var rating;
 
 		if($(this).attr('rating') >= 900) {
 			$('.selected-mog').addClass('legendary');
+			rating = "Legendary";
 		} else if($(this).attr('rating') < 900 && $(this).attr('rating') >= 600) {
 			$('.selected-mog').addClass('rare');
+			rating = "Rare";
 		} else {
 			$('.selected-mog').removeClass('legendary');
 			$('.selected-mog').removeClass('rare');
+			rating = "Common";
 		}
 
 		$('.selected-mog').attr('style',style);
 		$('.selected-mog-name').text(title_rating.substring(0,(title_rating.indexOf('|') - 1)));
-		$('.selected-mog-rating').text('Rating: ' + title_rating.substring(title_rating.indexOf('|') + 1));
+		$('.selected-mog-rating').text('Rating: ' + $(this).attr('rating') + ' ' + rating);
 		$('.selected-mog-url > a').attr('href',url);
 	});
 
