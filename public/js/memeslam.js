@@ -117,8 +117,6 @@ $(function() {
 
 			        		initializeMatch(data.matchID);
 
-			        		// getGameState(matchID);
-
 			        		$('body').trigger('gameLoop', data.matchID);
 			        	
 			        	} else {
@@ -138,8 +136,7 @@ $(function() {
 							        		console.log("BOTH PLAYERS HAVE ACCEPTED THE MATCH!");
 							        		
 							        		initializeMatch(data.matchID);
-							        		
-							        		// getGameState(matchID);
+	
 							        		//call 
 							        		$('body').trigger('gameLoop', data.matchID);
 
@@ -349,7 +346,6 @@ $(function() {
 				console.log("First time through seeing match results...");
 				switchGameView(2);
 				$('body').trigger('showRoundResults');
-				// setTimeout(function(){},5000);
 			} else { //catch case where other player has not yet seen the update
 				console.log("Other user has not seen view, resetting outcomeViewed and polling for players viewed round results...");
 				//show stack and display text
@@ -642,8 +638,6 @@ $(function() {
 			}
 		}
 
-		
-
 		//fade out old view and reset properties
 		prevContainer.fadeOut(400,function(){
 			//clean up mog drop screen
@@ -707,30 +701,6 @@ $(function() {
 			});
 		}
 
-
-
-
-		// for(var i = 0; i < (countFlipped + countNotFlipped); i++) {
-		// 	console.log("Getting flipped mogs...");
-		// 	if(i < (countFlipped) ) {
-		// 		$('.mog-drop-container').append('<div class=\"stack-itm-contr\" style=\"left: '+Math.floor((Math.random() * (maxWidth)))+'px; top: -400px\"><div class=\"drop-item '+i+'\" style=\"background-image: url(\'/images/mogs/'+GameState.round_result_mogs[i].id+'\')\"></div></div>');
-		// 	} else {
-		// 		$('.mog-drop-container').append('<div class=\"stack-itm-contr\" style=\"left: '+Math.floor((Math.random() * (maxWidth)))+'px; top: -400px\"><div class=\"drop-item '+i+'\" style=\"background-image: url(\'/images/memeslam.png\')\"></div></div>');	
-		// 	}
-			
-		// 	$('.drop-item.'+i).snabbt({
-		// 		delay: 400,
-		// 		duration: 400,
-		// 		position: [0,(Math.floor((Math.random() * (maxHeight)) + 750)),0],
-		// 		complete: function(){
-		// 			console.log("Mog " + i + " added!");
-		// 		}
-		// 	}).snabbt('attention',{
-		// 		rotation: [0,0,Math.PI/2],
-		// 		springConstant: 1.9,
-		// 		springDeceleration: 0.9
-		// 	});
-		// }
 		console.log("Mogs Dropping...");
 	}
 
@@ -744,6 +714,9 @@ $(function() {
 		var resultMessage;
 		var slamTime;
 
+		$('.slammer').remove();
+
+		$('.slammer-container').append('<div class=\"slammer\" hidden><div class=\"upper\"></div><div class=\"gates\"><div class=\"enter\"></div><div class=\"exit\"></div></div><div class=\"lower\"></div></div>');
 
 		$('.slammer-container h3').attr('hidden','');
 		

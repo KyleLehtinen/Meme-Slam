@@ -2,7 +2,6 @@ $(function(){
 
 	var requiredBetMogs = 20;
 
-
 	//controls mog selection from bet pod and inventory for hero area
 	$('body').on('click','.mog-img', function(e){
 		$('.selected-mog').removeClass('legendary');
@@ -12,14 +11,14 @@ $(function(){
 		var style = $(this).attr('style');
 		var url = $(this).attr('data');
 
-		if($(this).attr('rating').val() >= 900) {
-			$('.select-mog').addClass('legendary');
-		} else if($(this).attr('rating').val() < 900 && $(this).attr('rating').val() >= 600) {
-			$('.select-mog').addClass('rare');
+		if($(this).attr('rating') >= '900') {
+			$('.selected-mog').addClass('legendary');
+		} else if($(this).attr('rating') < '900' && $(this).attr('rating') >= '600') {
+			$('.selected-mog').addClass('rare');
 		}
 
 		$('.selected-mog').attr('style',style);
-		$('.selected-mog-name').text('Mog Name: ' + title_rating.substring(0,(title_rating.indexOf('|') - 1)));
+		$('.selected-mog-name').text(title_rating.substring(0,(title_rating.indexOf('|') - 1)));
 		$('.selected-mog-rating').text('Rating: ' + title_rating.substring(title_rating.indexOf('|') + 1));
 		$('.selected-mog-url > a').attr('href',url);
 	});
@@ -36,6 +35,22 @@ $(function(){
 		connectWith: ".inv-mogs",
 		receive: sortableReceiveLogic,
 		stop: updateBetPodRating
+	});
+
+	$('.inv-mogs .mog-img').dblclick(function() {
+	    var litem = $(this).clone();
+	    litem.appendTo($('.bet-pod-mogs'));
+	    $(this).remove();
+	    sortableReceiveLogic();
+	    updateBetPodRating();
+	});
+
+	$('.bet-pod-mogs .mog-img').dblclick(function() {
+	    var litem = $(this).clone();
+	    litem.appendTo($('.inv-mogs'));
+	    $(this).remove();
+	    sortableReceiveLogic();
+	    updateBetPodRating();
 	});
 
 	$('.nav-memeslam').on('click', function(){
@@ -114,6 +129,4 @@ $(function(){
 
 		return betMogCount;
 	}
-
-	
 });
