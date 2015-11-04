@@ -21,6 +21,7 @@ class GameState
 		$this->last_update = $last_update;
 	}
 
+	//builds and returns current gamestate given match id
 	public static function getGameState($match_id, $player_id) {
 
 		//get match

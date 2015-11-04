@@ -21,6 +21,7 @@ class User extends Model implements AuthenticatableContract,
     protected $fillable = ['name', 'email', 'password', 'collection_rating'];
     protected $hidden = ['password', 'remember_token'];
 
+    //returns any active match the user is currently in
     public function getActiveMatch() {
 
         $result = 0;
@@ -30,8 +31,7 @@ class User extends Model implements AuthenticatableContract,
                     ->where(function($query){
                         $query->where('p1_id', '=', $this->id)
                             ->orWhere('p2_id', '=', $this->id);
-                    })
-                    ->get();
+                    })->get();
 
         if(!empty($row)){
             $result = $row[0]->id;
@@ -39,7 +39,8 @@ class User extends Model implements AuthenticatableContract,
 
         return $result;                                  
     }
-
+    
+    //recalculates user's collection rating
     public function recalcCollectionRating() {
    
         //get this instance's owner mogs
@@ -63,6 +64,7 @@ class User extends Model implements AuthenticatableContract,
         return $rating;
     }
 
+    //returns user's mogs
     public static function getUserMogs($owner_id) {
             
         $mogs = DB::select("
@@ -78,6 +80,7 @@ class User extends Model implements AuthenticatableContract,
         return $mogs;
     }
 
+    //returns user's betting mogs
     public static function getBettedMogs($owner_id) {
 
         $mogs = DB::select('
@@ -93,18 +96,10 @@ class User extends Model implements AuthenticatableContract,
         return $mogs;
     }
 
+    //returns user's name
     public static function getUsername($id) {
-        
-        // $id = (int) $id;
 
-        // $user = User::find($id);
-        // echo "<br>GETTING THE USER OBJECT!!!";
-        // print_r($user);
-        // echo $user['name'];
-        // $username = $user['name'];
-        // echo "$username";
         $row = DB::table('User')->where('id', '=', $id)->get();
-        // print_r($row[0]->name);
         $username = $row[0]->name;
         
         return $username;

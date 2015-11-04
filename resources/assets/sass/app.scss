@@ -3,7 +3,6 @@
 /************
 RESETS
 ************/
-
 html {
     box-sizing: border-box;
     color: #444;
@@ -39,7 +38,6 @@ html {
 .background-mogs-container .mog-img {
     margin: 10px;
     position: relative;
-    /* display: inline-block; */
     background-size: cover;
     width: 100px;
     height: 100px;
@@ -66,13 +64,11 @@ body.login-body {
 
 navbar {
 	width: 100%;
-	/*position: absolute;*/
   	top: -16px;
 }
 
 navbar ul {
     display: flex;
-    /* justify-content: space-between; */
     text-align: center;
     margin: 0;
     padding: 0;
@@ -118,7 +114,6 @@ LOGIN SCREEN CSS
     position: relative;
     width: 25em;
     height: 25em;
-    /* overflow: hidden; */
 }
 
 .login-container {
@@ -137,31 +132,11 @@ LOGIN SCREEN CSS
 }
 
 .register {
-    /* position: absolute; */
-    /* left: 0em; */
-    /* top: 0em; */
-    /* border-bottom: solid rgba(0, 0, 0, 0.8) 1px; */
-    /* width: 200px; */
-    /* height: 4.4em; */
-    /* text-align: center; */
-    /* border-right: solid rgba(0, 0, 0, 0.8) 1px; */
     display: inline-block;
     margin: 0 10px;
 }
 
-.register > a {
-    /* margin: 2.7em 0 0 4em; */
-    /* display: inline-block; */
-}
-
 .login {
-    /* position: absolute; */
-    /* left: 200px; */
-    /* top: 0em; */
-    /* border-bottom: solid rgba(0, 0, 0, 0.8) 1px; */
-    /* width: 201px; */
-    /* height: 70px; */
-    /* display: inline-block; */
     display: inline-block;
     margin: 0 10px;
 }
@@ -171,14 +146,7 @@ LOGIN SCREEN CSS
     cursor:pointer
 }
 
-
-.login > a {
-    /* margin: 45px 0 0 50px; */
-    /* display: inline-block; */
-}
-
 .login-selected {
-    /* background-color: #FC881D; */
     color: #FC881D;
 }
 
@@ -215,13 +183,6 @@ LOGIN SCREEN CSS
     height: 185px;
 }
 
-form {
-    /* position: absolute; */
-    /* display: flex; */
-    /* padding: 1em; */
-    /* text-align: center; */
-}
-
 .fields-container {
     width: 270px;
     height: 175px;
@@ -241,7 +202,6 @@ form {
     transform: translateX(-50%);
     padding: 10px;
     border-radius: 5px;
-    /* background-color: white; */
 }
 
 #remember-me {
@@ -262,7 +222,6 @@ form {
     outline: 0;
     border: none;
     width: 250px;
-    /* height: 35px; */
     background: #FC881D;
     border-radius: 5px;
     color: white;
@@ -417,7 +376,6 @@ Jamaican Css in full force below
     -webkit-justify-content: center;
     -ms-flex-pack: center;
     justify-content: center;
-    /* border-right: 1px solid black; */
 }
 
 .bet-pod {
@@ -444,7 +402,7 @@ Jamaican Css in full force below
 .mog-img {
     margin: 0.5em;
     position: relative;
-    display: inline-block;/*NOTE, I CHANGED THIS FOR END ROUND MOG VIEW*/
+    display: inline-block;
     background-size: cover;
     width: 50px;
     height: 50px;
@@ -466,7 +424,6 @@ Jamaican Css in full force below
 .mog {
     margin: 0.2em;
     position: relative;
-    /* display: inline-block; */
     background-size: cover;
     width: 50px;
     height: 50px;
@@ -512,7 +469,6 @@ Jamaican Css in full force below
     width: 100%;
     height: 100%;
     position: absolute;
-    /* margin: auto; */
 }
 
 .slammer-explosion {
@@ -568,7 +524,6 @@ Jamaican Css in full force below
     background-size: cover;
     background-color: white;
     background-position: center;
-    /* -webkit-transform: rotate3d(1, 0, 0, 60deg); */
     box-shadow: 5px 5px 30px -9px rgba(102, 102, 102, 0.5);
 }
 
@@ -679,7 +634,6 @@ SLAMMER CSS
     width: 375px;
     background-color: white;
     background-image: url('/images/mouseguide.png');
-
     z-index: 1;
 }
 

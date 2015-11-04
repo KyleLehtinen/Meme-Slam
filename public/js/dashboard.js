@@ -40,6 +40,7 @@ $(function(){
 		stop: updateBetPodRating
 	});
 
+	//double click to move mogs in/out
 	$('body').on('dblclick','.inv-mogs .mog-img',function() {
 	    var litem = $(this).clone();
 	    litem.appendTo($('.bet-pod-mogs'));
@@ -54,10 +55,6 @@ $(function(){
 	    $(this).remove();
 	    sortableReceiveLogic();
 	    updateBetPodRating();
-	});
-
-	$('.nav-memeslam').on('click', function(){
-		
 	});
 
 	//Support Jquery UI events - Prevents adding more than requiredBetMogs

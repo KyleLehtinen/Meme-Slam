@@ -287,13 +287,13 @@ $(function() {
 				setTimeout(function(){
 					$('.players-won-mogs-count').text(ggDetail.p1_name + '\'s Mogs: ' + ggDetail.match_detail.p1_mog_count +
 														'	' + ggDetail.p2_name + '\'s Mogs: ' + ggDetail.match_detail.p2_mog_count);
-					if(parseInt(ggDetail.p1_mog_count,10) > parseInt(ggDetail.p2_mog_count,10)) {
-						$('.winner').text(ggDetail.p1_name + ' wins!');
-					} else if (parseInt(ggDetail.p1_mog_count,10) < parseInt(ggDetail.p2_mog_count,10)){
-						$('.winner').text(ggDetail.p2_name + ' wins!');
-					} else {
-						$('.winner').text("Tie.");
-					}
+					// if(parseInt(ggDetail.p1_mog_count,10) > parseInt(ggDetail.p2_mog_count,10)) {
+					// 	$('.winner').text(ggDetail.p1_name + ' wins!');
+					// } else if (parseInt(ggDetail.p1_mog_count,10) < parseInt(ggDetail.p2_mog_count,10)){
+					// 	$('.winner').text(ggDetail.p2_name + ' wins!');
+					// } else {
+					// 	$('.winner').text("Tie.");
+					// }
 					
 					switchGameView(3);	
 				},2000,ggDetail);
