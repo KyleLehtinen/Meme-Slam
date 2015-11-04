@@ -285,11 +285,11 @@ Jamaican Css in full force below
 }
 
 .selected-mog.legendary {
-    border: 3px solid gold;
+    border: 5px solid gold;
 }
 
 .selected-mog.rare {
-    border: 3px solid silver;
+    border: 5px solid silver;
 }
 
 .selected-mog-name {
@@ -333,7 +333,7 @@ Jamaican Css in full force below
     justify-content: space-around;
     background-color: white;
     /* border-radius: 10px; */
-    border-bottom: solid black 1px;}
+}
 
 .mog-detail-view {
 	flex: 1;
@@ -387,6 +387,7 @@ Jamaican Css in full force below
 
 .bet-pod-container {
 	flex: 1.2;
+    border-right: 1px solid black;
 }
 
 .bet-pod-container div h4 {
@@ -406,11 +407,13 @@ Jamaican Css in full force below
     -webkit-flex-wrap: wrap;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    -webkit-align-content: flex-start;
     -ms-flex-line-pack: start;
+    -webkit-align-content: flex-start;
     align-content: flex-start;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
     justify-content: center;
-    border-right: 1px solid black;
+    /* border-right: 1px solid black; */
 }
 
 .bet-pod {
@@ -431,7 +434,7 @@ Jamaican Css in full force below
 }
 
 .bet-pod-container {
-    overflow: scroll;
+    overflow: hidden;
 }
 
 .mog-img {
@@ -446,11 +449,11 @@ Jamaican Css in full force below
 }
 
 .mog-img.legendary {
-    border: solid gold 3px
+    border: solid gold 5px
 }
 
 .mog-img.rare {
-    border: solid silver 3px;
+    border: solid silver 5px;
 }
 
 .mog {

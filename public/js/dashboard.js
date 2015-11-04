@@ -1,7 +1,7 @@
 $(function(){
 
 	var requiredBetMogs = 20;
-	
+
 	//controls mog selection from bet pod and inventory for hero area
 	$('body').on('click','.mog-img', function(e){
 		$('.selected-mog').removeClass('legendary');
@@ -18,7 +18,7 @@ $(function(){
 		}
 
 		$('.selected-mog').attr('style',style);
-		$('.selected-mog-name').text('Mog Name: ' + title_rating.substring(0,(title_rating.indexOf('|') - 1)));
+		$('.selected-mog-name').text(title_rating.substring(0,(title_rating.indexOf('|') - 1)));
 		$('.selected-mog-rating').text('Rating: ' + title_rating.substring(title_rating.indexOf('|') + 1));
 		$('.selected-mog-url > a').attr('href',url);
 	});
@@ -113,6 +113,4 @@ $(function(){
 
 		return betMogCount;
 	}
-
-	
 });

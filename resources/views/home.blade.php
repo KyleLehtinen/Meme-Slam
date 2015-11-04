@@ -27,7 +27,7 @@
 			</div>
 			<div class="mog-details-container">
 				<div class="selected-mog-name">
-					{{'Mog Name: ' . $mogs[0]->name}}
+					{{$mogs[0]->name}}
 				</div>
 				<div class="selected-mog-rating">
 					{{'Rating: ' . $mogs[0]->rating}}

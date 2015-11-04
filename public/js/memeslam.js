@@ -702,6 +702,8 @@ $(function() {
 		var failed = false;
 		var passed = false;
 		var resultMessage;
+		var slamTime;
+
 
 		$('.slammer-container h3').attr('hidden','');
 		
@@ -726,6 +728,7 @@ $(function() {
 
 		$('body').on('mouseenter', '.exit', function(e) {
 			if(entered){
+				slamTime = slammerTime
 				$('.slammer').fadeOut(300,function(){
 					passed = true;
 				});
@@ -741,6 +744,7 @@ $(function() {
 			var result = 0;
 
 			if(failed){
+				console.log("Player failed Slammer Game.");
 				$('.slammer-container h3').text("Too Bad!").removeAttr('hidden');
 			} else {
 				getResultMessage();
@@ -749,12 +753,8 @@ $(function() {
 			$('.slammer').attr('hidden','');
 			$('.slammer').removeAttr('style');
 
-			if(failed){
-				console.log("Player failed Slammer Game.");
-			} else {
-				console.log("Player Passed Slammer Game! Result " + slammerTime);
-				result = Math.floor(slammerTime);
-			}
+			console.log("Player Passed Slammer Game! Result " + slamTime);
+			result = Math.floor(slamTime);
 
 			setTimeout(function(){
 				$('body').trigger('updateMatchState', [matchID, result]);
@@ -763,15 +763,15 @@ $(function() {
 
 		//check calculation and get result message
 		function getResultMessage() {
-			if(slammerTime <= 200) {
+			if(slamTime <= 200) {
 				resultMessage = "PERFECT!";
-			} else if (slammerTime > 200 && slammerTime <= 900) {
+			} else if (slamTime > 200 && slamTime <= 900) {
 				resultMessage = "MARVELOUS!";
-			} else if (slammerTime > 900 && slammerTime <= 1100) {
+			} else if (slamTime > 900 && slamTime <= 1100) {
 				resultMessage = "Great!";
-			} else if (slammerTime > 1100 && slammerTime <= 1600) {
+			} else if (slamTime > 1100 && slamTime <= 1600) {
 				resultMessage = "Good.";
-			} else if (slammerTime > 1600 && slammerTime <= 2500) {
+			} else if (slamTime > 1600 && slamTime <= 2500) {
 				resultMessage = "Fair...";
 			} else {
 				resultMessage = "Poor...";
