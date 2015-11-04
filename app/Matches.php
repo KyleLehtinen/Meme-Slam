@@ -142,7 +142,6 @@ class Matches extends Model
 		$this->match_state = 3;
 
 		//update game count for players
-
 		DB::table('User')->whereIn('id', array($this->p1_id,$this->p2_id))->increment('game_count');
 
 		//determine who wins
@@ -153,7 +152,7 @@ class Matches extends Model
 			$winner = $this->p2_id;
 			$loser = $this->p1_id;
 		} else {//tie
-			$winner = 0;
+			$winner = false;
 		}
  		 
 		//update winners game count
@@ -180,7 +179,7 @@ class Matches extends Model
 				$legendaryNum = 1;
 			}
  		
-			$commonNum -= ($rareNum - $legendaryNum); 
+			$commonNum -= ($rareNum + $legendaryNum); 
 			ActivatedMogs::activateNew($commonNum,$rareNum,$legendaryNum, $winner);
 			ActivatedMogs::activateNew(5,0,0, $loser);
 		}

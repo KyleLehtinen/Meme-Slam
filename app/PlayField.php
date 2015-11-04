@@ -116,7 +116,7 @@ class PlayField extends Model
 
 		//build array of active ids from flipped mogs
 		foreach($flipped_mogs as $mog) {
-			echo "<br>PlayField ID: " .$mog->id.", Active ID: ".$mog->mog_id;
+			// echo "<br>PlayField ID: " .$mog->id.", Active ID: ".$mog->mog_id;
 			$active_ids[] = $mog->mog_id;
 		}
 
