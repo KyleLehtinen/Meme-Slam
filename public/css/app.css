@@ -216,7 +216,8 @@ Jamaican Css in full force below
 .top-collection-rating-container {
   -webkit-flex: 1;
   -ms-flex: 1;
-  flex: 1; }
+  flex: 1;
+  overflow: scroll; }
 
 .top-collection-rating-container h5 {
   text-align: center;
@@ -293,7 +294,8 @@ Jamaican Css in full force below
   -ms-flex-pack: distribute;
   justify-content: space-between;
   background-color: white;
-  /* border-radius: 10px; */ }
+  /* border-radius: 10px; */
+  height: 250px; }
 
 .mog-detail-view {
   -webkit-flex: 1;
