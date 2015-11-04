@@ -35,7 +35,7 @@
 		</div>
 		<div class="slammer-game" hidden>
 			<div class="slammer-container">
-				<h3>3...2...1...</h3>
+				<h3>Get Ready...</h3>
 				<div class="slammer" hidden>
 					<div class="upper"></div>
 					<div class="gates">

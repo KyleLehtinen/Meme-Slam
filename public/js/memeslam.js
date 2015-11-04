@@ -317,7 +317,7 @@ $(function() {
 				lastState = newState;
 
 				console.log("Game State is 0, displaying stack...");
-				$('.display-stack > h3').text("It's your turn! Get ready...");
+				$('.display-stack > h3').text("It's your turn!");
 				//load in stack of mogs for view
 				var stackCount = GameState.player.playing_mogs.length +
 									GameState.opponent.playing_mogs.length;
@@ -332,7 +332,7 @@ $(function() {
 			
 			if(lastState != '1') {
 				lastState = newState;
-				$('.slammer-container h3').text('3...2...1...');
+				$('.slammer-container h3').text('Get Ready...');
 				console.log("Game State is 1, displaying slammer...");
 				switchGameView(1);
 			
@@ -631,12 +631,18 @@ $(function() {
 		
 		//clear results view before rev
 		$('.slammer-game-results').children().remove();
-		$('.slammer-game-results').append('<h3>Mogs Won this round:</h3>');
 
-		//append won mogs to dom
-		for(var i = 0; i < GameState.round_result_mogs.length; i++) {
-			$('.slammer-game-results').append('<div class=\"mog-img\" style=\"background-image: url(\'/images/mogs/'+GameState.round_result_mogs[i].id+'\');\"></div>');
+		if(GameState.round_result_mogs.length < 1) {
+			$('.slammer-game-results').append('<h3>No Mogs won this round</h3>');
+		} else {
+			$('.slammer-game-results').append('<h3>Mogs Won this round:</h3>');
+
+			for(var i = 0; i < GameState.round_result_mogs.length; i++) {
+				$('.slammer-game-results').append('<div class=\"mog-img\" style=\"background-image: url(\'/images/mogs/'+GameState.round_result_mogs[i].id+'\');\"></div>');
+			}
 		}
+
+		
 
 		//fade out old view and reset properties
 		prevContainer.fadeOut(400,function(){
@@ -666,7 +672,7 @@ $(function() {
 
 		for(var i = 0; i < (countFlipped + countNotFlipped); i++) {
 			console.log("Getting flipped mogs...");
-			if(i < (countFlipped - 1) ) {
+			if(i < (countFlipped) ) {
 				$('.mog-drop-container').append('<div class=\"stack-itm-contr\" style=\"left: '+Math.floor((Math.random() * (maxWidth)))+'px; top: -400px\"><div class=\"drop-item '+i+'\" style=\"background-image: url(\'/images/mogs/'+GameState.round_result_mogs[i].id+'\')\"></div></div>');
 			} else {
 				$('.mog-drop-container').append('<div class=\"stack-itm-contr\" style=\"left: '+Math.floor((Math.random() * (maxWidth)))+'px; top: -400px\"><div class=\"drop-item '+i+'\" style=\"background-image: url(\'/images/memeslam.png\')\"></div></div>');	
@@ -686,5 +692,90 @@ $(function() {
 			});
 		}
 		console.log("Mogs Dropping...");
+	}
+
+	function slammerMiniGame(matchID) {
+	
+		console.log("Slammer Mini Game started... ");
+
+		var entered = false;
+		var failed = false;
+		var passed = false;
+		var resultMessage;
+
+		$('.slammer-container h3').attr('hidden','');
+		
+		$('.slammer').removeAttr('hidden');
+
+		$('.slammer').snabbt({
+			rotation: [0,0,2*Math.PI],
+			duration: 5000,
+			complete: function(){
+				processRound(matchID);
+			}
+		});
+
+		$('body').on('mouseenter', '.upper, .lower', function() {
+			failed = true;
+			$('.slammer').fadeOut(400);
+		});
+
+		$('body').on('mouseenter', '.enter', function(e) {
+			entered = true;
+		});
+
+		$('body').on('mouseenter', '.exit', function(e) {
+			if(entered){
+				$('.slammer').fadeOut(300,function(){
+					passed = true;
+				});
+			} else {
+				failed = true;
+				$('.slammer').fadeOut(300);
+			}
+		});
+
+		//process outcome of minigame here...
+		function processRound(matchID) {
+
+			var result = 0;
+
+			if(failed){
+				$('.slammer-container h3').text("Too Bad!").removeAttr('hidden');
+			} else {
+				getResultMessage();
+				$('.slammer-container h3').text(resultMessage).removeAttr('hidden');
+			}
+			$('.slammer').attr('hidden','');
+			$('.slammer').removeAttr('style');
+
+			if(failed){
+				console.log("Player failed Slammer Game.");
+			} else {
+				console.log("Player Passed Slammer Game! Result " + slammerTime);
+				result = Math.floor(slammerTime);
+			}
+
+			setTimeout(function(){
+				$('body').trigger('updateMatchState', [matchID, result]);
+			}, 2000, matchID, result);
+		}
+
+		//check calculation and get result message
+		function getResultMessage() {
+			if(slammerTime <= 200) {
+				resultMessage = "PERFECT!";
+			} else if (slammerTime > 200 && slammerTime <= 900) {
+				resultMessage = "MARVELOUS!";
+			} else if (slammerTime > 900 && slammerTime <= 1100) {
+				resultMessage = "Great!";
+			} else if (slammerTime > 1100 && slammerTime <= 1600) {
+				resultMessage = "Good.";
+			} else if (slammerTime > 1600 && slammerTime <= 2500) {
+				resultMessage = "Fair...";
+			} else {
+				resultMessage = "Poor...";
+			}
+		}
 	}
 });

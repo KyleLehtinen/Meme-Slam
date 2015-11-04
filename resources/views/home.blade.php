@@ -17,7 +17,13 @@
 				
 			</div>
 			<div class="mog-detail-view">
-				<div class="selected-mog" style="background-image: url(/images/mogs/{{$mogs[0]->id}}"></div>
+				@if($mogs[0]->rating >= 900)
+					<div class="selected-mog legendary" style="background-image: url(/images/mogs/{{$mogs[0]->id}}"></div>
+				@elseif($mogs[0]->rating < 900 && $mogs[0]->rating >= 600)
+					<div class="selected-mog rare" style="background-image: url(/images/mogs/{{$mogs[0]->id}}"></div>
+				@else
+					<div class="selected-mog" style="background-image: url(/images/mogs/{{$mogs[0]->id}}"></div>
+				@endif
 			</div>
 			<div class="mog-details-container">
 				<div class="selected-mog-name">

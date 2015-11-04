@@ -51,16 +51,20 @@ class Matches extends Model
 		$result = 0;
 
 		if($arr["current_state"] == 0) {//post stack 
+		
 			DB::table('Matches')
 					->where('id', '=', $this->id)
 					->update(['match_state' => 1]);
 			$result = 1;
+		
 		} else if ($arr["current_state"] == 1){//post slammer
+		
 			$this->calcRoundOutcome($arr['state_data']);
 			DB::table('Matches')
 					->where('id', '=', $this->id)
 					->update(['match_state' => 2]);
 			$result = 1;
+		
 		} else if ($arr["current_state"] == 2) {//mini-game results, check if game over and reset round
 			
 			//updating that the given player has seen the result
@@ -143,9 +147,9 @@ class Matches extends Model
 		if($this->p1_mog_count > $this->p2_mog_count) {//player 1 wins
 			$winner = User::find($this->p1_id);
 			$loser = User::find($this->p2_id);
-			$winner->game_count .= 1;
+			$winner->game_count += 1;
 			$winner->save();
-			$loser->game_count .= 1;
+			$loser->game_count += 1;
 			$loser->save();
 		} else if ($this->p1_mog_count < $this->p2_mog_count) {//player 2 wins
 			$winner =  User::find($this->p2_id);
@@ -155,15 +159,15 @@ class Matches extends Model
 			$winner = 0;
 			$player1 = User::find($this->p1_id);
 			$player2 = User::find($this->p2_id);
-			$player1->game_count .= 1;
-			$player2->game_count .= 2;
+			$player1->game_count += 1;
+			$player2->game_count += 2;
 			$player1->save();
 			$player2->save();
 		}
 
 
 		//update winners game count
-		$winner->total_wins .= 1;
+		$winner->total_wins += 1;
 		// DB::table('User')->where('id','=',$winner)->increment('keeps_wins', 1)->increment('total_wins', 1);
 
 		//call new mog drops for winner/loser respectively
@@ -189,9 +193,9 @@ class Matches extends Model
 			$commonNum -= ($rareNum - $legendaryNum); 
 			ActivatedMogs::activateNew($commonNum,$rareNum,$legendaryNum, $winner->id);
 			ActivatedMogs::activateNew(5,0,0, $loser->id);
-			$winner->game_count .= 1;
+			$winner->game_count += 1;
 			$winner->save();
-			$loser->game_count .= 1;
+			$loser->game_count += 1;
 			$loser->save();
 		}
 
@@ -263,9 +267,9 @@ class Matches extends Model
 
 		//update count of mogs for player
 		if($this->active_player_id == $this->p1_id) {
-			$this->p1_mog_count .= $flip_count;
+			$this->p1_mog_count += $flip_count;
 		} else {
-			$this->p2_mog_count .= $flip_count;
+			$this->p2_mog_count += $flip_count;
 		}
 		$this->save();
 	}
