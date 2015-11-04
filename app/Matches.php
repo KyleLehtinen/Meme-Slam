@@ -155,19 +155,16 @@ class Matches extends Model
 		} else {//tie
 			$winner = 0;
 		}
-		echo $winner . '<br>' . $loser;
  		 
 		//update winners game count
 		DB::table('User')->where('id','=',$winner)->increment('keeps_wins'); 
  		DB::table('User')->where('id','=',$winner)->increment('total_wins');
 
 		//call new mog drops for winner/loser respectively
-		if($winner) {//if tie users get low common drop
-			echo "no winner";
+		if(!$winner) {//if tie users get low common drop
 			ActivatedMogs::activateNew(5,0,0, $this->p1_id);
 			ActivatedMogs::activateNew(5,0,0, $this->p2_id);
 		} else {
-			echo "yes winner";
 			//values for drops
 			$commonNum = 15;
 			$rareNum = 0;
@@ -185,7 +182,7 @@ class Matches extends Model
  		
 			$commonNum -= ($rareNum - $legendaryNum); 
 			ActivatedMogs::activateNew($commonNum,$rareNum,$legendaryNum, $winner);
-			ActivatedMogs::activateNew(5,0,0, $this->$loser);
+			ActivatedMogs::activateNew(5,0,0, $loser);
 		}
 
 

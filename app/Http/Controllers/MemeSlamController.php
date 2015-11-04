@@ -195,7 +195,12 @@ class MemeSlamController extends Controller
 
 	public function getGameOverDetail($match_id) {
 
-		$response = Matches::find($match_id);
+		$response = [];
+
+		$response['match_detail'] = Matches::find($match_id);
+
+		$response['p1_name'] = User::getUsername($response['match_detail']->p1_id);
+		$response['p2_name'] = User::getUsername($response['match_detail']->p2_id);
 
 		return $response;
 	}

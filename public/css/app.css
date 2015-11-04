@@ -246,11 +246,14 @@ Jamaican Css in full force below
   border-radius: 50%;
   background-size: cover;
   margin: 1em auto;
-  border: 1px solid black;
+  border: 1px solid orange;
   box-shadow: 0px 10px 30px -8px rgba(0, 0, 0, 0.75); }
 
+.match-results {
+  text-align: center; }
+
 .selected-mog.legendary {
-  border: 5px solid gold; }
+  border: 5px solid #FFDF00; }
 
 .selected-mog.rare {
   border: 5px solid silver; }
@@ -377,7 +380,7 @@ Jamaican Css in full force below
   -webkit-flex: 4;
   -ms-flex: 4;
   flex: 4;
-  overflow: scroll; }
+  overflow: hidden; }
 
 .mog-inventory div h4 {
   padding-left: 1.3em; }
@@ -400,10 +403,11 @@ Jamaican Css in full force below
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  border: solid black 1px; }
+  border: solid orange 1px;
+  box-shadow: 0px 10px 30px -8px rgba(0, 0, 0, 0.75); }
 
 .mog-img.legendary {
-  border: solid gold 5px; }
+  border: solid #FFDF00 5px; }
 
 .mog-img.rare {
   border: solid silver 5px; }

@@ -11,10 +11,13 @@ $(function(){
 		var style = $(this).attr('style');
 		var url = $(this).attr('data');
 
-		if($(this).attr('rating') >= '900') {
+		if($(this).attr('rating') >= 900) {
 			$('.selected-mog').addClass('legendary');
-		} else if($(this).attr('rating') < '900' && $(this).attr('rating') >= '600') {
+		} else if($(this).attr('rating') < 900 && $(this).attr('rating') >= 600) {
 			$('.selected-mog').addClass('rare');
+		} else {
+			$('.selected-mog').removeClass('legendary');
+			$('.selected-mog').removeClass('rare');
 		}
 
 		$('.selected-mog').attr('style',style);
@@ -37,7 +40,7 @@ $(function(){
 		stop: updateBetPodRating
 	});
 
-	$('.inv-mogs .mog-img').dblclick(function() {
+	$('body').on('dblclick','.inv-mogs .mog-img',function() {
 	    var litem = $(this).clone();
 	    litem.appendTo($('.bet-pod-mogs'));
 	    $(this).remove();
@@ -45,7 +48,7 @@ $(function(){
 	    updateBetPodRating();
 	});
 
-	$('.bet-pod-mogs .mog-img').dblclick(function() {
+	$('body').on('dblclick','.bet-pod-mogs .mog-img', function() {
 	    var litem = $(this).clone();
 	    litem.appendTo($('.inv-mogs'));
 	    $(this).remove();
