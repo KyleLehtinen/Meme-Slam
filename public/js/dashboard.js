@@ -37,6 +37,22 @@ $(function(){
 		stop: updateBetPodRating
 	});
 
+	$('.inv-mogs .mog-img').dblclick(function() {
+	    var litem = $(this).clone();
+	    litem.appendTo($('.bet-pod-mogs'));
+	    $(this).remove();
+	    sortableReceiveLogic();
+	    updateBetPodRating();
+	});
+
+	$('.bet-pod-mogs .mog-img').dblclick(function() {
+	    var litem = $(this).clone();
+	    litem.appendTo($('.inv-mogs'));
+	    $(this).remove();
+	    sortableReceiveLogic();
+	    updateBetPodRating();
+	});
+
 	$('.nav-memeslam').on('click', function(){
 		
 	});
