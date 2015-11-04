@@ -234,17 +234,17 @@ class Matches extends Model
 			$round_bias = 0.9;
 		} else if ($slam_time > 300 && $slam_time <= 600) {
 			$round_bias = 0.8;
-		} else if ($slam_time > 600 && $slam_time <= 900) {
+		} else if ($slam_time > 600 && $slam_time <= 700) {
 			$round_bias = 0.7;
-		} else if ($slam_time > 900 && $slam_time <= 1100) {
+		} else if ($slam_time > 700 && $slam_time <= 900) {
 			$round_bias = 0.6;
-		} else if ($slam_time > 1100 && $slam_time <= 1300) {
+		} else if ($slam_time > 900 && $slam_time <= 1200) {
 			$round_bias = 0.5;
-		} else if ($slam_time > 1300 && $slam_time <= 1600) {
+		} else if ($slam_time > 1200 && $slam_time <= 1600) {
 			$round_bias = 0.4;
-		} else if ($slam_time > 1600 && $slam_time <= 2500) {
+		} else if ($slam_time > 1600 && $slam_time <= 2100) {
 			$round_bias = 0.3;
-		} else if ($slam_time > 2500 && $slam_time <= 4000) {
+		} else if ($slam_time > 2100 && $slam_time <= 4000) {
 			$round_bias = 0.2;
 		} else {
 			$round_bias = 0.1;

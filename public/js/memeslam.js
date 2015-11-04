@@ -667,16 +667,31 @@ $(function() {
 	function renderRoundResultMogs(count) {
 		var maxHeight = 400;
 		var maxWidth = $('.round-results').parent().width() - 155;
-		var countNotFlipped = (GameState.player.playing_mogs.length + GameState.opponent.playing_mogs.length) - GameState.round_result_mogs.length;
+		var countNotFlipped = (GameState.player.playing_mogs.length + GameState.opponent.playing_mogs.length);
 		var countFlipped = GameState.round_result_mogs.length;
 
-		for(var i = 0; i < (countFlipped + countNotFlipped); i++) {
-			console.log("Getting flipped mogs...");
-			if(i < (countFlipped) ) {
-				$('.mog-drop-container').append('<div class=\"stack-itm-contr\" style=\"left: '+Math.floor((Math.random() * (maxWidth)))+'px; top: -400px\"><div class=\"drop-item '+i+'\" style=\"background-image: url(\'/images/mogs/'+GameState.round_result_mogs[i].id+'\')\"></div></div>');
-			} else {
-				$('.mog-drop-container').append('<div class=\"stack-itm-contr\" style=\"left: '+Math.floor((Math.random() * (maxWidth)))+'px; top: -400px\"><div class=\"drop-item '+i+'\" style=\"background-image: url(\'/images/memeslam.png\')\"></div></div>');	
-			}
+		console.log("Getting flipped mogs...");
+		console.log("Rendering flipped: " + countFlipped);
+		for(var i = 0; i < countFlipped; i++) {
+			$('.mog-drop-container').append('<div class=\"stack-itm-contr\" style=\"left: '+Math.floor((Math.random() * (maxWidth)))+'px; top: -400px\"><div class=\"drop-item '+i+'\" style=\"background-image: url(\'/images/mogs/'+GameState.round_result_mogs[i].id+'\')\"></div></div>');
+		
+			$('.drop-item.'+i).snabbt({
+				delay: 400,
+				duration: 400,
+				position: [0,(Math.floor((Math.random() * (maxHeight)) + 750)),0],
+				complete: function(){
+					console.log("Mog " + i + " added!");
+				}
+			}).snabbt('attention',{
+				rotation: [0,0,Math.PI/2],
+				springConstant: 1.9,
+				springDeceleration: 0.9
+			});
+		} 
+
+		console.log("Rendering non-flipped: " + countNotFlipped);
+		for(var i = 0; i < countNotFlipped; i++) {
+			$('.mog-drop-container').append('<div class=\"stack-itm-contr\" style=\"left: '+Math.floor((Math.random() * (maxWidth)))+'px; top: -400px\"><div class=\"drop-item '+i+'\" style=\"background-image: url(\'/images/memeslam.png\')\"></div></div>');	
 			
 			$('.drop-item.'+i).snabbt({
 				delay: 400,
@@ -691,6 +706,31 @@ $(function() {
 				springDeceleration: 0.9
 			});
 		}
+
+
+
+
+		// for(var i = 0; i < (countFlipped + countNotFlipped); i++) {
+		// 	console.log("Getting flipped mogs...");
+		// 	if(i < (countFlipped) ) {
+		// 		$('.mog-drop-container').append('<div class=\"stack-itm-contr\" style=\"left: '+Math.floor((Math.random() * (maxWidth)))+'px; top: -400px\"><div class=\"drop-item '+i+'\" style=\"background-image: url(\'/images/mogs/'+GameState.round_result_mogs[i].id+'\')\"></div></div>');
+		// 	} else {
+		// 		$('.mog-drop-container').append('<div class=\"stack-itm-contr\" style=\"left: '+Math.floor((Math.random() * (maxWidth)))+'px; top: -400px\"><div class=\"drop-item '+i+'\" style=\"background-image: url(\'/images/memeslam.png\')\"></div></div>');	
+		// 	}
+			
+		// 	$('.drop-item.'+i).snabbt({
+		// 		delay: 400,
+		// 		duration: 400,
+		// 		position: [0,(Math.floor((Math.random() * (maxHeight)) + 750)),0],
+		// 		complete: function(){
+		// 			console.log("Mog " + i + " added!");
+		// 		}
+		// 	}).snabbt('attention',{
+		// 		rotation: [0,0,Math.PI/2],
+		// 		springConstant: 1.9,
+		// 		springDeceleration: 0.9
+		// 	});
+		// }
 		console.log("Mogs Dropping...");
 	}
 
