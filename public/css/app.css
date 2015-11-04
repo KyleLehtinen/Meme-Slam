@@ -204,14 +204,51 @@ LOGIN SCREEN CSS
 Jamaican Css in full force below
 *************/
 .selected-mog {
-  height: 200px;
-  width: 200px;
-  padding: 2em;
+  height: 220px;
+  width: 220px;
+  /* padding: 2em; */
   border-radius: 50%;
   background-size: cover;
   margin: 1em auto;
   border: 1px solid orange;
   box-shadow: 0px 10px 30px -8px rgba(0, 0, 0, 0.75); }
+
+.top-collection-rating-container {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1; }
+
+.top-collection-rating-container h5 {
+  text-align: center;
+  margin-bottom: .5em; }
+
+.collection-rating {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  margin: 0 3em;
+  overflow: scroll; }
+
+.collection-record {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  /* margin-left: 0.5em; */ }
+
+.col-name {
+  display: inline-block; }
+
+.col-rating {
+  display: inline-block; }
 
 .match-results {
   text-align: center; }
@@ -228,7 +265,7 @@ Jamaican Css in full force below
 
 .selected-mog-rating {
   margin-top: 1em;
-  font-size: 1.5em; }
+  font-size: 1.2em; }
 
 .selected-mog-url {
   margin-top: 1em; }
@@ -247,21 +284,22 @@ Jamaican Css in full force below
   margin: auto; }
 
 .mog-viewport {
-  margin: 1em auto;
-  width: 90%;
+  margin: 2em 0.1em;
+  /* width: 95%; */
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-justify-content: space-around;
   -ms-flex-pack: distribute;
-  justify-content: space-around;
+  justify-content: space-between;
   background-color: white;
   /* border-radius: 10px; */ }
 
 .mog-detail-view {
   -webkit-flex: 1;
   -ms-flex: 1;
-  flex: 1; }
+  flex: 1;
+  /* padding-left: 11em; */ }
 
 .mog-details-container {
   -webkit-flex: 1;
@@ -299,7 +337,7 @@ Jamaican Css in full force below
   display: -ms-flexbox;
   display: flex;
   height: 600px;
-  background-color: #EEEEEE;
+  background-color: rgba(238, 238, 238, 0.4);
   border-radius: 10px; }
 
 .mog-main-container h3 {
@@ -311,7 +349,7 @@ Jamaican Css in full force below
   -webkit-flex: 1.2;
   -ms-flex: 1.2;
   flex: 1.2;
-  border-right: 1px solid black; }
+  border-right: 1px solid rgba(0, 0, 0, 0.1); }
 
 .bet-pod-container div h4 {
   padding-left: .5em; }

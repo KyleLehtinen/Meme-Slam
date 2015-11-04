@@ -16,18 +16,14 @@ use App\MogMaster;
 
 class MemeSlamController extends Controller
 {
+	//serves up MemeSlam game page
 	public function initialize($user_id) {
 
 		$required_bet_count = 20;
 
 		$in_active_match = Matches::checkForActiveMatch($user_id);
 
-		// if() {
-		// 	return redirect("meme_slam/$user_id");
-		// }
-
 		if(count(User::getBettedMogs($user_id)) == $required_bet_count || $in_active_match){
-
 
 			//get the user
 			$user = Auth::user();
@@ -70,6 +66,7 @@ class MemeSlamController extends Controller
 		
 	}
 
+	//finds a valid match
 	public function searchForMatch() {
 
 		$player_id = Request::input('userID');
@@ -80,6 +77,7 @@ class MemeSlamController extends Controller
 		return $response;
 	}
 
+	//called when players accept match
 	public function playerAcceptsMatch() {
 
 		$response = [];
@@ -92,6 +90,7 @@ class MemeSlamController extends Controller
 		return $response;
 	}
 
+	//checks if player 2 joined the match
 	public function checkP2Joined($match_id) {
 
 		$response = [];
@@ -100,6 +99,7 @@ class MemeSlamController extends Controller
 		return json_encode($response);
 	}
 
+	//used to check if both players have accepted a match
 	public function checkPlayersAcceptedMatch($match_id) {
 		
 		$response = [];
@@ -108,7 +108,9 @@ class MemeSlamController extends Controller
 		return $response;
 	}
 
+	//used to drop a failed match
 	public function dropMatch() {
+
 		$match_id = Request::input('matchID');
 
 		Matches::dropMatch($match_id);
@@ -116,6 +118,7 @@ class MemeSlamController extends Controller
 		return "success";
 	}
 
+	//creates match when two players join together
 	public function initializeMatch($match_id) {
 		
 		$match = Matches::find($match_id);
@@ -124,6 +127,7 @@ class MemeSlamController extends Controller
 		return "success";
 	}
 
+	//returns opponent
 	public function getOpponentDetails($match_id, $requestor) {
 
 		$match = Matches::find($match_id);
@@ -135,8 +139,6 @@ class MemeSlamController extends Controller
 		} else {
 			$response['opponent'] = Matches::getOpponentDetail($players['player1']);
 		}
-
-		// $response['p1Turn'] = $match->getTurn();
 
 		return $response;
 	}

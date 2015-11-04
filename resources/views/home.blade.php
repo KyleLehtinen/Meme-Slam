@@ -6,15 +6,23 @@
 
 @section('main')
 	<div class="mog-viewport-container">
-		<div class="user-stats" data="{{$user->id}}">
-			<h3 class="username">User: {{$user->name}}</h3>
+		<div class="user-stats" data="{{{$user->id}}}">
+			<h3 class="username">User: {{{$user->name}}}</h3>
 			<h3>Games Played: {{$user->game_count}}</h3>
 			<h3>Games Won: {{$user->total_wins}}</h3>
-			<h3>Collection Rating: {{$collectionRating}}</h3>
+			<h3>Collection Rating: {{$collection_rating}}</h3>
 		</div>
 		<div class="mog-viewport">
-			<div class="top-collection-rating">
-				
+			<div class="top-collection-rating-container">
+				<h5>Top Collections</h5>
+				<div class="collection-rating">
+					@foreach($top_collections as $key=>$collection)
+						<div class="collection-record">
+							<div class="col-name">{{{$collection}}}</div>
+							<div class="col-rating">{{{$key}}}</div> 
+						</div>
+					@endforeach
+				</div>
 			</div>
 			<div class="mog-detail-view">
 				@if($mogs[0]->rating >= 900)

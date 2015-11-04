@@ -104,4 +104,12 @@ class User extends Model implements AuthenticatableContract,
         
         return $username;
     }
+
+    //get top ratings
+    public static function getTopCollections() {
+
+        $result = DB::table('User')->orderBy('collection_rating','desc')->lists('name', 'collection_rating');
+
+        return $result;
+    }
 }
