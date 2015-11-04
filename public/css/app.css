@@ -159,7 +159,7 @@ LOGIN SCREEN CSS
   color: #FC881D; }
 
 .fields-container input {
-  padding: 5px 0px;
+  padding: 5px 0px 5px 5px;
   margin-bottom: 6px;
   border-radius: 5px;
   outline: none;
@@ -247,7 +247,7 @@ Jamaican Css in full force below
   background-size: cover;
   margin: 1em auto;
   border: 1px solid black;
-  box-shadow: 0px 124px 28px -116px rgba(0, 0, 0, 0.3); }
+  box-shadow: 0px 10px 30px -8px rgba(0, 0, 0, 0.75); }
 
 .selected-mog.legendary {
   border: 5px solid gold; }
