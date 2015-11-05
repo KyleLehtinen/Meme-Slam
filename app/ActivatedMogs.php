@@ -149,4 +149,17 @@ class ActivatedMogs extends Model
 		DB::table('ActivatedMogs')->where('owner_id','=',$user_id)->update(['on_bet' => 0]);
 	}
 
+	//retrieves users recent mogs
+	public static function getRecentMogs($owner_id) {
+
+		//get list of recent mogs
+		$row = DB::table('ActivatedMogs')->where('owner_id','=',$owner_id)
+										 ->where('recent','=',1)->lists('mog_id');
+		return $row;
+	}
+
+	//reset recent flag on user's mogs
+	public static function resetUserRecentMogs($owner_id) {
+		DB::table('ActivatedMogs')->where('owner_id','=',$owner_id)->update(['recent' => 0]);
+	}
 }

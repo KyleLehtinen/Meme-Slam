@@ -61,6 +61,10 @@ $(function(){
 	    updateBetPodRating();
 	});
 
+	$('body').on('click','.recent-mogs-container button, .recent-mogs-backdrop', function(){
+		$('.recent-mogs-backdrop').remove();
+	});
+
 	//Support Jquery UI events - Prevents adding more than requiredBetMogs
 	function sortableReceiveLogic(event,ui) {
 		if ($('.bet-pod-mogs').children().length > requiredBetMogs) {

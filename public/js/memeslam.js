@@ -739,6 +739,7 @@ $(function() {
 		console.log("Mogs Dropping...");
 	}
 
+	//controls slammer mini game
 	function slammerMiniGame(matchID) {
 	
 		console.log("Slammer Mini Game started... ");
@@ -749,14 +750,15 @@ $(function() {
 		var resultMessage;
 		var slamTime;
 
+		//delete and recreate slammer for animation
 		$('.slammer').remove();
-
 		$('.slammer-container').append('<div class=\"slammer\" style=\"transform: rotate('+Math.floor((Math.random() * 360))+'deg)\" hidden><div class=\"upper\"></div><div class=\"gates\"><div class=\"enter\"></div><div class=\"exit\"></div></div><div class=\"lower\"></div></div>');
 
 		$('.slammer-container h3').attr('hidden','');
 		
 		$('.slammer').removeAttr('hidden');
 
+		//animate's slammer
 		$('.slammer').snabbt({
 			rotation: [0,0,2*Math.PI],
 			duration: 5000,
@@ -765,6 +767,7 @@ $(function() {
 			}
 		});
 
+		//events that govern slammer gameplay
 		$('body').on('mouseenter', '.upper, .lower', function() {
 			failed = true;
 			$('.slammer').fadeOut(400);
@@ -811,15 +814,15 @@ $(function() {
 
 		//check calculation and get result message
 		function getResultMessage() {
-			if(slamTime <= 200) {
+			if(slamTime <= 800) {
 				resultMessage = "PERFECT!";
-			} else if (slamTime > 200 && slamTime <= 900) {
+			} else if (slamTime > 800 && slamTime <= 1100) {
 				resultMessage = "MARVELOUS!";
-			} else if (slamTime > 900 && slamTime <= 1100) {
+			} else if (slamTime > 1100 && slamTime <= 1500) {
 				resultMessage = "Great!";
-			} else if (slamTime > 1100 && slamTime <= 1600) {
+			} else if (slamTime > 1500 && slamTime <= 2000) {
 				resultMessage = "Good.";
-			} else if (slamTime > 1600 && slamTime <= 2500) {
+			} else if (slamTime > 2000 && slamTime <= 3500) {
 				resultMessage = "Fair...";
 			} else {
 				resultMessage = "Poor...";

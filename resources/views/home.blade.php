@@ -5,6 +5,19 @@
 @endsection
 
 @section('main')
+	@if(!empty($recent_mogs))
+	<div class="recent-mogs-backdrop">
+		<div class="recent-mogs-container">
+			<h2>You have new mogs, check'em out!</h2>
+			<div class="recent-mogs">
+				@foreach($recent_mogs as $recent_mog)
+					<div class="mog-img" style="background-image: url(/images/mogs/{{$recent_mog}}"></div>
+				@endforeach
+			</div>
+			<button>Cool!</button>
+		</div>
+	</div>
+	@endif
 	<div class="mog-viewport-container">
 		<div class="user-stats" data="{{{$user->id}}}">
 			<h3 class="username">User: {{{$user->name}}}</h3>
@@ -14,7 +27,7 @@
 		</div>
 		<div class="mog-viewport">
 			<div class="top-collection-rating-container">
-				<h5>Top Collections</h5>
+				<h5>Top Collections</h5>	
 				<div class="collection-rating">
 					@foreach($top_collections as $key=>$collection)
 						<div class="collection-record">
