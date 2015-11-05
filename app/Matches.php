@@ -68,7 +68,9 @@ class Matches extends Model
 		} else if ($arr["current_state"] == 2) {//mini-game results, check if game over and reset round
 			
 			//updating that the given player has seen the result
-			$this->updatePlayerViewedResult($arr['state_data']);
+			if($this->match_complete == 0) {
+				$this->updatePlayerViewedResult($arr['state_data']);
+			}
 
 			$result = 1;
 		}
@@ -126,8 +128,7 @@ class Matches extends Model
 		} 
 
 		if($this->checkIfGameOver()) {//check if game over and update match state if so to alert clients
-			$this->processGameOver();
-			// DB::table('Matches')->where('id', '=', $this->id)->update(['match_state' => 3]);
+			$this->processGameOver();	
 		} else if ($this->checkPlayersViewedResultsScreen()){//reset the round if not game over
 			$this->resetRound();
 		}
