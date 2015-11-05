@@ -200,9 +200,6 @@ LOGIN SCREEN CSS
   border-radius: 5px;
   color: white; }
 
-/************
-Jamaican Css in full force below
-*************/
 .selected-mog {
   height: 220px;
   width: 220px;
@@ -248,8 +245,7 @@ Jamaican Css in full force below
   display: flex;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
-  justify-content: space-between;
-  /* margin-left: 0.5em; */ }
+  justify-content: space-between; }
 
 .col-name {
   display: inline-block; }
@@ -331,7 +327,6 @@ Jamaican Css in full force below
 
 .mog-viewport {
   margin: 2em 0.1em;
-  /* width: 95%; */
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -339,14 +334,12 @@ Jamaican Css in full force below
   -ms-flex-pack: distribute;
   justify-content: space-between;
   background-color: white;
-  /* border-radius: 10px; */
   height: 250px; }
 
 .mog-detail-view {
   -webkit-flex: 1;
   -ms-flex: 1;
-  flex: 1;
-  /* padding-left: 11em; */ }
+  flex: 1; }
 
 .mog-details-container {
   -webkit-flex: 1;

@@ -27,7 +27,7 @@ class Player
 		$captured_mogs = PlayField::getUsersCapturedMogs($match_id, $player_id);
 
 		$player = new Player($name, $playing_mogs, $captured_mogs);
-		// echo "Got player $player_id";
+
 		return $player;		
 	}
 }

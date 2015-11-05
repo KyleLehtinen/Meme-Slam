@@ -34,7 +34,7 @@ $(function() {
         beforeSend: function (xhr) {
         	var token = $('meta[name="csrf_token"]').attr('content');
             
-            if (token) {
+            if(token) {
                 return xhr.setRequestHeader('X-XSRF-TOKEN', token);
             }
         }
@@ -78,7 +78,7 @@ $(function() {
 		});
 	});
 
-    //
+    //prompts players to accept the match
 	function promptAccept(matchID, playerRoll, acceptTimerValue) {
 		var playerAcceptedMatch = false;
 		console.log('MATCH FOUND! PLEASE ACCEPT!');
@@ -102,7 +102,7 @@ $(function() {
 
 		setTimeout(function() {
 			console.log('Player ' + playerRoll + ' accept: ' + playerAcceptedMatch);
-			if (playerAcceptedMatch) {
+			if(playerAcceptedMatch) {
 				$.ajax({
 					url: '/api/player_accepts_match',
 					method: 'post',
@@ -234,7 +234,7 @@ $(function() {
 		console.log("Entered OpponentViewUpdate Function...");
 		var newState = GameState.match_state
 
-		if (newState == '0' || newState == '1') {//display stack
+		if(newState == '0' || newState == '1') {//display stack
 			//first time through
 			if(lastState != '0' && lastState != '1'){
 				console.log("Opponent View changed to Stack...");

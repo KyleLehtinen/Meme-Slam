@@ -86,7 +86,7 @@ class ActivatedMogs extends Model
 						->update(['on_bet' => 1]);
 		}
 		
-		return TRUE;	
+		return true;	
 	}
 
 	//Calcs and returns the bet pod rating of a given user id 

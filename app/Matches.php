@@ -441,6 +441,7 @@ class Matches extends Model
 						SET players_matched = 1
 						WHERE id = :match_id
 					', ['match_id' => $match_id]);
+			
 			$players_matched = true;
 		} else {
 			$players_matched = false;
