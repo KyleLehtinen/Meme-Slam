@@ -58,8 +58,10 @@
 		<div class="match-results" hidden>
 			<h3>GAME OVER</h3>
 			<h3>Match Results</h3>
-			<h3 class="players-won-mogs-count"></h3>
-			<h3 class="winner"></h3>
+			<div class="match-mog-count">
+				<h3 class="first-mogs-count"></h3>
+				<h3 class="second-mogs-count"></h3>
+			</div>
 			<h3>New Mogs have been added to your dashboard. Thanks for playing.</h3>
 		</div>
 	</div>
