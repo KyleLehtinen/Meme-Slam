@@ -495,34 +495,6 @@ $(function() {
 					$(containerElement).append('<div id=\"' + id + '\" class=\"mog-img\" title=\"' + title + '\" name=\"' + name 
 									+ '\" rating=\"' + rating + '\"style=\"' + style + '\" data=\"' + data + '\"></div>');
 				}
-					
-				
-
-				// if(j == 0) {
-				// 	if(rating >= 900) {
-				// 		$('.user-mogs').append('<div id=\"' + id + '\" class=\"mog-img legendary\" title=\"' + title + '\" name=\"' + name 
-				// 						+ '\" rating=\"' + rating + '\"style=\"' + style + '\" data=\"' + data + '\"></div>');
-				// 	} else if (rating < 900 && rating >= 600) {
-				// 		$('.user-mogs').append('<div id=\"' + id + '\" class=\"mog-img rare\" title=\"' + title + '\" name=\"' + name 
-				// 						+ '\" rating=\"' + rating + '\"style=\"' + style + '\" data=\"' + data + '\"></div>');
-				// 	} else {
-				// 		$('.user-mogs').append('<div id=\"' + id + '\" class=\"mog-img\" title=\"' + title + '\" name=\"' + name 
-				// 						+ '\" rating=\"' + rating + '\"style=\"' + style + '\" data=\"' + data + '\"></div>');
-				// 	}
-					
-				// } else {
-				// 	if(rating >= 900) {
-				// 		$('.won-mogs').append('<div id=\"' + id + '\" class=\"mog-img legendary\" title=\"' + title + '\" name=\"' + name 
-				// 						+ '\" rating=\"' + rating + '\"style=\"' + style + '\" data=\"' + data + '\"></div>');
-				// 	} else if (rating < 900 && rating >= 600) {
-				// 		$('.won-mogs').append('<div id=\"' + id + '\" class=\"mog-img rare\" title=\"' + title + '\" name=\"' + name 
-				// 						+ '\" rating=\"' + rating + '\"style=\"' + style + '\" data=\"' + data + '\"></div>');
-				// 	} else {
-				// 		$('.won-mogs').append('<div id=\"' + id + '\" class=\"mog-img\" title=\"' + title + '\" name=\"' + name 
-				// 						+ '\" rating=\"' + rating + '\"style=\"' + style + '\" data=\"' + data + '\"></div>');
-				// 	}
-				// }
-				
 			}
 		}
 	}
