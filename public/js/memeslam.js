@@ -654,7 +654,7 @@ $(function() {
 		setTimeout(function(){
 			console.log("Drop animation done... Moving on to Won Mogs...");
 			showRoundsWonMogs(mogDropContainer);
-		},5000,mogDropContainer);
+		},3000,mogDropContainer);
 	}
 
 	//show won mogs
@@ -688,7 +688,7 @@ $(function() {
 				$('.slammer-game-results').attr('hidden','');
 				console.log("Calling updateMatchState since user should have seen view now...");
 				$('body').trigger('updateMatchState',[matchID,userID]);
-			},5000,matchID, userID);
+			},3000,matchID, userID);
 		});
 	}
 
