@@ -30,7 +30,7 @@ class PlayField extends Model
 
 	//get count of active mogs for a given match_id
 	public static function getActiveMogs($match_id) {
-		
+
 		$rows = DB::table('PlayField')
 						->where('match_id', '=', $match_id)
 						->where('flipped', '=', '0')->get();
@@ -104,8 +104,6 @@ class PlayField extends Model
 			$flip_ids[] = $mogs[$flipIdx]->id;
 			array_splice($mogs, $flipIdx, 1);
 		}
-		// echo "<br>Displaying Flipped IDs: ";
-		// print_r($flip_ids);
 
 		//flip them
 		DB::table('PlayField')->where('match_id', '=', $match_id)
@@ -116,38 +114,12 @@ class PlayField extends Model
 		//Get flipped Mogs active id for update
 		$flipped_mogs = DB::table('PlayField')->whereIn('id', $flip_ids)->get();
 
-		// echo "<br>Count of Mogs flipped: " . count($flipped_mogs);
-
 		//build array of active ids from flipped mogs
 		foreach($flipped_mogs as $mog) {
-			echo "<br>PlayField ID: " .$mog->id.", Active ID: ".$mog->mog_id;
 			$active_ids[] = $mog->mog_id;
 		}
 
-		// echo "<br>ActiveID's to change hands: ";
-		// print_r($active_ids);
-
-		// //update Activated Mog's owner
+		//update Activated Mog's owner
 		ActivatedMogs::updateOwner($active_ids, $active_player_id);
 	}
-
-	// //returns array of mog ids belonging to the given match and user ids
-	// public static function getCapturedMogIDs($match_id, $user_id) {
-
-	// 	$result = [];
-
-	// 	$rows = DB::table('PlayField')
-	// 							->where('match_id', '=', $match_id)
-	// 							->where('flipped', '=', 1)
-	// 							->where('flipped_by', '=', $user_id)
-	// 							->get();
-
-	// 	if(!empty($rows)) {
-	// 		foreach($rows as $row) {
-	// 			$result[] = $row->mog_id;
-	// 		}
-	// 	}
-		
-	// 	return $result;
-	// }
 }

@@ -17,6 +17,5 @@
     {!! HTML::script('js/snabbt.js') !!}
     {!! HTML::script('js/dashboard.js') !!}
     {!! HTML::script('js/memeslam.js') !!}
-    {!! HTML::script('js/slammerMiniGame.js')!!}
 </body>
 </html>

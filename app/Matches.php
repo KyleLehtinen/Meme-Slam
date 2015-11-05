@@ -51,20 +51,26 @@ class Matches extends Model
 		$result = 0;
 
 		if($arr["current_state"] == 0) {//post stack 
+		
 			DB::table('Matches')
 					->where('id', '=', $this->id)
 					->update(['match_state' => 1]);
 			$result = 1;
+		
 		} else if ($arr["current_state"] == 1){//post slammer
+		
 			$this->calcRoundOutcome($arr['state_data']);
 			DB::table('Matches')
 					->where('id', '=', $this->id)
 					->update(['match_state' => 2]);
 			$result = 1;
+		
 		} else if ($arr["current_state"] == 2) {//mini-game results, check if game over and reset round
 			
 			//updating that the given player has seen the result
-			$this->updatePlayerViewedResult($arr['state_data']);
+			if($this->match_complete == 0) {
+				$this->updatePlayerViewedResult($arr['state_data']);
+			}
 
 			$result = 1;
 		}
@@ -122,14 +128,14 @@ class Matches extends Model
 		} 
 
 		if($this->checkIfGameOver()) {//check if game over and update match state if so to alert clients
-			$this->processGameOver();
-			// DB::table('Matches')->where('id', '=', $this->id)->update(['match_state' => 3]);
+			$this->processGameOver();	
 		} else if ($this->checkPlayersViewedResultsScreen()){//reset the round if not game over
 			$this->resetRound();
 		}
 	}
 
 	//logic that handles game over
+		//logic that handles game over
 	public function processGameOver(){
 		//set match state, match complete, and in progress
 		$this->in_progress = 0;
@@ -137,34 +143,22 @@ class Matches extends Model
 		$this->match_state = 3;
 
 		//update game count for players
-		// DB::table('User')->whereIn('id', array($this->p1_id,$this->p2_id))->increment('game_count',1);
+		DB::table('User')->whereIn('id', array($this->p1_id,$this->p2_id))->increment('game_count');
 
 		//determine who wins
 		if($this->p1_mog_count > $this->p2_mog_count) {//player 1 wins
-			$winner = User::find($this->p1_id);
-			$loser = User::find($this->p2_id);
-			$winner->game_count .= 1;
-			$winner->save();
-			$loser->game_count .= 1;
-			$loser->save();
+			$winner = $this->p1_id;
+			$loser = $this->p2_id;
 		} else if ($this->p1_mog_count < $this->p2_mog_count) {//player 2 wins
-			$winner =  User::find($this->p2_id);
-			$loser =  User::find($this->p1_id);
-			
+			$winner = $this->p2_id;
+			$loser = $this->p1_id;
 		} else {//tie
-			$winner = 0;
-			$player1 = User::find($this->p1_id);
-			$player2 = User::find($this->p2_id);
-			$player1->game_count .= 1;
-			$player2->game_count .= 2;
-			$player1->save();
-			$player2->save();
+			$winner = false;
 		}
-
-
+ 		 
 		//update winners game count
-		$winner->total_wins .= 1;
-		// DB::table('User')->where('id','=',$winner)->increment('keeps_wins', 1)->increment('total_wins', 1);
+		DB::table('User')->where('id','=',$winner)->increment('keeps_wins'); 
+ 		DB::table('User')->where('id','=',$winner)->increment('total_wins');
 
 		//call new mog drops for winner/loser respectively
 		if(!$winner) {//if tie users get low common drop
@@ -180,26 +174,21 @@ class Matches extends Model
 			if(rand(0,10) > 8) {
 				$rareNum = rand(1,4);
 			}
-
+ 		 
 			//legendary roll...
 			if(rand(0,10) >= 9) {
 				$legendaryNum = 1;
 			}
-
-			$commonNum -= ($rareNum - $legendaryNum); 
-			ActivatedMogs::activateNew($commonNum,$rareNum,$legendaryNum, $winner->id);
-			ActivatedMogs::activateNew(5,0,0, $loser->id);
-			$winner->game_count .= 1;
-			$winner->save();
-			$loser->game_count .= 1;
-			$loser->save();
+ 		
+			$commonNum -= ($rareNum + $legendaryNum); 
+			ActivatedMogs::activateNew($commonNum,$rareNum,$legendaryNum, $winner);
+			ActivatedMogs::activateNew(5,0,0, $loser);
 		}
+
 
 		//reset players mog bet status
 		ActivatedMogs::resetBetStatus($this->p1_id);
 		ActivatedMogs::resetBetStatus($this->p2_id);
-
-		//save changes
 
 		$this->save();
 	}
@@ -230,17 +219,17 @@ class Matches extends Model
 			$round_bias = 0.9;
 		} else if ($slam_time > 300 && $slam_time <= 600) {
 			$round_bias = 0.8;
-		} else if ($slam_time > 600 && $slam_time <= 900) {
+		} else if ($slam_time > 600 && $slam_time <= 700) {
 			$round_bias = 0.7;
-		} else if ($slam_time > 900 && $slam_time <= 1100) {
+		} else if ($slam_time > 700 && $slam_time <= 900) {
 			$round_bias = 0.6;
-		} else if ($slam_time > 1100 && $slam_time <= 1300) {
+		} else if ($slam_time > 900 && $slam_time <= 1200) {
 			$round_bias = 0.5;
-		} else if ($slam_time > 1300 && $slam_time <= 1600) {
+		} else if ($slam_time > 1200 && $slam_time <= 1600) {
 			$round_bias = 0.4;
-		} else if ($slam_time > 1600 && $slam_time <= 2500) {
+		} else if ($slam_time > 1600 && $slam_time <= 2100) {
 			$round_bias = 0.3;
-		} else if ($slam_time > 2500 && $slam_time <= 4000) {
+		} else if ($slam_time > 2100 && $slam_time <= 4000) {
 			$round_bias = 0.2;
 		} else {
 			$round_bias = 0.1;
@@ -263,9 +252,9 @@ class Matches extends Model
 
 		//update count of mogs for player
 		if($this->active_player_id == $this->p1_id) {
-			$this->p1_mog_count .= $flip_count;
+			$this->p1_mog_count += $flip_count;
 		} else {
-			$this->p2_mog_count .= $flip_count;
+			$this->p2_mog_count += $flip_count;
 		}
 		$this->save();
 	}
@@ -452,6 +441,7 @@ class Matches extends Model
 						SET players_matched = 1
 						WHERE id = :match_id
 					', ['match_id' => $match_id]);
+			
 			$players_matched = true;
 		} else {
 			$players_matched = false;

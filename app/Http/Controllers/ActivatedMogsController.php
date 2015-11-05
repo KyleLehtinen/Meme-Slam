@@ -11,12 +11,12 @@ class ActivatedMogsController extends Controller
 	public function updateBetStatus() {
 		$mogs = [];
 		$owner_id = Request::input('ownerID');
-		$stringMogs = Request::input('mogs');
+		$string_mogs = Request::input('mogs');
 
 		//convert string data to int for sql query in next method
-		if(!empty($stringMogs)) {
-			foreach($stringMogs as $sMog) {
-				$mogs[] = (int) $sMog;
+		if(!empty($string_mogs)) {
+			foreach($string_mogs as $s_mogs) {
+				$mogs[] = (int) $s_mogs;
 			}	
 		}
 		

@@ -16,7 +16,7 @@
 			<div class="searching-icn"></div>
 		</div>
 		<div class="prompt-accept" hidden>
-			<h3>A match has been found! Click 'Accept Match' below to join...<span class="accept-count-down">10</span></h3>
+			<h3>A match has been found! Click 'Accept Match' below to join...<span class="accept-count-down"></span></h3>
 			<button class="accept-match-btn">Accept Match</button>
 		</div>
 		<div class="attempt-join" hidden>
@@ -35,7 +35,7 @@
 		</div>
 		<div class="slammer-game" hidden>
 			<div class="slammer-container">
-				<h3>3...2...1...</h3>
+				<h3>Get Ready...</h3>
 				<div class="slammer" hidden>
 					<div class="upper"></div>
 					<div class="gates">
@@ -56,9 +56,12 @@
 			</div>
 		</div>
 		<div class="match-results" hidden>
-			<h3>Game Over!</h3>
-			<h3 class="winner"></h3>
-			<h3 class="players-won-mogs-count"></h3>
+			<h3>GAME OVER</h3>
+			<h3>Match Results</h3>
+			<div class="match-mog-count">
+				<h3 class="first-mogs-count"></h3>
+				<h3 class="second-mogs-count"></h3>
+			</div>
 			<h3>New Mogs have been added to your dashboard. Thanks for playing.</h3>
 		</div>
 	</div>
@@ -68,14 +71,34 @@
 				<h3>Betting Mogs</h3>
 				<div class="user-mogs">
 					@foreach($bet_mogs as $mog)
-						<div id="{{$mog->active_id}}"
-							 class="mog-img" 
-							 title="{{{$mog->name}}} | {{$mog->rating}}" 
-							 name="{{$mog->name}}"
-							 rating="{{$mog->rating}}"
-							 style="background-image: url(/images/mogs/{{$mog->id}}" 
-							 data="{{$mog->src_url}}">
-						</div>
+						@if($mog->rating >= 900)
+							<div id="{{$mog->active_id}}"
+								class="mog-img legendary" 
+								title="{{{$mog->name}}} | {{$mog->rating}}" 
+								style="background-image: url(/images/mogs/{{$mog->id}}" 
+								data="{{$mog->src_url}}"
+								rating="{{$mog->rating}}"
+								owner="{{$user->id}}">
+							</div>
+						@elseif($mog->rating < 900 && $mog->rating >= 600)	
+							<div id="{{$mog->active_id}}"
+								class="mog-img rare" 
+								title="{{{$mog->name}}} | {{$mog->rating}}" 
+								style="background-image: url(/images/mogs/{{$mog->id}}" 
+								data="{{$mog->src_url}}"
+								rating="{{$mog->rating}}"
+								owner="{{$user->id}}">
+							</div>
+						@else
+							<div id="{{$mog->active_id}}"
+								class="mog-img" 
+								title="{{{$mog->name}}} | {{$mog->rating}}" 
+								style="background-image: url(/images/mogs/{{$mog->id}}" 
+								data="{{$mog->src_url}}"
+								rating="{{$mog->rating}}"
+								owner="{{$user->id}}">
+							</div>
+						@endif
 					@endforeach
 				</div>
 			</div>

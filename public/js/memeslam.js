@@ -34,7 +34,7 @@ $(function() {
         beforeSend: function (xhr) {
         	var token = $('meta[name="csrf_token"]').attr('content');
             
-            if (token) {
+            if(token) {
                 return xhr.setRequestHeader('X-XSRF-TOKEN', token);
             }
         }
@@ -78,7 +78,7 @@ $(function() {
 		});
 	});
 
-    //
+    //prompts players to accept the match
 	function promptAccept(matchID, playerRoll, acceptTimerValue) {
 		var playerAcceptedMatch = false;
 		console.log('MATCH FOUND! PLEASE ACCEPT!');
@@ -102,7 +102,7 @@ $(function() {
 
 		setTimeout(function() {
 			console.log('Player ' + playerRoll + ' accept: ' + playerAcceptedMatch);
-			if (playerAcceptedMatch) {
+			if(playerAcceptedMatch) {
 				$.ajax({
 					url: '/api/player_accepts_match',
 					method: 'post',
@@ -116,8 +116,6 @@ $(function() {
 			        		console.log("BOTH PLAYERS ACCEPT!")
 
 			        		initializeMatch(data.matchID);
-
-			        		// getGameState(matchID);
 
 			        		$('body').trigger('gameLoop', data.matchID);
 			        	
@@ -138,8 +136,7 @@ $(function() {
 							        		console.log("BOTH PLAYERS HAVE ACCEPTED THE MATCH!");
 							        		
 							        		initializeMatch(data.matchID);
-							        		
-							        		// getGameState(matchID);
+	
 							        		//call 
 							        		$('body').trigger('gameLoop', data.matchID);
 
@@ -237,7 +234,7 @@ $(function() {
 		console.log("Entered OpponentViewUpdate Function...");
 		var newState = GameState.match_state
 
-		if (newState == '0' || newState == '1') {//display stack
+		if(newState == '0' || newState == '1') {//display stack
 			//first time through
 			if(lastState != '0' && lastState != '1'){
 				console.log("Opponent View changed to Stack...");
@@ -288,7 +285,8 @@ $(function() {
 				console.log("Opponent View is set to show end of match...");
 				getGameOverDetail(matchID);
 				setTimeout(function(){
-					$('.winner').text(ggDetail.id);
+					$('.first-mogs-count').text(ggDetail.p1_name + '\'s mog count: ' + ggDetail.match_detail.p1_mog_count);
+					$('.second-mogs-count').text(ggDetail.p2_name + '\'s mog count: ' + ggDetail.match_detail.p2_mog_count);
 					switchGameView(3);	
 				},2000,ggDetail);
 			}
@@ -317,7 +315,7 @@ $(function() {
 				lastState = newState;
 
 				console.log("Game State is 0, displaying stack...");
-				$('.display-stack > h3').text("It's your turn! Get ready...");
+				$('.display-stack > h3').text("It's your turn!");
 				//load in stack of mogs for view
 				var stackCount = GameState.player.playing_mogs.length +
 									GameState.opponent.playing_mogs.length;
@@ -332,7 +330,7 @@ $(function() {
 			
 			if(lastState != '1') {
 				lastState = newState;
-				$('.slammer-container h3').text('3...2...1...');
+				$('.slammer-container h3').text('Get Ready...');
 				console.log("Game State is 1, displaying slammer...");
 				switchGameView(1);
 			
@@ -349,7 +347,6 @@ $(function() {
 				console.log("First time through seeing match results...");
 				switchGameView(2);
 				$('body').trigger('showRoundResults');
-				// setTimeout(function(){},5000);
 			} else { //catch case where other player has not yet seen the update
 				console.log("Other user has not seen view, resetting outcomeViewed and polling for players viewed round results...");
 				//show stack and display text
@@ -369,7 +366,9 @@ $(function() {
 				console.log("Opponent View is set to show end of match...");
 				getGameOverDetail(matchID);
 				setTimeout(function(){
-					$('.winner').text(ggDetail.id);
+					$('.first-mogs-count').text(ggDetail.p1_name + '\'s mog count: ' + ggDetail.match_detail.p1_mog_count);
+					$('.second-mogs-count').text(ggDetail.p2_name + '\'s mog count: ' + ggDetail.match_detail.p2_mog_count);
+					
 					switchGameView(3);	
 				},2000,ggDetail);
 			}
@@ -480,11 +479,28 @@ $(function() {
 				var data = updatedMogs[j][i].src_url;
 
 				if(j == 0) {
-					$('.user-mogs').append('<div id=\"' + id + '\" class=\"mog-img\" title=\"' + title + '\" name=\"' + name 
+					if(rating >= 900) {
+						$('.user-mogs').append('<div id=\"' + id + '\" class=\"mog-img legendary\" title=\"' + title + '\" name=\"' + name 
 										+ '\" rating=\"' + rating + '\"style=\"' + style + '\" data=\"' + data + '\"></div>');
+					} else if (rating < 900 && rating >= 600) {
+						$('.user-mogs').append('<div id=\"' + id + '\" class=\"mog-img rare\" title=\"' + title + '\" name=\"' + name 
+										+ '\" rating=\"' + rating + '\"style=\"' + style + '\" data=\"' + data + '\"></div>');
+					} else {
+						$('.user-mogs').append('<div id=\"' + id + '\" class=\"mog-img\" title=\"' + title + '\" name=\"' + name 
+										+ '\" rating=\"' + rating + '\"style=\"' + style + '\" data=\"' + data + '\"></div>');
+					}
+					
 				} else {
-					$('.won-mogs').append('<div id=\"' + id + '\" class=\"mog-img\" title=\"' + title + '\" name=\"' + name 
+					if(rating >= 900) {
+						$('.won-mogs').append('<div id=\"' + id + '\" class=\"mog-img legendary\" title=\"' + title + '\" name=\"' + name 
 										+ '\" rating=\"' + rating + '\"style=\"' + style + '\" data=\"' + data + '\"></div>');
+					} else if (rating < 900 && rating >= 600) {
+						$('.won-mogs').append('<div id=\"' + id + '\" class=\"mog-img rare\" title=\"' + title + '\" name=\"' + name 
+										+ '\" rating=\"' + rating + '\"style=\"' + style + '\" data=\"' + data + '\"></div>');
+					} else {
+						$('.won-mogs').append('<div id=\"' + id + '\" class=\"mog-img\" title=\"' + title + '\" name=\"' + name 
+										+ '\" rating=\"' + rating + '\"style=\"' + style + '\" data=\"' + data + '\"></div>');
+					}
 				}
 				
 			}
@@ -623,7 +639,7 @@ $(function() {
 		setTimeout(function(){
 			console.log("Drop animation done... Moving on to Won Mogs...");
 			showRoundsWonMogs(mogDropContainer);
-		},5000,mogDropContainer);
+		},3000,mogDropContainer);
 	}
 
 	//show won mogs
@@ -631,11 +647,15 @@ $(function() {
 		
 		//clear results view before rev
 		$('.slammer-game-results').children().remove();
-		$('.slammer-game-results').append('<h3>Mogs Won this round:</h3>');
 
-		//append won mogs to dom
-		for(var i = 0; i < GameState.round_result_mogs.length; i++) {
-			$('.slammer-game-results').append('<div class=\"mog-img\" style=\"background-image: url(\'/images/mogs/'+GameState.round_result_mogs[i].id+'\');\"></div>');
+		if(GameState.round_result_mogs.length < 1) {
+			$('.slammer-game-results').append('<h3>No Mogs won this round</h3>');
+		} else {
+			$('.slammer-game-results').append('<h3>Mogs Won this round:</h3>');
+
+			for(var i = 0; i < GameState.round_result_mogs.length; i++) {
+				$('.slammer-game-results').append('<div class=\"mog-img\" style=\"background-image: url(\'/images/mogs/'+GameState.round_result_mogs[i].id+'\');\"></div>');
+			}
 		}
 
 		//fade out old view and reset properties
@@ -653,7 +673,7 @@ $(function() {
 				$('.slammer-game-results').attr('hidden','');
 				console.log("Calling updateMatchState since user should have seen view now...");
 				$('body').trigger('updateMatchState',[matchID,userID]);
-			},5000,matchID, userID);
+			},3000,matchID, userID);
 		});
 	}
 
@@ -661,16 +681,31 @@ $(function() {
 	function renderRoundResultMogs(count) {
 		var maxHeight = 400;
 		var maxWidth = $('.round-results').parent().width() - 155;
-		var countNotFlipped = (GameState.player.playing_mogs.length + GameState.opponent.playing_mogs.length) - GameState.round_result_mogs.length;
+		var countNotFlipped = (GameState.player.playing_mogs.length + GameState.opponent.playing_mogs.length);
 		var countFlipped = GameState.round_result_mogs.length;
 
-		for(var i = 0; i < (countFlipped + countNotFlipped); i++) {
-			console.log("Getting flipped mogs...");
-			if(i < (countFlipped - 1) ) {
-				$('.mog-drop-container').append('<div class=\"stack-itm-contr\" style=\"left: '+Math.floor((Math.random() * (maxWidth)))+'px; top: -400px\"><div class=\"drop-item '+i+'\" style=\"background-image: url(\'/images/mogs/'+GameState.round_result_mogs[i].id+'\')\"></div></div>');
-			} else {
-				$('.mog-drop-container').append('<div class=\"stack-itm-contr\" style=\"left: '+Math.floor((Math.random() * (maxWidth)))+'px; top: -400px\"><div class=\"drop-item '+i+'\" style=\"background-image: url(\'/images/memeslam.png\')\"></div></div>');	
-			}
+		console.log("Getting flipped mogs...");
+		console.log("Rendering flipped: " + countFlipped);
+		for(var i = 0; i < countFlipped; i++) {
+			$('.mog-drop-container').append('<div class=\"stack-itm-contr\" style=\"left: '+Math.floor((Math.random() * (maxWidth)))+'px; top: -400px\"><div class=\"drop-item '+i+'\" style=\"background-image: url(\'/images/mogs/'+GameState.round_result_mogs[i].id+'\')\"></div></div>');
+		
+			$('.drop-item.'+i).snabbt({
+				delay: 400,
+				duration: 400,
+				position: [0,(Math.floor((Math.random() * (maxHeight)) + 750)),0],
+				complete: function(){
+					console.log("Mog " + i + " added!");
+				}
+			}).snabbt('attention',{
+				rotation: [0,0,Math.PI/2],
+				springConstant: 1.9,
+				springDeceleration: 0.9
+			});
+		} 
+
+		console.log("Rendering non-flipped: " + countNotFlipped);
+		for(var i = 0; i < countNotFlipped; i++) {
+			$('.mog-drop-container').append('<div class=\"stack-itm-contr\" style=\"left: '+Math.floor((Math.random() * (maxWidth)))+'px; top: -400px\"><div class=\"drop-item '+i+'\" style=\"background-image: url(\'/images/memeslam.png\')\"></div></div>');	
 			
 			$('.drop-item.'+i).snabbt({
 				delay: 400,
@@ -685,6 +720,98 @@ $(function() {
 				springDeceleration: 0.9
 			});
 		}
+
 		console.log("Mogs Dropping...");
+	}
+
+	//controls slammer mini game
+	function slammerMiniGame(matchID) {
+	
+		console.log("Slammer Mini Game started... ");
+
+		var entered = false;
+		var failed = false;
+		var passed = false;
+		var resultMessage;
+		var slamTime;
+
+		//delete and recreate slammer for animation
+		$('.slammer').remove();
+		$('.slammer-container').append('<div class=\"slammer\" style=\"transform: rotate('+Math.floor((Math.random() * 360))+'deg)\" hidden><div class=\"upper\"></div><div class=\"gates\"><div class=\"enter\"></div><div class=\"exit\"></div></div><div class=\"lower\"></div></div>');
+
+		$('.slammer-container h3').attr('hidden','');
+		
+		$('.slammer').removeAttr('hidden');
+
+		//animate's slammer
+		$('.slammer').snabbt({
+			rotation: [0,0,2*Math.PI],
+			duration: 5000,
+			complete: function(){
+				processRound(matchID);
+			}
+		});
+
+		//events that govern slammer gameplay
+		$('body').on('mouseenter', '.upper, .lower', function() {
+			failed = true;
+			$('.slammer').fadeOut(400);
+		});
+
+		$('body').on('mouseenter', '.enter', function(e) {
+			entered = true;
+		});
+
+		$('body').on('mouseenter', '.exit', function(e) {
+			if(entered){
+				slamTime = slammerTime
+				$('.slammer').fadeOut(300,function(){
+					passed = true;
+				});
+			} else {
+				failed = true;
+				$('.slammer').fadeOut(300);
+			}
+		});
+
+		//process outcome of minigame here...
+		function processRound(matchID) {
+
+			var result = 0;
+
+			if(failed){
+				console.log("Player failed Slammer Game.");
+				$('.slammer-container h3').text("Too Bad!").removeAttr('hidden');
+			} else {
+				getResultMessage();
+				$('.slammer-container h3').text(resultMessage).removeAttr('hidden');
+			}
+			$('.slammer').attr('hidden','');
+			$('.slammer').removeAttr('style');
+
+			console.log("Player Passed Slammer Game! Result " + slamTime);
+			result = Math.floor(slamTime);
+
+			setTimeout(function(){
+				$('body').trigger('updateMatchState', [matchID, result]);
+			}, 2000, matchID, result);
+		}
+
+		//check calculation and get result message
+		function getResultMessage() {
+			if(slamTime <= 800) {
+				resultMessage = "PERFECT!";
+			} else if (slamTime > 800 && slamTime <= 1100) {
+				resultMessage = "MARVELOUS!";
+			} else if (slamTime > 1100 && slamTime <= 1500) {
+				resultMessage = "Great!";
+			} else if (slamTime > 1500 && slamTime <= 2000) {
+				resultMessage = "Good.";
+			} else if (slamTime > 2000 && slamTime <= 3500) {
+				resultMessage = "Fair...";
+			} else {
+				resultMessage = "Poor...";
+			}
+		}
 	}
 });

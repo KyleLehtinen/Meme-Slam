@@ -5,26 +5,59 @@
 @endsection
 
 @section('main')
+	@if(!empty($recent_mogs))
+	<div class="recent-mogs-backdrop">
+		<div class="recent-mogs-container">
+			<h2>You have new mogs, check'em out!</h2>
+			<div class="recent-mogs">
+				@foreach($recent_mogs as $recent_mog)
+					<div class="mog-img" style="background-image: url(/images/mogs/{{$recent_mog}}"></div>
+				@endforeach
+			</div>
+			<button>Cool!</button>
+		</div>
+	</div>
+	@endif
 	<div class="mog-viewport-container">
-		<div class="user-stats" data="{{$user->id}}">
-			<h3 class="username">User: {{$user->name}}</h3>
+		<div class="user-stats" data="{{{$user->id}}}">
+			<h3 class="username">User: {{{$user->name}}}</h3>
 			<h3>Games Played: {{$user->game_count}}</h3>
 			<h3>Games Won: {{$user->total_wins}}</h3>
-			<h3>Collection Rating: {{$collectionRating}}</h3>
+			<h3>Collection Rating: {{$collection_rating}}</h3>
 		</div>
 		<div class="mog-viewport">
-			<div class="top-collection-rating">
-				
+			<div class="top-collection-rating-container">
+				<h5>Top Collections</h5>	
+				<div class="collection-rating">
+					@foreach($top_collections as $key=>$collection)
+						<div class="collection-record">
+							<div class="col-name">{{{$collection}}}</div>
+							<div class="col-rating">{{{$key}}}</div> 
+						</div>
+					@endforeach
+				</div>
 			</div>
 			<div class="mog-detail-view">
-				<div class="selected-mog" style="background-image: url(/images/mogs/{{$mogs[0]->id}}"></div>
+				@if($mogs[0]->rating >= 900)
+					<div class="selected-mog legendary" style="background-image: url(/images/mogs/{{$mogs[0]->id}}"></div>
+				@elseif($mogs[0]->rating < 900 && $mogs[0]->rating >= 600)
+					<div class="selected-mog rare" style="background-image: url(/images/mogs/{{$mogs[0]->id}}"></div>
+				@else
+					<div class="selected-mog" style="background-image: url(/images/mogs/{{$mogs[0]->id}}"></div>
+				@endif
 			</div>
 			<div class="mog-details-container">
 				<div class="selected-mog-name">
-					{{'Mog Name: ' . $mogs[0]->name}}
+					{{$mogs[0]->name}}
 				</div>
 				<div class="selected-mog-rating">
-					{{'Rating: ' . $mogs[0]->rating}}
+					@if($mogs[0]->rating >= 900)
+						{{'Rating: ' . $mogs[0]->rating . ' Legendary'}}
+					@elseif($mogs[0]->rating < 900 && $mogs[0]->rating >= 600)
+						{{'Rating: ' . $mogs[0]->rating . ' Rare'}}
+					@else
+						{{'Rating: ' . $mogs[0]->rating . ' Common'}}
+					@endif
 				</div>
 				<div class="selected-mog-url">
 					<a href="{{$mogs[0]->src_url}}" target=”_blank”>Learn More at KnowYourMeme</a>

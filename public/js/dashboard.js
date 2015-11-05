@@ -1,7 +1,7 @@
 $(function(){
 
 	var requiredBetMogs = 20;
-	
+
 	//controls mog selection from bet pod and inventory for hero area
 	$('body').on('click','.mog-img', function(e){
 		$('.selected-mog').removeClass('legendary');
@@ -10,16 +10,23 @@ $(function(){
 		var title_rating = $(this).attr('title');
 		var style = $(this).attr('style');
 		var url = $(this).attr('data');
+		var rating;
 
-		if($(this).attr('rating') >= '900') {
+		if($(this).attr('rating') >= 900) {
 			$('.selected-mog').addClass('legendary');
-		} else if($(this).attr('rating') < '900' && $(this).attr('rating') >= '600') {
+			rating = "Legendary";
+		} else if($(this).attr('rating') < 900 && $(this).attr('rating') >= 600) {
 			$('.selected-mog').addClass('rare');
+			rating = "Rare";
+		} else {
+			$('.selected-mog').removeClass('legendary');
+			$('.selected-mog').removeClass('rare');
+			rating = "Common";
 		}
 
 		$('.selected-mog').attr('style',style);
-		$('.selected-mog-name').text('Mog Name: ' + title_rating.substring(0,(title_rating.indexOf('|') - 1)));
-		$('.selected-mog-rating').text('Rating: ' + title_rating.substring(title_rating.indexOf('|') + 1));
+		$('.selected-mog-name').text(title_rating.substring(0,(title_rating.indexOf('|') - 1)));
+		$('.selected-mog-rating').text('Rating: ' + $(this).attr('rating') + ' ' + rating);
 		$('.selected-mog-url > a').attr('href',url);
 	});
 
@@ -37,8 +44,25 @@ $(function(){
 		stop: updateBetPodRating
 	});
 
-	$('.nav-memeslam').on('click', function(){
-		
+	//double click to move mogs in/out
+	$('body').on('dblclick','.inv-mogs .mog-img',function() {
+	    var litem = $(this).clone();
+	    litem.appendTo($('.bet-pod-mogs'));
+	    $(this).remove();
+	    sortableReceiveLogic();
+	    updateBetPodRating();
+	});
+
+	$('body').on('dblclick','.bet-pod-mogs .mog-img', function() {
+	    var litem = $(this).clone();
+	    litem.appendTo($('.inv-mogs'));
+	    $(this).remove();
+	    sortableReceiveLogic();
+	    updateBetPodRating();
+	});
+
+	$('body').on('click','.recent-mogs-container button, .recent-mogs-backdrop', function(){
+		$('.recent-mogs-backdrop').remove();
 	});
 
 	//Support Jquery UI events - Prevents adding more than requiredBetMogs
@@ -113,6 +137,4 @@ $(function(){
 
 		return betMogCount;
 	}
-
-	
 });
