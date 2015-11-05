@@ -80,7 +80,7 @@ navbar ul {
 navbar ul li {
 	list-style: none;	
 	flex: 1;
-    border-left: 1px solid gray;
+    border-left: 2px solid rgba(0, 0, 0, 0.2);;
 }
 
 .nav-selected {
@@ -551,7 +551,7 @@ Jamaican Css in full force below
     background-color: white;
     position: relative;
     overflow: hidden;
-    border-bottom: solid black 1px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);;
 }
 
 .mog-drop-container {
@@ -668,6 +668,7 @@ Jamaican Css in full force below
     min-height: 120px;
     border-radius: 10px;
     background-color: rgba(238, 238, 238, 0.4);
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /****
