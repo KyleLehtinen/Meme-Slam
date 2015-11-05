@@ -6,6 +6,7 @@
 
 @section('main')
 	<div class="game-field" userID="{{$user->id}}" name="{{$user->name}}" rating="{{$bet_rating}}">
+		<h3>{{$user->name}}</h3>
 		<div class="pre-search" hidden>
 			<h3>Your Bet Pod Rating is {{$bet_rating}}</h3>
 			<h3>You will be matched against other players with a BP rating between {{$bet_rating - 300}} and {{$bet_rating + 300}}</h3>

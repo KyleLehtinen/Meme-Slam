@@ -242,6 +242,7 @@ LOGIN SCREEN CSS
     flex-direction: column;
     flex: 1;
     overflow: hidden;
+    padding-bottom: 11px;
 }
 
 .top-collection-rating-container h5 {
@@ -317,6 +318,22 @@ LOGIN SCREEN CSS
     justify-content: space-around;
 }
 
+.username {
+    // border-bottom: solid black 1px;
+}
+
+.user-settings-container.selected {
+    background-color: orange;
+    height: 100px;
+    width: 100%;
+
+}
+
+::-webkit-input-placeholder {
+    color: inherit;
+    outline: 0;
+}
+
 .recent-mogs-backdrop {
     background: rgba(0, 0, 0, 0.3);
     z-index: 100;
@@ -347,7 +364,8 @@ LOGIN SCREEN CSS
 
 .recent-mogs {
     overflow: scroll;
-    height: 438px;
+    height: 435px;
+    margin-bottom: 5px;
 }
 
 .recent-mogs-container button {

@@ -24,7 +24,7 @@ class MemeSlamController extends Controller
 		$in_active_match = Matches::checkForActiveMatch($user_id);
 
 		if(count(User::getBettedMogs($user_id)) == $required_bet_count || $in_active_match){
-
+			
 			//get the user
 			$user = Auth::user();
 

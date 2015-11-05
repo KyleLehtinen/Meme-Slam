@@ -281,7 +281,7 @@ class Matches extends Model
 		//see if given user id is player 1 or 2 in an active match
 		$row = DB::table('Matches')
 					->where('in_progress', '=', 1)
-					->where('match_complete', '=', 0)
+					// ->where('match_complete', '=', 0)
 					->where(function($query) use($user_id){
 						$query->where('p1_id', '=', $user_id)
 							  ->orWhere('p2_id', '=', $user_id);
